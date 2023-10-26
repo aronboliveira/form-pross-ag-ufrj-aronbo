@@ -1,0 +1,604 @@
+<!-- todo lógica de sim ou não radios required-->
+<!-- todo inserir mais regex em model.js para formatação-->
+<!-- todo inserção de mais tratamentos médicos -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Anamnese Geral</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Anamnese Geral</h1>
+      <h6>Você pode apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo campo após iniciar o foco com Tab</h6>
+    </header>
+    <main>
+      <form name="formAnamG" method="post" action="#">
+        <fieldset name="fsAnamGId">
+          <legend>Identificação</legend>
+          <label for="firstNameId">Primeiro Nome (Simples ou Composto):
+            <input type="text" name="firstNameName" id="firstNameId" autocomplete="given-name" required />
+          </label>
+          <br />
+
+          <label for="additionalNameId">Sobrenome(s) do Meio, se presentes:
+            <input type="text" name="additionalNameName" id="additionalNameId" autocomplete="additional-name" />
+          </label>
+          <br />
+
+          <label for="familyNameId">Último Sobrenome:
+            <input type="text" name="familyNameName" id="familyNameId" autocomplete="family-name" required />
+          </label>
+          <br />
+
+          <label for="socialNameId">Nome Social:
+            <input type="text" name="socialNameName" id="socialNameId" />
+          </label>
+          <hr />
+
+          <label for="UFId">Unidade Federativa (Residência Atual):
+            <select id="UFId" autocomplete="address-level1" required>
+              <optgroup label="Centro-Oeste">
+                <option value="GO">Goiás</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MS">Mato Grosso do Sul</option>
+              </optgroup>
+
+              <optgroup label="Nordeste">
+                <option value="AL">Alagoas</option>
+                <option value="BA">Bahia</option>
+                <option value="CE">Ceará</option>
+                <option value="MA">Maranhão</option>
+                <option value="PB">Paraíba</option>
+                <option value="PE">Pernambuco</option>
+                <option value="PI">Piauí</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="SE">Sergipe</option>
+              </optgroup>
+              
+              <optgroup label="Norte">
+                <option value="AC">Acre</option>
+                <option value="AP">Amapá</option>
+                <option value="AM">Amazonas</option>
+                <option value="RO">Rondônia</option>
+                <option value="RR">Roraima</option>
+                <option value="TO">Tocantins</option>
+              </optgroup>
+
+              <optgroup label="Sudeste">
+                <option value="ES">Espírito Santo</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="SP">São Paulo</option>
+              </optgroup>
+
+              <optgroup label="Sul">
+                <option value="PR">Paraná</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="SC">Santa Catarina</option>
+              </optgroup>
+            </select>
+          </label>
+          <br />
+
+          <label for="countryId">Nacionalidade:
+            <input type="text" name="countryName" id="countryId" autocomplete="country" required/>
+          </label>
+          <br />
+
+          <label for="munId">Naturalidade:
+            <input type="text" name="munName" id="munId" autocomplete="address-level2" required/>
+          </label>
+          <br />
+
+          <label for="streetId">Endereço:
+            <input type="text" name="streetName" id="streetId" autocomplete="address-level3" required/>
+          </label>
+          <br />
+
+          <label for="streetNumId">Número:
+            <input type="number" name="streetNumName" id="streetNumId" min="1" autocomplete="address-level4" />
+            <input type="radio" name="streetNumNullName" id="streetNumNullId" /> Sem número
+          </label>
+          <br />
+
+          <label for="compNumId">Complemento:
+            <input type="number" name="compNumName" id="compNumId" min="1" autocomplete="address-level4" />
+            <input type="radio" name="compNumNullName" id="compNumNullId" /> Sem número
+          </label>
+          <hr />
+
+          <label for="dateBdayId">Data de Nascimento:
+            <input type="date" name="dateBdayName" id="dateBdayId" autocomplete="bday" required/>
+          </label>
+          <br />
+
+          <label for="dateAgeId">Idade:
+            <input type="number" name="dateAgeName" id="dateAgeId" min="1" max="120" required>
+          </label>
+          <hr />
+
+          <label for="genId">Gênero:
+            <select name="genName" id="genId" required>
+              <option value="masculino">Masculino</option>
+              <option value="feminino">Feminino</option>
+              <option value="nao-binario">Não-Binário</option>
+              <option value="neutro">Neutro</option>
+              <option value="outros">Outros</option>
+              <option value="undefined">Não desejo declarar</option>
+            </select>
+          </label>
+          <br />
+
+          <label for="estCivId">Estado Civil:
+            <select name="estCivName" id="estCivId" required>
+              <option value="casado">Casado&#40a/e&#41</option>
+              <option value="desquitado">Desquitado&#40a/e&#41</option>
+              <option value="divorciado">Divorciado&#40a/e&#41</option>
+              <option value="separado">Separado&#40a/e&#41</option>
+              <option value="solteiro">Solteiro&#40a/e&#41</option>
+            </select>
+          </label>
+          <br />
+
+          <label for="profId">Profissão:
+            <input type="text" name="profName" id="profId" maxlength="100" />
+          </label>
+          <hr />
+
+
+          <label for="telAreaCodeId">DDD:
+            <input type="number" name="telAreaCodeName" id="telAreaCodeId" min="11" max="99" autocomplete="tel-area-code"
+            required />
+          </label>
+          <br />
+
+          <label for="telId">Telefone:
+            <input type="text" name="telName" id="telId" minlength="8" maxlength="15" required/>
+          </label>
+          <br />
+
+          <label for="tel2AreaCodeId">DDD do Telefone Secundário:
+            <input type="number" name="tel2AreaCodeName" id="tel2AreaCodeId" min="11" max="99" autocomplete="tel-area-code"/>
+          </label>
+          <br />
+
+
+          <label for="tel2Id">Telefone Secundário:
+            <input type="text" name="tel2Name" id="tel2Id" minlength="8" maxlength="15" />
+          </label>
+
+        </fieldset>
+        <hr />
+
+        <fieldset name="fsSdGeral">
+          <legend>Dados de Saúde Geral</legend>
+          <label for="qxPrinc">Queixa Principal</label>
+          <textarea id="qxPrinc" maxlength="500" placeholder="Escreva aqui a(s) queixa(s)"></textarea>
+          <br />
+
+          <label for="histDc">História da Doença</label>
+          <textarea id="histDc" maxlength="500" placeholder="Escreva aqui a história""></textarea>
+
+        </fieldset>
+        <hr />
+        
+        <fieldset name="fsAnamGRad">
+          <legend>Opções</legend>
+          <label for="febrRSpan">Febre Reumática</label>
+          <span id="febrRSpan">
+            <input type="radio" name="febrRName" id="febrRYes" tabindex="0"/>
+            <label for="febrRYes">Sim</label>
+            <input type="radio" name="febrRName" id="febrRNo" tabindex="0"/>
+            <label for="febrRNo">Não</label>
+          </span>
+          <br />
+
+          <label for="hepSpan">Hepatite ou Outra Doença Hepática</label>
+          <span id="hepSpan">
+            <input type="radio" name="hepName" id="hepYes" />
+            <label for="hepYes">Sim</label>
+            <input type="radio" name="hepName" id="hepNo" />
+            <label for="hepNo">Não</label>
+          </span>
+          <br />
+
+          <label for="CpbDiabSpan">Diabetes</label>
+          <span id="CpbDiabSpan">
+            <input type="radio" name="pbDiabName" id="CpbDiabYes" />
+            <label for="pbDiabYes">Sim</label>
+            <input type="radio" name="pbDiabName" id="CpbDiabNo" />
+            <label for="pbDiabNo">Não</label>
+          </span>
+          <div id="divAddDiab">
+            <input type="checkbox" name="diabTipo1Name" id="diabTipo1Id"> Tipo 1
+            <input type="checkbox" name="diabTipo2Name" id="diabTipo2Id"> Tipo 2
+            <input type="checkbox" name="diabGestName" id="diabGestId"> Gestacional
+            <input type="checkbox" name="diabInsName" id="diabInsId"> Insípido
+            <input type="checkbox" name="diabLadaName" id="diabLadaId"> LADA
+            <input type="checkbox" name="diabModyName" id="diabModyId"> MODY
+          </div>
+          <br />
+
+          <label for="hivSpan">Portador de HIV</label>
+          <span id="hivSpan">
+            <input type="radio" name="hivName" id="hivYes" />
+            <label for="hivYes">Sim</label>
+            <input type="radio" name="hivName" id="hivNo" />
+            <label for="hivNo">Não</label> 
+          </span>
+          <br />
+
+          <label for="tSangSpan">Tranfusão de Sangue</label>
+          <span id="tSangSpan">
+            <input type="radio" name="tSangName" id="tSangYes" />
+            <label for="tSangYes">Sim</label>
+            <input type="radio" name="tSangName" id="tSangNo" />
+            <label for="tSangNo">Não</label>
+          </span>
+          <br />
+
+          <label for="prAltaSpan">Pressão Alta &#40Hipertensão Arterial&#41</label>
+          <span id="prAltaSpan">
+            <input type="radio" name="prAltaName" id="prAltaYes" />
+            <label for="prAltaYes">Sim</label>
+            <input type="radio" name="prAltaName" id="prAltaNo" />
+            <label for="prAltaNo">Não</label>
+          </span>
+          <br />
+
+          <label for="pbCardSpan">Problemas Cardíacos</label>
+          <span id="pbCardSpan">
+            <input type="radio" name="pbCardName" id="pbCardYes" />
+            <label for="pbCardYes">Sim</label>
+            <input type="radio" name="pbCardName" id="pbCardNo" />
+            <label for="pbCardNo">Não</label>
+          </span>
+          <textarea id="textAddCard" maxlength="500" placeholder="Escreva aqui os problemas específicos"></textarea>
+          <br />
+
+          <label for="pbRenSpan">Problemas Renais</label>
+          <span id="pbRenSpan">
+            <input type="radio" name="pbRenName" id="pbRenYes" />
+            <label for="pbRenYes">Sim</label>
+            <input type="radio" name="pbRenName" id="pbRenNo"/>
+            <label for="pbRenNo">Não</label>
+          </span>
+          <textarea id="textAddRen" maxlength="500" placeholder="Escreva aqui os problemas específicos"></textarea>
+          <br />
+
+          <label for="pbGastSpan">Problemas Gástricos</label>
+          <span id="pbGastSpan">
+            <input type="radio" name="pbGastName" id="pbGastYes"/>
+            <label for="pbGastYes">Sim</label>
+            <input type="radio" name="pbGastName" id="pbGastNo"/>
+            <label for="pbGastNo">Não</label>
+          </span>
+          <textarea id="textAddGast" maxlength="500" placeholder="Escreva aqui os problemas específicos"></textarea>
+          <br />
+
+          <label for="pbRespSpan">Problemas Respiratórios</label>
+          <span id="pbRespSpan">
+            <input type="radio" name="pbRespName" id="pbRespYes"/>
+            <label for="pbRespYes">Sim</label>
+            <input type="radio" name="pbRespName" id="pbRespNo"/>
+            <label for="pbRespNo">Não</label>
+          </span>
+          <textarea id="textAddResp" maxlength="500" placeholder="Escreva aqui os problemas específicos"></textarea>
+          <br />
+          
+          <label for="pbAlergSpan">Problemas Alérgicos</label>
+          <span id="pbAlergSpan">
+            <input type="radio" name="pbAlergName" id="pbAlergYes"/>
+            <label for="pbAlergYes">Sim</label>
+            <input type="radio" name="pbAlergName" id="pbAlergNo"/>
+            <label for="pbAlergNo">Não</label>
+          </span>
+          <textarea id="textAddAlerg" maxlength="500" placeholder="Escreva aqui os problemas específicos"></textarea>
+          <br />
+
+          
+          <label for="pbArtReumSpan">Problemas Articulares ou Reumatismo</label>
+          <span id="pbArtReumSpan">
+            <input type="radio" name="pbArtReumName" id="pbArtReumYes"/>
+            <label for="pbArtReumYes">Sim</label>
+            <input type="radio" name="pbArtReumName" id="pbArtReumNo"/>
+            <label for="pbArtReumNo">Não</label>
+          </span>
+          <textarea id="textAddArtReum" maxlength="500" placeholder="Escreva aqui os problemas específicos"></textarea>
+          <br />
+          
+          <label for="pbSistSpan">Alguma Outra Doença Sistêmica</label>
+          <span id="pbSistSpan">
+            <input type="radio" name="pbSistName" id="pbSistYes"/>
+            <label for="pbSistYes">Sim</label>
+            <input type="radio" name="pbSistName" id="pbSistNo"/>
+            <label for="pbSistNo">Não</label>
+          </span>
+          <textarea id="textAddSist" maxlength="500" placeholder="Escreva aqui os nomes específicos"></textarea>
+          <br />
+
+          <label for="pbAlcSpan">Uso de Bebidas Alcoólicas</label>
+          <span id="pbAlcSpan">
+            <input type="radio" name="pbAlcName" id="pbAlcYes"/>
+            <label for="pbAlcYes">Sim</label>
+            <input type="radio" name="pbAlcName" id="pbAlcNo"/>
+            <label for="pbAlcNo">Não</label>
+          </span>
+          <textarea id="textAddAlc" maxlength="500" placeholder="Escreva aqui os nomes específicos"></textarea>
+          <br />
+          
+          <label for="CpbFumoSpan">É fumante</label>
+          <span id="CpbFumoSpan">
+            <input type="radio" name="CpbFumoName" id="CpbFumoYes"/>
+            <label for="CpbFumoYes">Sim</label>
+            <input type="radio" name="CpbFumoName" id="CpbFumoNo"/>
+            <label for="CpbFumoNo">Não</label>
+          </span>
+          <div id="divAddFumo">
+            <input type="radio" name="nivelFumo" id="fumoLeveId" /> Leve
+            <input type="radio" name="nivelFumo" id="fumoModId" /> Moderado
+            <input type="radio" name="nivelFumo" id="fumoAltoId" /> Alto
+            <br />
+            <input type="text" name="tempApFumoName" id="tempApFumoId" /> Tempo aproximado do hábito
+          </div>
+          <br />
+   
+          <label for="pbDrgSpan">Uso de Drogas</label>
+          <span id="pbDrgSpan">
+            <input type="radio" name="pbDrgName" id="pbDrgYes"/>
+            <label for="pbDrgYes">Sim</label>
+            <input type="radio" name="pbDrgName" id="pbDrgNo"/>
+            <label for="pbDrgNo">Não</label>
+          </span>
+          <textarea id="textAddDrg" maxlength="500" placeholder="Qual ou quais?"></textarea>
+          <br />
+   
+          <label for="CpbGrvSpan">Gravidez</label>
+          <span id="CpbGrvSpan">
+            <input type="radio" name="CpbGrvName" id="CpbGrvYes"/>
+            <label for="CpbGrvYes">Sim</label>
+            <input type="radio" name="CpbGrvName" id="CpbGrvNo"/>
+            <label for="CpbGrvNo">Não</label>
+          </span>
+          <div id="divAddGrv">
+            <input type="checkbox" name="GrvAtName" id="GrvAtId"> Atual
+            <input type="checkbox" name="GrvPasName" id="GrvPasId"> Passada
+          </div>
+          <br />
+
+          <label for="pbAntCSpan">Uso de Anticoncepional</label>
+          <span id="pbAntCSpan">
+            <input type="radio" name="pbAntCName" id="pbAntCYes"/>
+            <label for="pAntCYes">Sim</label>
+            <input type="radio" name="pbAntCName" id="pbAntCNo"/>
+            <label for="pbAntCNo">Não</label>
+          </span>
+          <textarea id="textAddAntC" maxlength="500" placeholder="Qual?"></textarea>
+          <br />
+ 
+          <label for="pbOpSpan">Operação ou Extração de Dente</label>
+          <span id="pbOpSpan">
+            <input type="radio" name="pbOpName" id="pbOpYes"/>
+            <label for="pbOpYes">Sim</label>
+            <input type="radio" name="pbOpName" id="pbOpNo"/>
+            <label for="pbOpNo">Não</label>
+          </span>
+          <textarea id="textAddOp" maxlength="500" placeholder="Qual ou quais?"></textarea>
+          <br />
+
+             
+          <label for="pbCicSpan">Problemas com Cicatrização</label>
+          <span id="pbCicSpan">
+            <input type="radio" name="pbCicName" id="pbCicYes"/>
+            <label for="pbCicYes">Sim</label>
+            <input type="radio" name="pbCicName" id="pbCicNo"/>
+            <label for="pbCicNo">Não</label>
+          </span>
+          <textarea id="textAddCic" maxlength="500" placeholder="Qual ou quais?"></textarea>
+          <br />
+
+          <label for="pbAnstSpan">Problemas com Anestesia</label>
+          <span id="pbAnstSpan">
+            <input type="radio" name="pbAnstName" id="pbAnstYes"/>
+            <label for="pbAnstYes">Sim</label>
+            <input type="radio" name="pbAnstName" id="pbAnstNo"/>
+            <label for="pbAnstNo">Não</label>
+          </span>
+          <textarea id="textAddAnst" maxlength="500" placeholder="Qual ou quais?"></textarea>
+          <br />
+
+          <label for="pbHemSpan">Problemas com Hematrização</label>
+          <span id="pbHemSpan">
+            <input type="radio" name="pbHemName" id="pbHemYes"/>
+            <label for="pbHemYes">Sim</label>
+            <input type="radio" name="pbHemName" id="pbHemNo"/>
+            <label for="pbHemNo">Não</label>
+          </span>
+          <textarea id="textAddHem" maxlength="500" placeholder="Qual ou quais?"></textarea>
+          <br />
+
+          <label for="pbIntrnSpan">Internação Recente</label>
+          <span id="pbIntrnpan">
+            <input type="radio" name="pbIntrnName" id="pbIntrnYes"/>
+            <label for="pbInternYes">Sim</label>
+            <input type="radio" name="pbIntrnName" id="pbIntrnNo"/>
+            <label for="pbIntrnNo">Não</label>
+          </span>
+          <textarea id="textAddIntrn" maxlength="500" placeholder="Tempo aproximado"></textarea>
+          <br />
+
+          <label for="pbMedSpan">Uso Atual de Medicação Controlada</label>
+          <span id="pbMedSpan">
+            <input type="radio" name="pbMedName" id="pbMedYes"/>
+            <label for="pbMedYes">Sim</label>
+            <input type="radio" name="pbMedName" id="pbMedNo"/>
+            <label for="pbMedNo">Não</label>
+          </span>
+          <textarea id="textAddMed" maxlength="500" placeholder="Qual ou quais?"></textarea>
+          <hr />
+          
+          <section id="sectODId">
+            <h4>Outras Doenças</h4>
+              <input type="checkbox" name="candName" id="candId" />
+              <label for="canId">Candidíase</label>
+              <br />
+              
+              <input type="checkbox" name="gonName" id="gonId" />
+              <label for="gonId">Gonorreia</label>
+              <br />
+
+              <input type="checkbox" name="herpName" id="herpId" />
+              <label for="herpId">Herpes</label>
+              <br />
+              
+              <input type="checkbox" name="herpZName" id="herpZId" />
+              <label for="herpZId">Herpes Zoster</label>
+              <br />
+
+              <input type="checkbox" name="pneuName" id="pneuId" />
+              <label for="pneuId">Pneumonia</label>
+              <br />
+              
+              <input type="checkbox" name="sifName" id="sifId" />
+              <label for="sifId">Sífilis</label>
+              <br />
+
+              <input type="checkbox" name="toxopName" id="toxopId" />
+              <label for="toxopId">Toxoplasmose</label>
+              <br />
+
+              <input type="checkbox" name="tubercName" id="tubercId" />
+              <label for="tubercId">Tuberculose</label>
+              <br />
+
+              <input type="radio" name="pbOtherDName" id="pbOtherDIdYes" />
+              <label for="pbOtherDIdYes">Outra&#40s&#41</label>
+              <br />
+              <textarea id="textAddOtherDId" maxlength="500" placeholder="Qual ou quais?"></textarea>
+              <br />
+              <hr />
+          </section>
+
+          <section id="sectAnt">
+            <h4>Antecedentes</h4>
+              <fieldset id="fsAntFam">
+                <legend>Familiares</legend>
+                <input type="checkbox" name="FamDiabName" id="FamDiabId" />
+                <label for="FamDiabId">Diabetes</label>
+                <br />
+                <input type="checkbox" name="FamCardName" id="FamCardId" />
+                <label for="FamCardId">Doenças Cardíacas</label>
+                <br />
+                <input type="checkbox" name="FamHemName" id="FamHemId" />
+                <label for="FamHemId">Doenças Hematológicas</label>
+                <br />
+                <input type="checkbox" name="FamPulmName" id="FamPulmId" />
+                <label for="FamPulmId">Doenças Pulmonares</label>
+                <hr />
+              </fieldset>
+
+              <fieldset id="fsAntMed">
+                <legend>Tratamentos Médicos e anteriores</legend>
+                <div id="antMedContainer">
+                  <span> 1&#41</span>
+                  <input type="text" name="antMedName1" id="antMedId1" />
+                  <input type="date" name="antMedDateIniName1" id="antMedDateIniId1" /> até
+                  <input type="date" name="antMedDateEndName1" id="antMedDateEndId1" />
+                  <button type="button" name="addAntMedName1" id="addAntMedId1" class="addAntMed"
+                  value="addAntMed">+</button>
+                  <button type="button" name="removeAntMedName1" id="removeAntMedId1"
+                  class="removeAntMed" value="removeAntMed">-</button>
+                </div>
+              </fieldset>
+
+            <hr />
+          </section>
+
+          <section id="sectFreq">
+            <h4>Frequências de Rotina</h4>
+            <label for="escovId">Escovações por dia:</label>
+              <input list="escovN" name="escovNName" id="escovNId" />
+              <datalist id="escovN">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3+"></option>
+              </datalist>
+              <br />
+
+            <label for="fioId">Uso de Fio Dental por dia:</label>
+              <input list="fioN" name="fioNName" id="fioNId" />
+              <datalist id="fioN">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3+"></option>
+              </datalist>
+              <br />
+
+            <label for="enxgId">Uso de Enxaguante Bucal por dia:</label>
+              <input list="enxgN" name="enxgNName" id="enxgNId" />
+              <datalist id="enxgN">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3+"></option>
+              </datalist>
+              <br />
+
+            <label for="pbAlmSpan">Consumo de Corantes ou Alimentos muito doces:</label>
+            <span id="pbAlmSpan">
+              <input type="radio" name="pbAlmName" id="pbAlmYes"/>
+              <label for="pbAlmYes">Sim</label>
+              <input type="radio" name="pbAlmName" id="pbAlmNo"/>
+              <label for="pbAlmNo">Não</label>
+            </span>
+            <br />
+            <textarea id="textAddAlm" maxlength="500" placeholder="Qual ou quais?"></textarea>
+            <br />
+          
+          </section>
+        </fieldset>
+
+        <div id="divConfirm">
+          <h5>DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA</h5>
+          <input type="checkbox" name="confirmName" id="confirmId" required />
+
+          <label for="confirmLocId"> Local:
+            <input type="text" name="confirmLocName" id="confirmLocId" required />
+          </label>
+
+          <label for="confirmDatId"> Data:
+            <input type="date" name="confirmDatName" id="confirmDatId" required />
+          </label>
+          <hr />
+
+          <label for="confirmAssId"> Assinatura do Paciente:
+            <input type="file" name="confirmAssName" id="confirmAssId" accept="image/*"
+            required />
+          </label>
+
+        </div>
+
+        <button type="button" name="submitFormBut" formaction="_self" formmethod="post" enterkeyhint="send" accesskey="enter">Submeter</button>
+        <!-- Por enquanto como type button, mas será type submit -->
+        <button type="reset">Resetar</button>
+      </form>
+    </main>
+    <script type="module" src="controller.js"></script>
+  </body>
+</html>
+
+<!-- 
+<label for=""></label>
+<input type="radio" name="opName" id="opId" />
+<label>Sim</label>
+<input type="radio" name="opName" id="opId" />
+<label>Não</label>
+<br /> 
+-->
