@@ -126,14 +126,21 @@ export function addAntMedHandler(click) {
     const newBlock = document.createElement("div");
     newBlock.className = "antMedBlock";
     newBlock.innerHTML = `
-      <span>${blockCount}</span>
+    <span>
+      <span>${blockCount}&#41;</span>
       <input type="text" name="antMedName${blockCount}" id="antMedId${blockCount}" />
-      <input type="date" name="antMedDateIniName${blockCount}" id="antMedDateIniId${blockCount}" /> até
-      <input type="date" name="antMedDateEndName${blockCount}" id="antMedDateEndId${blockCount}" />
-      <button type="button" name="addAntMedName${blockCount}" class="addAntMed">+</button>
-      <button type="button" name="removeAntMedName${blockCount}" id="removeAntMedId${blockCount}" 
-      class="removeAntMed" value="removeAntMed">-</button>
-    `;
+    </span>
+    <span>
+      <span>
+        <input type="date" name="antMedDateIniName${blockCount}" id="antMedDateIniId${blockCount}" /> até
+        <input type="date" name="antMedDateEndName${blockCount}" id="antMedDateEndId${blockCount}" />
+        <button type="button" name="addAntMedName${blockCount}" id="addAntMedId${blockCount}" class="addAntMed"
+        value="addAntMed">+</button>
+        <button type="button" name="removeAntMedName${blockCount}" id="removeAntMedId${blockCount}"
+        class="removeAntMed" value="removeAntMed">-</button>
+      </span>
+    </span>
+  `;
     // Adiciona o novo bloco ao contêiner
     antMedContainer.appendChild(newBlock);
   } else if (
@@ -144,4 +151,10 @@ export function addAntMedHandler(click) {
     const antMedContainer = document.getElementById("antMedContainer");
     antMedContainer.removeChild(divToRemove);
   }
+}
+
+export function subForm() {
+  window.alert(
+    "Sistema ainda não pronto\n...mas você teria enviado clicando aqui! :)"
+  );
 }
