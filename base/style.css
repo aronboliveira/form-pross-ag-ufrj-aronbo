@@ -113,7 +113,7 @@ body {
 }
 
 #ag_but {
-  background-image: url("img/ufrj_icon.png");
+  background-image: url("./ufrj_icon.png");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 60%;
@@ -121,7 +121,7 @@ body {
 }
 
 #ef_but {
-  background-image: url("img/ed-fis_ufrj_icon.jfif");
+  background-image: url("./ed-fis_ufrj_icon.jfif");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 60%;
@@ -129,7 +129,7 @@ body {
 }
 
 #od_but {
-  background-image: url("img/od_ufrj_icon.jpg");
+  background-image: url("./od_ufrj_icon.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 60%;
@@ -137,7 +137,7 @@ body {
 }
 
 #nutr_but {
-  background-image: url("img/nut_ufrj_icon.jpg");
+  background-image: url("./nut_ufrj_icon.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 60%;

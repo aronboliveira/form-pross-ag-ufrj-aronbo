@@ -1,0 +1,1334 @@
+<!-- todo incluir hide nos campos de gen após reset -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Este é um formulário para 
+    o Exame Clínico de Educação Física do projeto PROSSaúde — UFRJ" />
+    <title>Exame Clínico — Educação Física & Nutrição</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1 class="hGeneric" id="hForm">Exame Clínico — Educação Física & Nutrição
+        <span class="flexSpan" id="spanHFlex">
+          <input type="date" class="contSec" >
+          <button
+          type="button"
+          class="contSec datBtn atualTratBtn"
+          id="headerDatBtn"
+        >
+          Usar data atual
+        </button>
+        </span>
+      </h1>
+    </header>
+    <main>
+      <form id="formEdFis">
+        <fieldset name="fsAnamGName" id="fsAnamGIdId" class="contPrim fsMain">
+          <legend class="contSec legMain" id="fsAnamGLeg">Identificação</legend>
+
+          <section class="contSec sectionMain" id="fsAnamGSect">
+            <div class="contTerc divMain fsAnamGDiv" id="fsAnamGDiv1">
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG1">
+                <label for="firstNameId" class="contQuint labelIdentif"
+                  >Primeiro Nome (Simples ou Composto):
+                  <input
+                    type="text"
+                    name="firstNameName"
+                    id="firstNameId"
+                    class="contSext inpIdentif"
+                    autocomplete="given-name"
+                    required
+                  />
+                </label>
+                <br />
+              </span>
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG2">
+                <label for="additionalNameId" class="contQuint labelIdentif"
+                  >Sobrenome(s) do Meio, se presentes:
+                  <input
+                    type="text"
+                    name="additionalNameName"
+                    id="additionalNameId"
+                    class="contSext inpIdentif"
+                    autocomplete="additional-name"
+                  />
+                </label>
+                <br />
+              </span>
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG3">
+                <label for="familyNameId" class="contQuint labelIdentif"
+                  >Último Sobrenome:
+                  <input
+                    type="text"
+                    name="familyNameName"
+                    id="familyNameId"
+                    class="contSext inpIdentif"
+                    autocomplete="family-name"
+                    required
+                  />
+                </label>
+                <br />
+              </span>
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG4">
+                <label for="socialNameId" class="contQuint labelIdentif"
+                  >Nome Social:
+                  <input
+                    type="text"
+                    name="socialNameName"
+                    id="socialNameId"
+                    class="contSext inpIdentif"
+                    autocomplete="given-name"
+                  />
+                </label>
+              </span>
+              <br />
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG5">
+                <label for="ageId" class="labelIdentif">Idade:
+                  <input type="number" name="ageName" id="ageId" class="inpIdentif" min="0" max="255" required>
+                </label>
+              </span>
+              <br />
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG6">
+                <label for="genId" class="labelIdentif">Gênero:
+                  <select name="genName" id="genId" required>
+                    <option class="optIdentif optGen" value="masculino" selected>Masculino | Homem binário</option>
+                    <option class="optIdentif optGen" value="feminino">Feminino | Mulher binária</option>
+                    <option class="optIdentif optGen" value="naoBinario">Não-Binário</option>
+                    <option class="optIdentif optGen" value="outros">Outros</option>
+                    <option class="optIdentif optGen" value="undefined">Não deseja declarar</option>
+                  </select>
+                </label>
+                <br />
+              </span>
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG7">
+                <label for="genBirthRelId" class="labelIdentif">Identidade em relação ao gênero designado na nascença:
+                  <select name="genBirthRelName" id="genBirthRelId" required>
+                    <option class="optIdentif optgenBirthRel" value="cis" selected>Cisgênero | Cissexual</option>
+                    <option class="optIdentif optgenBirthRel" value="trans">Transgênero | Transsexual</option>
+                    <option class="optIdentif optgenBirthRel" value="outros">Outros</option>
+                    <option class="optIdentif optgenBirthRel" value="undefined">Não deseja declarar</option>
+                  </select>
+                </label>
+                <br />
+              </span>
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG8" hidden>
+                <label for="genTransId" class="labelIdentif">Estágio da Transição Hormonal:
+                  <select name="genTransName" id="genTransId">
+                    <option class="optIdentif optgenTrans" value="undefined">Indefinido</option>
+                    <option class="optIdentif optgenTrans" value="no">Não está em transição</option>
+                    <option class="optIdentif optgenTrans" value="inicial">Inicial</option>
+                    <option class="optIdentif optgenTrans" value="intermediario">Intermediário</option>
+                    <option class="optIdentif optgenTrans" value="avancado" selected>Avançado</option>
+                  </select>
+                </label>
+                <br />
+              </span>
+
+              <span class="contQuat spanFsAnamG" id="spanFsAnamG9" hidden>
+                <label for="genFisAlinId" class="labelIdentif">Alinhamento de características físicas predominante:
+                  <select name="genFisAlinName" id="genFisAlinId">
+                    <option class="optIdentif optgenFisAlin" value="masculinizado">Masculinizado</option>
+                    <option class="optIdentif optgenFisAlin" value="feminilizado">Feminilizado</option>
+                    <option class="optIdentif optgenFisAlin" value="neutro">Indeterminado | Neutro</option>
+                  </select>
+                </label>
+                <br />
+              </span>
+
+              <hr />
+            </div>
+          </section>
+        </fieldset>
+        <hr />
+
+        <fieldset name="fsComorbName" id="fsComorbId" class="contPrim fsMain">
+          <legend class="contSec" id="fsComorbLeg">Comorbidades
+            <button type="button" class="contQuint countComorb" id="addComorb" >
+              <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-plus-square-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
+              />
+            </svg>
+            </button>
+            <button type="button" class="contQuint countComorb" id="removeComorb">
+              <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-dash-square-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"
+              />
+            </svg>
+            </button>
+          </legend>
+          <table class="contSec" id="tabComorb">
+            <colgroup class="contTerc" id="tabColGrpComorb">
+              <col class="contQuat tabColComorb" id="tabColComorb1" />
+              <col class="contQuat tabColComorb" id="tabColComorb2" />
+              <col class="contQuat tabColComorb" id="tabColComorb3" />
+            </colgroup>
+            <tr class="contTerc tabRowComorb" id="tabRowComorb1">
+              <th class="contQuat tabCelComorb tabCelRowComorb1" id="tabCelRowComorb1_1"></th>
+              <th class="contQuat tabCelComorb tabCelRowComorb1" id="tabCelRowComorb1_2">Nome da Comorbidade</th>
+              <th class="contQuat tabCelComorb tabCelRowComorb1" id="tabCelRowComorb1_3">Data de Diagnóstico</th>
+            </tr>
+            <tr class="contTerc tabRowComorb" id="tabRowComorb2">
+              <td class="contQuat tabCelComorb tabCelRowComorb2" id="tabCelRowComorb2_1">1</td>
+              <td class="contQuat tabCelComorb tabCelRowComorb2" id="tabCelRowComorb2_2">
+                <input type="text" class="contQuint tabInpComorb tabInpRowComorb2" id="tablInpRowComorb2_2"/>
+              </td>
+              <td class="contQuat tabCelComorb tabCelRowComorb2" id="tabCelRowComorb2_3">
+                <input type="date" class="contQuint tabInpComorb tabInpRowComorb2" id="tablInpRowComorb2_3"/>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+        <hr/>
+
+        <fieldset name="fsHabRotName" id="fsHabRotId" class="contPrim fsMain">
+          <legend class="contSec" id="fsHabRotLeg">Hábitos Rotineiros</legend>
+
+          <section class="contSec sectionMain sectHabRot" id="sectAlimRot">
+            <h2 class="contTerc hGeneric" id="hAlm">Alimentação, Hidratação e Excreção Rotineira</h2>
+            <label for="inpRefDiaMin" class="contTerc labAlimRot labRef labRefDia">
+              Faz quantas refeições por dia, no mínimo?
+              <input
+                type="number"
+                min="0"
+                max="255"
+                class="contQuat inpAlimRot inpRef inpRefDia"
+                id="inpRefDiaMin"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpRefDiaMax" class="contTerc labAlimRot labRef labRefDia">
+              Faz quantas refeições por dia, no máximo?
+              <input
+                type="number"
+                min="1"
+                max="255"
+                class="contQuat inpAlimRot inpRef inpRefDia"
+                id="inpRefDiaMax"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpRefCompDiaMin" class="contTerc labAlimRot labRef labRefCompDia">
+              Quantas das refeições diárias são completas, no mínimo?
+              <input
+                type="number"
+                min="0"
+                max="255"
+                class="contQuat inpAlimRot inpRef inpRefCompDia"
+                id="inpRefCompDiaMin"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpRefCompDiaMax" class="contTerc labAlimRot labRef labRefCompDia">
+              Quantas das refeições diárias são completas, no máximo?
+              <input
+                type="number"
+                min="1"
+                max="255"
+                class="contQuat inpAlimRot inpRef inpRefCompDia"
+                id="inpRefCompDiaMax"
+                required
+              />
+            </label>
+            <hr />
+
+            <label for="inpAguaDiaMin" class="contTerc labAlimRot labAgua">
+              Ingere quantos litros de água por dia, no mínimo?
+              <input
+                type="number"
+                min="0"
+                max="255"
+                class="contQuat inpAlimRot inpAgua float"
+                id="inpAguaDiaMin"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpAguaDiaMax" class="contTerc labAlimRot labAgua">
+              Ingere quantos litros de água por dia, no máximo?
+              <input
+                type="number"
+                min="1"
+                max="255"
+                class="contQuat inpAlimRot inpAgua float"
+                id="inpAguaDiaMax"
+                required
+              />
+            </label>
+            <hr />
+
+            <label for="inpElimUrDiaMin" class="contTerc labAlimRot labUr labUrDia">
+              Urina quantas vezes por dia, no mínimo?
+              <input
+                type="number"
+                min="0"
+                max="255"
+                class="contQuat inpAlimRot inpUr inpUrDia"
+                id="inpElimUrDiaMin"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpElimUrDiaMax" class="contTerc labAlimRot labUr labUrDia">
+              Urina quantas vezes por dia, no máximo?
+              <input
+                type="number"
+                min="1"
+                max="255"
+                class="contQuat inpAlimRot inpUr inpUrDia"
+                id="inpElimUrDiaMax"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpElimUrDiaMin" class="contTerc labAlimRot labUr labUrInterval">
+              Qual é o intervalo &#40em horas&#41 entre cada excreção de urina, no mínimo?
+              <input
+                type="number"
+                min="0"
+                max="255"
+                class="contQuat inpAlimRot inpUr inpUrInterval float"
+                id="inpElimUrIntervaloMin"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpElimUrDiaMax" class="contTerc labAlimRot labUr labUrInterval">
+              Qual é o intervalo &#40em horas&#41 entre cada excreção de urina, no máximo?
+              <input
+                type="number"
+                min="0"
+                max="255"
+                class="contQuat inpAlimRot inpUr inpUrInterval float"
+                id="inpElimUrIntervaloMax"
+                required
+              />
+            </label>
+            <br />
+
+            <label for="inpElimUrCor" class="contTerc labAlimRot labUr">
+              Qual é a coloração da urina?
+              <input
+                type="text"
+                list="corUr"
+                class="contQuat inpAlimRot inpUr"
+                id="inpElimUrCor"
+                required
+              />
+              <datalist class="contQuat" id="corUr">
+                <option class="contQuint opCorUr" value="Transparente"></option>
+                <option class="contQuint opCorUr" value="Verde-claro"></option>
+                <option class="contQuint opCorUr" value="Verde-escuro"></option>
+                <option class="contQuint opCorUr" value="Amarelo-claro"></option>
+                <option class="contQuint opCorUr" value="Amarelo-escuro"></option>
+                <option class="contQuint opCorUr" value="Âmbar"></option>
+                <option class="contQuint opCorUr" value="Laranja intenso"></option>
+                <option class="contQuint opCorUr" value="Rosada"></option>
+                <option class="contQuint opCorUr" value="Avermelhada"></option>
+                <option class="contQuint opCorUr" value="Marrom"></option>
+                <option class="contQuint opCorUr" value="Azul"></option>
+                <option class="contQuint opCorUr" value="Arroxeada"></option>
+                <option class="contQuint opCorUr" value="Preta"></option>
+              </datalist>
+            </label>
+            <br />
+
+            <span for="inpElimUrDiaMax" class="contTerc spanAlimRot spanbUr spanProtUr">
+              Proteinúria
+              <input
+                type="radio"
+                class="contQuat inpAlimRot inpUr inpUrRadio"
+                id="CpbinpProtUrRadioYes"
+                name="inpProtUrRadio"
+              />
+              <label for="CpbinpProtUrRadioYes" class="contQuat" id="labCpbinpProtUrRadioYes">Sim
+              <input
+                type="radio"
+                class="contQuat inpAlimRot inpUr inpUrRadio"
+                id="CpbinpProtUrRadioNo"
+                name="inpProtUrRadio"
+              />
+              <label for="CpbinpProtUrRadioNo" class="contQuat" id="labCpbinpProtUrRadioNo">Não
+            </span>
+            <div class="contTerc divMain" id="divAddProtUr">
+              <input type="radio" name="protUrTypeRadio" id="protUrOrtId" class="contQuat cpbOp opProtUr" > Ortostática
+              <input type="radio" name="protUrTypeRadio" id="protUrTrId" class="contQuat cpbOp opProtUr" > Transitória
+              <input type="radio" name="protUrTypeRadio" id="protUrPersistId" class="contQuat cpbOp opProtUr" > Persistente
+              <br />
+              <input type="number" id="protUrLvl" class="contQuat opProtUr" />
+              <label for="protUrLvl" class="contQuat" id="labProtUrLvl">mg/dL
+              </label>
+            </div>
+            <br />
+
+            <label for="inpElimEvDiaMin" class="contTerc labAlimRot labEv labEvDia">
+              Evacua quantas vezes por dia, no mínimo?
+              <input
+                type="number"
+                min="0"
+                max="255"
+                class="contQuat inpAlimRot inpEv inpEvDia"
+                id="inpElimEvDiaMin"
+                required
+              />
+            </label>
+            <br />
+
+          <label for="inpElimEvDiaMax" class="contTerc labAlimRot labEv labEvDia">
+            Evacua quantas vezes por dia, no máximo?
+            <input
+              type="number"
+              min="1"
+              max="255"
+              class="contQuat inpAlimRot inpEv inpEvDia"
+              id="inpElimEvDiaMax"
+              required
+            />
+          </label>
+          <br />
+
+          <label for="inpElimEvDiaMin" class="contTerc labAlimRot labEv labEvIntervalo">
+            Qual é o intervalo &#40em horas&#41 entre cada evacuação, no mínimo?
+            <input
+              type="number"
+              min="0"
+              max="255"
+              class="contQuat inpAlimRot inpEv inpEvIntervalo float"
+              id="inpElimEvIntervaloMin"
+              required
+            />
+          </label>
+          <br />
+
+          <label for="inpElimEvDiaMax" class="contTerc labAlimRot labEv labEvIntervalo">
+            Qual é o intervalo &#40em horas&#41 entre cada evacuação, no máximo?
+            <input
+              type="number"
+              min="0"
+              max="255"
+              class="contQuat inpAlimRot inpEv inpEvIntervalo float"
+              id="inpElimEvIntervaloMax"
+              required
+            />
+          </label>
+
+          <hr />
+        </section>
+
+          <div class="contSec divTab" id="divAtFisRot">
+
+            <span class="contSext spanMain" id="divLvlAtFis">Nível de Atividade Física:
+              <select class="contSet" id="selectLvlAtFis" required>
+                <option value="sedentario" class="contOct opLvlAtFis">Sedentário</option>
+                <option value="leve" class="contOct opLvlAtFis" selected>Leve</option>
+                <option value="moderado" class="contOct opLvlAtFis">Moderado</option>
+                <option value="intenso" class="contOct opLvlAtFis">Intenso</option>
+                <option value="muitoIntenso" class="contOct opLvlAtFis">Muito intenso</option>
+              </select>
+            </span>
+
+            <table class="contTerc" class="tabAtFis tabAtFisRot" id="tabAtFisRot" itemscope>
+              <caption
+                class="contQuat"
+                id="tabCapAtFisRot"
+                itemprop="headerAtFisRot"
+              >
+                Atividades Físicas Rotineiras
+                <button
+                  type="button"
+                  name="addAtFisRotName"
+                  id="addAtFisRotId"
+                  class="contQuint countAtFis countAtFisRot addAtFis addAtFisRot"
+                  value="addComorb"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-plus-square-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  name="removeAtFisRotName"
+                  id="removeAtFisRotId"
+                  class="contQuint countAtFis countAtFisRot removeAtFis removeAtFisRot"
+                  value="removeComorb"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-dash-square-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"
+                    />
+                  </svg>
+                </button>
+              </caption>
+              <colgroup
+                class="contQuat"
+                id="tabColGrpAtFisRot"
+                itemprop="blockAtfisRot"
+              >
+                <col class="contQuint tabColAtFisRot" id="tabColAtFisRot1" itemprop="colAtFisRot" />
+                <col class="contQuint tabColAtFisRot" id="tabColAtFisRot2" itemprop="colAtFisRot" />
+                <col class="contQuint tabColAtFisRot" id="tabColAtFisRot3" itemprop="colAtFisRot" />
+                <col class="contQuint tabColAtFisRot" id="tabColAtFisRot4" itemprop="colAtFisRot" />
+                <col class="contQuint tabColAtFisRot" id="tabColAtFisRot5" itemprop="colAtFisRot" />
+              </colgroup>
+              <tbody
+                class="contQuat"
+                id="tabTbodyAtFisRot"
+                itemprop="blockAtfisRot"
+              >
+                <tr class="contQuint tabRowAtFisRot" id="tabRowAtFisRot1" itemprop="rowAtFisRot">
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot1_1" itemprop="celAtFisRot"></td>
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot1_2">Pratica qual atividade física?</td>
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot1_3">Quantas vezes por semana?</td>
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot1_4">Quanto tempo por sessão, em minutos?</td>
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot1_5">Há quanto tempo, em meses?</td>
+                </tr>
+                <tr class="contQuint tabRowAtFisRot" id="tabRowAtFisRotId2" itemprop="rowAtFisRot">
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot2_1" itemprop="celAtFisRot">1&#41</td>
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot2_2" itemprop="celAtFisRot">
+                    <input type="text" min="0" max="255" class="contSet tabInpAtFisRot tabInpRowAtFisRot2" id="tabInpRowAtFisRot2_1" itemprop="inpAtFisRot" />
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot2_3" itemprop="celAtFisRot">
+                    <input type="number" min="0" max="255" class="contSet inpAtivFis tabInpAtFisRot tabInpRowAtFisRot2" id="tabInpRowAtFisRot2_2" itemprop="inpAtFisRot" />
+                  </td>
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot2_4" itemprop="celAtFisRot">
+                    <input type="number" min="0" max="255" class="contSet tabInpAtFisRot tabInpRowAtFisRot2" id="tabInpRowAtFisRot2_3" itemprop="inpAtFisRot" />
+                  </td>
+                  <td class="contSext tabCelAtFisRot" id="tabCelRowAtFisRot2_5" itemprop="celAtFisRot">
+                    <input type="number" min="0" max="255" class="contSet tabInpAtFisRot tabInpRowAtFisRot2" id="tabInpRowAtFisRot2_4" itemprop="inpAtFisRot" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <hr />
+
+            <table class="contTerc" class="tabAtFis tabAtFisProp" id="tabAtFisProp" itemscope>
+              <caption
+                class="contQuat"
+                id="tabCapAtFisProp"
+                itemprop="headerAtFisProp"
+              >
+                Atividades Físicas Propostas
+                <button
+                  type="button"
+                  name="addAtFisPropName"
+                  id="addAtFisPropId"
+                  class="contQuint countAtFis countAtFisProp addAtFis addAtFisProp"
+                  value="addComorb"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-plus-square-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  name="removeAtFisPropName"
+                  id="removeAtFisPropId"
+                  class="contQuint countAtFis countAtFisProp removeAtFis removeAtFisProp"
+                  value="removeComorb"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-dash-square-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"
+                    />
+                  </svg>
+                </button>
+              </caption>
+              <colgroup
+                class="contQuat"
+                id="tabColGrpAtFisProp"
+                itemprop="blockAtFisProp"
+              >
+                <col class="contQuint tabColAtFisProp" id="tabColAtFisProp1" itemprop="colAtFisProp" />
+                <col class="contQuint tabColAtFisProp" id="tabColAtFisProp2" itemprop="colAtFisProp" />
+                <col class="contQuint tabColAtFisProp" id="tabColAtFisProp3" itemprop="colAtFisProp" />
+                <col class="contQuint tabColAtFisProp" id="tabColAtFisProp4" itemprop="colAtFisProp" />
+                <col class="contQuint tabColAtFisProp" id="tabColAtFisProp5" itemprop="colAtFisProp" />
+              </colgroup>
+              <tbody
+                class="contQuat"
+                id="tabTbodyAtFisProp"
+                itemprop="blockAtFisProp"
+              >
+                <tr class="contQuint tabRowAtFisProp" id="tabRowAtFisProp1" itemprop="rowAtFisProp">
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp1_1" itemprop="celAtFisProp"></td>
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp1_2">Qual atividade?</td>
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp1_3">Quantas vezes por semana?</td>
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp1_4">Quanto tempo por sessão, em minutos?</td>
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp1_5">Por quanto tempo, em meses?</td>
+                </tr>
+                <tr class="contQuint tabRowAtFisProp" id="tabRowAtFisPropId2" itemprop="rowAtFisProp">
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp2_1" itemprop="celAtFisProp">1&#41</td>
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp2_2" itemprop="celAtFisProp">
+                    <input type="text" min="0" max="255" class="contSet tabInpAtFisProp tabInpRowAtFisProp2" id="tabInpRowAtFisProp2_1" itemprop="inpAtFisProp" required />
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp2_3" itemprop="celAtFisProp">
+                    <input type="number" min="0" max="255" class="contSet inpAtivFis tabInpAtFisProp tabInpRowAtFisProp2" id="tabInpRowAtFisProp2_2" itemprop="inpAtFisProp" required />
+                  </td>
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp2_4" itemprop="celAtFisProp">
+                    <input type="number" min="0" max="255" class="contSet tabInpAtFisProp tabInpRowAtFisProp2" id="tabInpRowAtFisProp2_3" itemprop="inpAtFisProp" required />
+                  </td>
+                  <td class="contSext tabCelAtFisProp" id="tabCelRowAtFisProp2_5" itemprop="celAtFisProp">
+                    <input type="number" min="0" max="255" class="contSet tabInpAtFisProp tabInpRowAtFisProp2" id="tabInpRowAtFisProp2_4" itemprop="inpAtFisProp" required />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+          <hr />
+        </fieldset>
+        <hr />
+
+        <fieldset
+          name="fsProgConsName"
+          id="fsProgConsId"
+          class="contPrim fsMain"
+        >
+          <h4 class="hGeneric" id="hProgCons">Progresso em Consultas</h4>
+
+          <fieldset
+            class="contSec fsSub"
+            name="fsSubProgConsName"
+            id="fsProgConsId"
+          >
+            <div class="divTab" id="divTabSVi">
+              <table class="contTerc tabProgCons" id="tabProgSVi" itemscope>
+                <caption
+                  class="contQuat tabCapProg"
+                  id="tabCapProgSVi"
+                  itemprop="headerSVi"
+                >
+                  Sinais Vitais
+                </caption>
+                <colgroup class="contQuat tabColGrpProg" id="tabColGrpProgSVi" itemprop="blockSVi">
+                  <col class="contQuint tabColProg tabColProgSVi" id="tabColProgSVi1" itemprop="colSVi"/>
+                  <col class="contQuint tabColProg tabColProgSVi" id="tabColProgSVi2" itemprop="colSVi"/>
+                  <col class="contQuint tabColProg tabColProgSVi" id="tabColProgSVi3" itemprop="colSVi"/>
+                  <col class="contQuint tabColProg tabColProgSVi" id="tabColProgSVi4" itemprop="colSVi"/>
+                </colgroup>
+                <thead class="contQuat tabTheadProg" id="tabTheadProgSVi" itemprop="blockSVi">
+                  <tr class="contQuint tabRowProg tabRowProgSVi" id="tabRowProgSVi1" itemprop="rowSVi">
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_1" itemprop="celSVi"></th>
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_2" itemprop="celSVi">1ª Consulta</th>
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_3" itemprop="celSVi">2ª Consulta</th>
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_4" itemprop="celSVi">3ª Consulta</th>
+                  </tr>
+                </thead>
+                <tbody class="contQuat tabTbodyProg" id="tabTbodyProgSvi" itemprop="blockSVi">
+                  <tr class="contQuint tabRowProg tabRowProgSVi" id="tabRowProgSVi2" itemprop="rowSVi">
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi2_1" itemprop="celSVi">PA</th>
+                    <td class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi2_2" itemprop="celSVi">
+                      <input type="number" min="0" max="255" class="contSet tabInpProg tabInpProgSVi tabInpRowProgSVi2" id="tabInpRowProgSVi2_2" itemprop="celValueSvi" required />
+                      <label for="tabInpRowProgSVi2_2" class="contSet tabLabProg tabLabProgSvi tabLabRowProgSVi2" id="tabLabRowProgSVi2_2" itempro="celLabSvi">mmHg</label>
+                    </td>
+                    <td class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi2_3" itemprop="celSVi">
+                      <input type="number" min="0" max="255" class="contSet tabInpProg tabInpProgSVi tabInpRowProgSVi2" id="tabInpRowProgSVi2_3" itemprop="celValueSvi" />
+                      <label for="tabInpRowProgSVi2_3" class="contSet tabLabProg tabLabProgSvi tabLabRowProgSVi2" id="tabLabRowProgSVi2_3" itempro="celLabSvi">mmHg</label>
+                      </label>
+                    </td>
+                    <td class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi2_4" itemprop="celSVi">
+                      <input type="number" min="0" max="255" class="contSet tabInpProg tabInpProgSVi tabInpRowProgSVi2" id="tabInpRowProgSVi2_4" itemprop="celValueSvi" />
+                      <label for="tabInpRowProgSVi2_4" class="contSet tabLabProg tabLabProgSvi tabLabRowProgSVi2" id="tabLabRowProgSVi2_4" itempro="celLabSvi">mmHg</label>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi3_1" itemprop="celSVi">FC</th>
+                    <td class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi3_2" itemprop="celSVi">
+                      <input type="number" min="0" max="255" class="contSet tabInpProg tabInpProgSVi tabInpRowProgSVi2" id="tabInpRowProgSVi3_2" itemprop="celValueSvi" required />
+                      <label for="tabInpRowProgSVi3_2" class="contSet tabLabProg tabLabProgSvi tabLabRowProgSVi2" id="tabLabRowProgSVi3_2" itempro="celLabSvi">bpm</label>
+                    </td>
+                    <td class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi3_3" itemprop="celSVi">
+                      <input type="number" min="0" max="255" class="contSet tabInpProg tabInpProgSVi tabInpRowProgSVi2" id="tabInpRowProgSVi3_3" itemprop="celValueSvi" />
+                      <label for="tabInpRowProgSVi3_3" class="contSet tabLabProg tabLabProgSvi tabLabRowProgSVi2" id="tabLabRowProgSVi3_3" itempro="celLabSvi">bpm</label>
+                    </td>
+                    <td class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi2" id="tabCelRowProgSVi3_4" itemprop="celSVi">
+                      <input type="number" min="0" max="255" class="contSet tabInpProg tabInpProgSVi tabInpRowProgSVi2" id="tabInpRowProgSVi3_4" itemprop="celValueSvi" />
+                      <label for="tabInpRowProgSVi3_4" class="contSet tabLabProg tabLabProgSvi tabLabRowProgSVi2" id="tabLabRowProgSVi3_4" itempro="celLabSvi">bpm</label>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <br />
+            </div>
+
+            <div class="divTab" id="divTabMedAnt">
+              <table class="contTerc tabProgCons" id="tabMedAnt" itemscope>
+                <caption
+                  class="contQuat tabCapProgCons"
+                  id="tabCapMedAnt"
+                  itemprop="capMedAnt"
+                >
+                  Medidas Antropométricas &#40exceto Dobras Cutâneas&#41
+                </caption>
+                <colgroup class="contQuat tabCapProgCons" id="tabColGrpMedAnt" itemprop="blockMedAnt">
+                  <col class="contQuint tabColProgCons tabColMedAnt" id="tabColMedAnt1" itemprop="colMedAnt" />
+                  <col class="contQuint tabColProgCons tabColMedAnt" id="tabColMedAnt2" itemprop="colMedAnt" />
+                  <col class="contQuint tabColProgCons tabColMedAnt" id="tabColMedAnt3" itemprop="colMedAnt" />
+                  <col class="contQuint tabColProgCons tabColMedAnt" id="tabColMedAnt4" itemprop="colMedAnt" />
+                </colgroup>
+                <thead class="contQuat tabTheadProgCons" id="tabTheadMedAnt" itemprop="blockMedAnt">
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt1" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_1" itemprop="celMedAnt"></th>
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_2" itemprop="celMedAnt">1ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_3" itemprop="celMedAnt">2ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_4" itemprop="celMedAnt">3ª Consulta</th>
+                  </tr>
+
+                </thead>
+                <tbody class="contQuat tabTbodyProgCons" id="tabTbodyMedAnt" itemprop="blockMedAnt">
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt2" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_1" itemprop="celMedAnt">Peso</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt2 float" id="tabInpRowMedAnt2_2" min="0" max="999" required />
+                      <label for="tabInpRowMedAnt2_2" class="contSet tabLabProgCons tabLabRowMedAnt2" id="tabLabRowMedAnt2_2">kg</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt2 float" id="tabInpRowMedAnt2_3" min="0" max="999" />
+                      <label for="tabInpRowMedAnt2_3" class="contSet tabLabProgCons tabLabRowMedAnt2" id="tabLabRowMedAnt2_3">kg</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt2 float" id="tabInpRowMedAnt2_4" min="0" max="999" />
+                      <label for="tabInpRowMedAnt2_4" class="contSet tabLabProgCons tabLabRowMedAnt2" id="tabLabRowMedAnt2_4">kg</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt3" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_1" itemprop="celMedAnt">Altura</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt3 float" id="tabInpRowMedAnt3_2" min="0" max="255" required />
+                      <label for="tabInpRowMedAnt3_2" class="contSet tabLabProgCons tabLabRowMedAnt3" id="tabLabRowMedAnt3_2">m</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt3 float" id="tabInpRowMedAnt3_3" min="0" max="255" />
+                      <label for="tabInpRowMedAnt3_3" class="contSet tabLabProgCons tabLabRowMedAnt3" id="tabLabRowMedAnt3_3">m</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt3 float" id="tabInpRowMedAnt3_4" min="0" max="255" />
+                      <label for="tabInpRowMedAnt3_4" class="contSet tabLabProgCons tabLabRowMedAnt3" id="tabLabRowMedAnt3_4">m</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt4" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt4" id="tabCelRowMedAnt4_1" itemprop="celMedAnt">Tórax</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt4" id="tabCelRowMedAnt4_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt4 float" id="tabInpRowMedAnt4_2" min="0" max="255" required />
+                      <label for="tabInpRowMedAnt4_2" class="contSet tabLabProgCons tabLabRowMedAnt4" id="tabLabRowMedAnt4_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt4" id="tabCelRowMedAnt4_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt4 float" id="tabInpRowMedAnt4_3" min="0" max="255" />
+                      <label for="tabInpRowMedAnt4_3" class="contSet tabLabProgCons tabLabRowMedAnt4" id="tabLabRowMedAnt4_3">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt4" id="tabCelRowMedAnt4_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt4 float" id="tabInpRowMedAnt4_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt4_4" class="contSet tabLabProgCons tabLabRowMedAnt4" id="tabLabRowMedAnt4_4">cm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt5" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt5" id="tabCelRowMedAnt5_1" itemprop="celMedAnt">Cintura</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt5" id="tabCelRowMedAnt5_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt5 float" id="tabInpRowMedAnt5_2" min="0" max="255" required />
+                      <label for="tabInpRowMedAnt5_2" class="contSet tabLabProgCons tabLabRowMedAnt5" id="tabLabRowMedAnt5_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt5" id="tabCelRowMedAnt5_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt5 float" id="tabInpRowMedAnt5_3" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt5_3" class="contSet tabLabProgCons tabLabRowMedAnt5" id="tabLabRowMedAnt5_3">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt5" id="tabCelRowMedAnt5_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt5 float" id="tabInpRowMedAnt5_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt5_4" class="contSet tabLabProgCons tabLabRowMedAnt5" id="tabLabRowMedAnt5_4">cm</label></td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt6" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt6" id="tabCelRowMedAnt6_1" itemprop="celMedAnt">Quadril</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt6" id="tabCelRowMedAnt6_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt6 float" id="tabInpRowMedAnt6_2" min="0" max="255" required />
+                      <label for="tabInpRowMedAnt6_2" class="contSet tabLabProgCons tabLabRowMedAnt6" id="tabLabRowMedAnt6_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt6" id="tabCelRowMedAnt6_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt6 float" id="tabInpRowMedAnt6_3" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt6_3" class="contSet tabLabProgCons tabLabRowMedAnt6" id="tabLabRowMedAnt6_3">cm</label>
+                    </td>
+                    <td  class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt6" id="tabCelRowMedAnt6_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt6 float" id="tabInpRowMedAnt6_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt6_4" class="contSet tabLabProgCons tabLabRowMedAnt6" id="tabLabRowMedAnt6_4">cm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt7" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt7" id="tabCelRowMedAnt7_1" itemprop="celMedAnt">Cintura × Quadril</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt7" id="tabCelRowMedAnt7_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt7 float" id="tabInpRowMedAnt7_2" min="0" max="255" required  />
+                      <label for="tabInpRowMedAnt7_2" class="contSet tabLabProgCons tabLabRowMedAnt7" id="tabLabRowMedAnt7_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt7" id="tabCelRowMedAnt7_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt7 float" id="tabInpRowMedAnt7_3" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt7_3" class="contSet tabLabProgCons tabLabRowMedAnt7" id="tabLabRowMedAnt7_3">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt7" id="tabCelRowMedAnt7_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt7 float" id="tabInpRowMedAnt7_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt7_4" class="contSet tabLabProgCons tabLabRowMedAnt7" id="tabLabRowMedAnt7_4">cm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt8" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt8" id="tabCelRowMedAnt8_1" itemprop="celMedAnt">Antebraço</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt8" id="tabCelRowMedAnt8_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt8 float" id="tabInpRowMedAnt8_2" min="0" max="255" required />
+                      <label for="tabInpRowMedAnt8_2" class="contSet tabLabProgCons tabLabRowMedAnt8" id="tabLabRowMedAnt8_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt8" id="tabCelRowMedAnt8_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt8 float" id="tabInpRowMedAnt8_3" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt8_3" class="contSet tabLabProgCons tabLabRowMedAnt8" id="tabLabRowMedAnt8_3">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt8" id="tabCelRowMedAnt8_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt8 float" id="tabInpRowMedAnt8_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt8_4" class="contSet tabLabProgCons tabLabRowMedAnt8" id="tabLabRowMedAnt8_4">cm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt9" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt9" id="tabCelRowMedAnt9_1" itemprop="celMedAnt">Braço</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt9" id="tabCelRowMedAnt9_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt9 float" id="tabInpRowMedAnt9_2" min="0" max="255" required  />
+                      <label for="tabInpRowMedAnt9_2" class="contSet tabLabProgCons tabLabRowMedAnt9" id="tabLabRowMedAnt9_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt9" id="tabCelRowMedAnt9_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt9 float" id="tabInpRowMedAnt9_3" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt9_3" class="contSet tabLabProgCons tabLabRowMedAnt9" id="tabLabRowMedAnt9_3">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt9" id="tabCelRowMedAnt9_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt9 float" id="tabInpRowMedAnt9_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt9_4" class="contSet tabLabProgCons tabLabRowMedAnt9" id="tabLabRowMedAnt9_4">cm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt10" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt10" id="tabCelRowMedAnt10_1" itemprop="celMedAnt">Coxa</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt10" id="tabCelRowMedAnt10_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt10 float" id="tabInpRowMedAnt10_2" min="0" max="255" required />
+                      <label for="tabInpRowMedAnt10_2" class="contSet tabLabProgCons tabLabRowMedAnt10" id="tabLabRowMedAnt10_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt10" id="tabCelRowMedAnt10_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt10 float" id="tabInpRowMedAnt10_3" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt10_3" class="contSet tabLabProgCons tabLabRowMedAnt10" id="tabLabRowMedAnt10_3">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt10" id="tabCelRowMedAnt10_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt10 float" id="tabInpRowMedAnt10_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt10_4" class="contSet tabLabProgCons tabLabRowMedAnt10" id="tabLabRowMedAnt10_4">cm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt11" itemprop="rowMedAnt">
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt11" id="tabCelRowMedAnt11_1" itemprop="celMedAnt">Panturrilha</th>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt11" id="tabCelRowMedAnt11_2" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt11 float" id="tabInpRowMedAnt11_2" min="0" max="255" required />
+                      <label for="tabInpRowMedAnt11_2" class="contSet tabLabProgCons tabLabRowMedAnt11" id="tabLabRowMedAnt11_2">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt11" id="tabCelRowMedAnt11_3" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt11 float" id="tabInpRowMedAnt11_3" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt11_3" class="contSet tabLabProgCons tabLabRowMedAnt11" id="tabLabRowMedAnt11_3">cm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt11" id="tabCelRowMedAnt11_4" itemprop="celMedAnt">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowMedAnt11 float" id="tabInpRowMedAnt11_4" min="0" max="255"  />
+                      <label for="tabInpRowMedAnt11_4" class="contSet tabLabProgCons tabLabRowMedAnt11" id="tabLabRowMedAnt11_4">cm</label>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+            <br />
+
+            <div class="divTab" id="divTabDobrCut">
+              <table class="contTerc tabProgCons" id="tabDCut" itemscope>
+                <caption
+                  class="contQuat tabCapProgCons"
+                  id="tabCapDCut"
+                  itemprop="capDCut"
+                >
+                  Dobras Cutâneas
+                <span class="contQuat spanMain spanMainTabProgCons" id="tabSpanDCut">Protocolo:
+                  <select class="contQuint selectTabProgCons" id="tabSelectDCutId" name="tabSelectDCutName" required>
+                    <option value="pollock3" class="contSext opTabProgCons opProtoc" id="opProtocJP3" selected>Jackson/Pollock 3</option>
+                    <option value="pollock3" class="contSext opTabProgCons opProtoc" id="opProtocJP7">Jackson/Pollock 7</option>
+                  </select>
+                </span>
+                </caption>
+                <colgroup class="contQuat tabCapProgCons" id="tabColGrpDCut" itemprop="blockDCut">
+                  <col class="contQuint tabColProgCons tabColDCut" id="tabColDCut1" itemprop="colDCut" />
+                  <col class="contQuint tabColProgCons tabColDCut" id="tabColDCut2" itemprop="colDCut" />
+                  <col class="contQuint tabColProgCons tabColDCut" id="tabColDCut3" itemprop="colDCut" />
+                  <col class="contQuint tabColProgCons tabColDCut" id="tabColDCut4" itmeprop="colDCut" />
+                </colgroup>
+                <thead class="contQuat tabTheadProgCons" id="tabTheadDCut" itemprop="blockDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut1" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_1" itemprop="celDCut"></th>
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_2" itemprop="celDCut">1ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_3" itemprop="celDCut">2ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_4" itemprop="celDCut">3ª Consulta</th>
+                  </tr>
+                </thead>
+                <tbody class="contQuat tabTbodyProgCons" id="tabTbodyDCut" itemprop="blockDCut">
+
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut2" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut2" id="tabCelRowDCut2_1" itemprop="subescapularStr">Subescapular</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut2" id="tabCelRowDCut2_2" itemprop="subescapularNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut2 float" id="tabInpRowDCut2_2" min="0" max="255" />
+                      <label for="tabInpRowDCut2_2" id="labInpRowDCut2_2" class="contSet tabLabProgCons tabLabRowDCut2" id="tabLabRowDCut2_2">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut2" id="tabCelRowDCut2_3" itemprop="subescapularNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut2 float" id="tabInpRowDCut2_3" min="0" max="255"  />
+                      <label for="tabInpRowDCut2_3" id="labInpRowDCut2_3" class="contSet tabLabProgCons tabLabRowDCut2" id="tabLabRowDCut2_3">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut2" id="tabCelRowDCut2_4" itemprop="subescapularNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut2 float" id="tabInpRowDCut2_4" min="0" max="255"  />
+                      <label for="tabInpRowDCut2_4" id="labInpRowDCut2_4" class="contSet tabLabProgCons tabLabRowDCut2" id="tabLabRowDCut2_4">mm</label>
+
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut3" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut3" id="tabCelRowDCut3_1" itemprop="axilarMediaStr">Axilar Média</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut3" id="tabCelRowDCut3_2" itemprop="axilarMediaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut3 float" id="tabInpRowDCut3_2" min="0" max="255" />
+                      <label for="tabInpRowDCut3_2" id="labInpRowDCut3_2" class="contSet tabLabProgCons tabLabRowDCut3" id="tabLabRowDCut3_2">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut3" id="tabCelRowDCut3_3" itemprop="axilarMediaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut3 float" id="tabInpRowDCut3_3" min="0" max="255"  />
+                      <label for="tabInpRowDCut3_3" id="labInpRowDCut3_3" class="contSet tabLabProgCons tabLabRowDCut3" id="tabLabRowDCut3_3">mm</label>
+
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut3" id="tabCelRowDCut3_4" itemprop="axilarMediaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut3 float" id="tabInpRowDCut3_4" min="0" max="255"  />
+                      <label for="tabInpRowDCut3_4" id="labInpRowDCut3_4" class="contSet tabLabProgCons tabLabRowDCut3" id="tabLabRowDCut3_4">mm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut4" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_1" itemprop="coxaStr">Coxa</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_2" itemprop="coxaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut4 float" id="tabInpRowDCut4_2" min="0" max="255" required />
+                      <label for="tabInpRowDCut4_2" id="labInpRowDCut4_2" class="contSet tabLabProgCons tabLabRowDCut4" id="tabLabRowDCut4_2">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_3" itemprop="coxaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut4 float" id="tabInpRowDCut4_3" min="0" max="255"  />
+                      <label for="tabInpRowDCut4_3" id="labInpRowDCut4_3" class="contSet tabLabProgCons tabLabRowDCut4" id="tabLabRowDCut4_3">mm</label>
+
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_4" itemprop="coxaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut4 float" id="tabInpRowDCut4_4" min="0" max="255"  />
+                      <label for="tabInpRowDCut4_4" id="labInpRowDCut4_2" class="contSet tabLabProgCons tabLabRowDCut4" id="tabLabRowDCut4_2">mm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut5" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut5" id="tabCelRowDCut5_1" itemprop="triciptalStr">Tríciptal</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut5" id="tabCelRowDCut5_2" itemprop="triciptalNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut5 float" id="tabInpRowDCut5_2" min="0" max="255" />
+                      <label for="tabInpRowDCut5_2" id="labInpRowDCut5_2" class="contSet tabLabProgCons tabLabRowDCut5" id="tabLabRowDCut5_2">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut5" id="tabCelRowDCut5_3" itemprop="triciptalNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut5 float" id="tabInpRowDCut5_3" min="0" max="255"  />
+                      <label for="tabInpRowDCut5_3" id="labInpRowDCut5_3" class="contSet tabLabProgCons tabLabRowDCut5" id="tabLabRowDCut5_3">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut5" id="tabCelRowDCut5_4" itemprop="triciptalNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut5 float" id="tabInpRowDCut5_4" min="0" max="255"  />
+                      <label for="tabInpRowDCut5_4" id="labInpRowDCut5_4" class="contSet tabLabProgCons tabLabRowDCut5" id="tabLabRowDCut5_4">mm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut6" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut6" id="tabCelRowDCut6_1" itemprop="suprailiacaStr">Suprailíaca</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut6" id="tabCelRowDCut6_2" itemprop="suprailiacaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut6 float" id="tabInpRowDCut6_2" min="0" max="255" />
+                      <label for="tabInpRowDCut6_2" id="labInpRowDCut6_2" class="contSet tabLabProgCons tabLabRowDCut6" id="tabLabRowDCut6_2">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut6" id="tabCelRowDCut6_3" itemprop="suprailiacaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut6 float" id="tabInpRowDCut6_3" min="0" max="255"  />
+                      <label for="tabInpRowDCut6_3" id="labInpRowDCut6_3" class="contSet tabLabProgCons tabLabRowDCut6" id="tabLabRowDCut6_3">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut6" id="tabCelRowDCut6_4" itemprop="suprailiacaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut6 float" id="tabInpRowDCut6_4" min="0" max="255"  />
+                      <label for="tabInpRowDCut6_4" id="labInpRowDCut6_4" class="contSet tabLabProgCons tabLabRowDCut6" id="tabLabRowDCut6_4">mm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut7" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_1" itemprop="peitoralStr">Peitoral</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_2" itemprop="peitoralNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut7 float" id="tabInpRowDCut7_2" min="0" max="255" />
+                      <label for="tabInpRowDCut7_2" id="labInpRowDCut7_2" class="contSet tabLabProgCons tabLabRowDCut7" id="tabLabRowDCut7_2">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_3" itemprop="peitoralNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut7 float" id="tabInpRowDCut7_3" min="0" max="255"  />
+                      <label for="tabInpRowDCut7_3" id="labInpRowDCut7_3" class="contSet tabLabProgCons tabLabRowDCut7" id="tabLabRowDCut7_3">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_4" itemprop="peitoralNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut7 float" id="tabInpRowDCut7_4" min="0" max="255"  />
+                      <label for="tabInpRowDCut7_4" id="labInpRowDCut7_4" class="contSet tabLabProgCons tabLabRowDCut7" id="tabLabRowDCut7_4">mm</label>
+                    </td>
+                  </tr>
+
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut8" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_1" itemprop="abdominalStr">Abdominal</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_2" itemprop="abdominalNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut8 float" id="tabInpRowDCut8_2" min="0" max="255" />
+                      <label for="tabInpRowDCut8_2" id="labInpRowDCut8_2" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_2">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_3" itemprop="abdominalNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut8 float" id="tabInpRowDCut8_3" min="0" max="255"  />
+                      <label for="tabInpRowDCut8_3" id="labInpRowDCut8_3" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_3">mm</label>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_4" itemprop="abdominalNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut8 float" id="tabInpRowDCut8_4" min="0" max="255"  />
+                      <label for="tabInpRowDCut8_4" id="labInpRowDCut8_4" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_4">mm</label>
+                    </td>
+                  </tr>
+                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut9" itemprop="rowDCut">
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_1" itemprop="somaStr">Soma</th>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut9 float" id="tabInpRowDCut9_2" min="0" max="255" required/>
+                      <label for="tabInpRowDCut9_2" id="labInpRowDCut9_2" class="contSet tabLabProgCons tabLabRowDCut9" id="tabLabRowDCut9_2">mm</label>
+                      <button type="button" id="sumDCBtn9_2" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut9 float" id="tabInpRowDCut9_3" min="0" max="255" />
+                      <label for="tabInpRowDCut9_3" id="labInpRowDCut9_3" class="contSet tabLabProgCons tabLabRowDCut9" id="tabLabRowDCut9_3">mm</label>
+                      <button type="button" id="sumDCBtn9_3" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
+                    </td>
+                    <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut9 float" id="tabInpRowDCut9_4" min="0" max="255" />
+                      <label for="tabInpRowDCut9_4" id="labInpRowDCut9_4" class="contSet tabLabProgCons tabLabRowDCut9" id="tabLabRowDCut9_4">mm</label>
+                      <button type="button" id="sumDCBtn9_4" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <div class="divTab" id="divTabInd">
+              <table id="tabIndPerc">
+                <colgroup>
+                  <col />
+                  <col />
+                  <col />
+                </colgroup>
+                <caption>
+                  Índices e Percentuais Corporais
+                </caption>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>1ª Consulta</th>
+                    <th>2ª Consulta</th>
+                    <th>3ª Consulta</th>
+                  </tr>      
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>IMC</th>
+                    <dialog></dialog>
+                    <td>
+                      <input type="number" id="inpImc1Cel2_2" class="tabInpProgCons inpInd inpImc inpCol2" required/>
+                      <label for="inpImc1Cel2_2" id="labImcCel2_2" class="tabInpProgCons labInd labImc">kg/m²</label>
+                      <button type="button" id="btnImc1Cel2_2" class="contSet tabBtn tabBtnProgCons tabBtnInd tabBtnImc tabBtnCol2">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpImc2Cel2_3" class="tabInpProgCons inpInd inpImc inpCol3" />
+                      <label for="inpImc2Cel2_3" id="labImc2Cel2_3" class="tabInpProgCons labInd labImc">kg/m²</label>
+                      <button type="button" id="btnImc1Cel2_3" class="contSet tabBtn tabBtnProgCons tabBtnInd tabBtnImc tabBtnCol3">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpImc3Cel2_4" class="tabInpProgCons inpInd inpImc inpCol4" />
+                      <label for="inpImc3Cel2_4" id="labImc3Cel2_4" class="tabInpProgCons labInd labImc">kg/m²</label>
+                      <button type="button" id="btnImc3Cel2_4" class="contSet tabBtn tabBtnProgCons tabBtnInd tabBtnImc tabBtnCol4">Calcular</button>
+                     </td>
+                  </tr>
+                  <tr>
+                    <th>PGC</th>
+                    <dialog></dialog>
+                    <td>
+                      <input type="number" id="inpPgc1Cel2_2" class="tabInpProgCons inpInd inpPgc inpCol2" required/>
+                      <label for="inpPgc1Cel2_2" id="labPgc1Cel2_2" class="tabInpProgCons labInd labPgc">%</label>
+                      <button type="button" id="btnPgc1Cel2_2" class="contSet tabBtn tabBtnProgCons tabBtnInd tabBtnPgc tabBtnCol2">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpPgc2Cel2_3" class="tabInpProgCons inpInd inpPgc inpCol3" required/>
+                      <label for="inpPgc2Cel2_3" id="labPgc2Cel2_3" class="tabInpProgCons labInd labPgc">%</label>
+                      <button type="button" id="btnPgc2Cel2_3" class="contSet tabBtn tabBtnProgCons tabBtnInd tabBtnPgc tabBtnCol3">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpPgc3Cel2_4" class="tabInpProgCons inpInd inpPgc inpCol4" required/>
+                      <label for="inpPgc3Cel2_4" id="labPgc3Cel2_4" class="tabInpProgCons labInd labPgc">%</label>
+                      <button type="button" id="btnPgc1Cel2_4" class="contSet tabBtn tabBtnProgCons tabBtnInd tabBtnPgc tabBtnCol4">Calcular</button>
+                     </td>
+                  </tr>
+                  <tr>
+                    <th>TMB</th>
+                    <dialog></dialog>
+                    <td>
+                      <input type="number" id="inpTmb1" required/>
+                      <label for="inpTmb1">kcal</label>
+                      <button type="button">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpTmb2"/>
+                      <label for="inpTmb2">kcal</label>
+                      <button type="button">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpTmb3"/>
+                      <label for="inpTmb3">kcal</label>
+                      <button type="button">Calcular</button>
+                     </td>
+                  </tr>
+                  <tr>
+                    <th>GET</th>
+                    <dialog></dialog>
+                    <td>
+                      <input type="number" id="inpGet1"/>
+                      <label for="inpGet1">kcal</label>
+                      <button type="button">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpGet2"/>
+                      <label for="inpGet2">kcal</label>
+                      <button type="button">Calcular</button>
+                    </td>
+                    <td>
+                      <input type="number" id="inpGet3"/>
+                      <label for="inpGet3">kcal</label>
+                      <button type="button">Calcular</button>
+                     </td>
+                  </tr>
+                </tbody>
+              </table>
+              <span>
+                Tipo corporal aplicado:
+                <select id="textBodytype">
+                  <option value="masculino">Masculino | Masculinizado</option>
+                  <option value="feminino">Feminino | Feminilizado</option>
+                  <option value="neutro">Neutro</option>
+                </select>                
+              </span>
+            </div>
+
+            <hr />
+          </fieldset>
+        </fieldset>
+
+        <fieldset name="fsConfirmName" id="fsConfirmId" class="contPrim fsMain">
+          <section
+            class="contSec sectionMain sectionConfirm"
+            id="sectConfirmCheck"
+          >
+            <blockquote class="contTerc declr" id="declrEnd">
+              "DECLARO QUE CONCORDO COM AS AVALIAÇÕES DESCRITAS ACIMA"
+              <label for="confirmId" class="contQuat labConfirm"></label>
+              <input
+                type="checkbox"
+                name="confirmName"
+                id="confirmId"
+                class="contQuat"
+                required
+              />
+            </blockquote>
+            <div class="contTerc divMain" id="divConfirm">
+              <span class="contQuat spanConfirm" id="spanConfirm1">
+                <h3 class="contQuint dicas" id="dicaCiteName">
+                  Você pode apagar o conteúdo inicial abaixo clicando no texto
+                </h3>
+                <h3 class="contQuint dicas" id="dicaUppercase">
+                  As primeiras letras, exceto conjunções, são capitalizadas
+                  automaticamente por padrão. Outras correções podem precisar de
+                  mais texto — Continue digitando!
+                </h3>
+                <cite contenteditable="true" id="citeNameId" class="contQuint"
+                  >Insira Seu Nome Aqui</cite
+                >
+                <button
+                  type="button"
+                  class="contQuint"
+                  id="deactAutocorrectBtn"
+                >
+                  Desativar Autocorreção
+                </button>
+                <hr id="hrCite" />
+              </span>
+
+              <div class="contQuat divSub divConfirm" id="divConfirm2">
+                <label for="confirmLocId" class="contQuint labConfirm">
+                  Local:
+                  <input
+                    type="text"
+                    name="confirmLocName"
+                    id="confirmLocId"
+                    class="contQuint inpConfirm"
+                    value="Rio de Janeiro, Rio de Janeiro"
+                    required
+                  />
+                </label>
+
+                <label for="confirmDatId" class="contQuint labConfirm">
+                  Data:
+                  <input
+                    type="date"
+                    name="confirmDatName"
+                    id="confirmDatId"
+                    class="contQuint inpConfirm"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="contQuint datBtn confirmBtn"
+                    id="confirmDatBtn"
+                  >
+                    Usar data atual
+                  </button>
+                </label>
+                <hr />
+              </div>
+
+              <div class="contQuat divSub divConfirm" id="divConfirm3">
+                <span id="spanAstPct" class="contQuint labConfirm labAst">
+                  Assinatura do Paciente:
+                  <input
+                    type="text"
+                    name="confirmAstName"
+                    id="inpAstConfirmId"
+                    class="contQuint inpAst"
+                  />
+                  <button
+                    type="button"
+                    class="contQuint deActBtn"
+                    id="deactAutocorrectBtnPac"
+                  >
+                    Desativar Autocorreção
+                  </button>
+                  <button
+                    type="button"
+                    class="contQuint astDigtBtn confirmBtn"
+                    id="confirmAstDigtBtn"
+                  >
+                    Usar Assinatura Digital
+                  </button>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="contSec sectionMain sectionConfirm"
+            id="sectConfirmBut"
+          >
+            <button
+              type="submit"
+              name="submitFormButName"
+              id="submitFormButId"
+              class="contTerc confirmBut"
+              formaction="_self"
+              formmethod="POST"
+              enterkeyhint="send"
+              accesskey="enter"
+            >
+              Submeter
+            </button>
+            <button type="reset" class="contTerc confirmBut" id="resetFormBtn">
+              Resetar
+            </button>
+          </section>
+          <hr />
+        </fieldset>
+      </form>
+    </main>
+    <script type="module" src="controller.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+  <footer>
+    <address class="contPrim">
+      <h4 class="contSec hGeneric" id="hAddress">Contato</h4>
+      <div class="contSec contatInf" id="telContatInf">Telefone:</div>
+      <div class="contSec contatInf" id="emailContatInf">Email:</div>
+      <hr />
+    </address>
+  </footer>
+</html>
