@@ -76,7 +76,7 @@ radioButtons.forEach((radio) => {
   radio.addEventListener("keydown", (keydown) => {
     Handlers.opRadioHandler(keydown);
   });
-  radio.addEventListener("dblclick", Handlers.doubleClickHandler.bind(radio));
+  radio.addEventListener("dblclick", () => Handlers.doubleClickHandler(radio));
   // radio.addEventListener("touchstart", Handlers.touchStartHandler);
 });
 

@@ -1490,12 +1490,143 @@ export function switchAutocorrect(click, deactAutocorrectBtn) {
   }
 }
 
-export function showGenFisAlin() {
-  const genFisAlin = document.getElementById("genFisAlinId");
+export function fluxGen(gen, genIniValue, genBirthRel, genTrans, genFisAlin) {
+  let genValue = null;
+  if (gen.value === "masculino" || gen.value === "feminino") {
+    if (genBirthRel.value === "cis") {
+      genValue = genIniValue;
+      hideGenFisAlin(genFisAlin);
+      hideStgTransHorm(genTrans);
+      return genValue;
+    } else if (genBirthRel.value === "trans") {
+      showStgTransHorm(genTrans);
+      if (genTrans.value === "avancado") {
+        genValue = genIniValue;
+        hideGenFisAlin(genFisAlin);
+        return genValue;
+      } else if (
+        genTrans.value === "undefined" ||
+        genTrans.value === "no" ||
+        genTrans.value === "inicial" ||
+        genTrans.value === "intermediario"
+      ) {
+        showGenFisAlin(genFisAlin);
+        const contFeminilizado = document.querySelector(
+          'option[value="feminilizado"]'
+        );
+        const contMasculinizado = document.querySelector(
+          'option[value="masculinizado"]'
+        );
+        if (genTrans.value === "intermediario") {
+          if (gen.value === "masculino") {
+            const isFemSelected = contFeminilizado.selected;
+            if (isFemSelected) {
+              contFeminilizado.removeAttribute("selected");
+            }
+            contMasculinizado.setAttribute("selected", "");
+          }
+          if (gen.value === "feminino") {
+            const isMascSelected = contMasculinizado.selected;
+            if (isMascSelected) {
+              contMasculinizado.removeAttribute("selected");
+            }
+            contFeminilizado.setAttribute("selected", "");
+          }
+        } else {
+          console.log("condição else");
+          const isFemSelected = contFeminilizado.selected;
+          const isMascSelected = contMasculinizado.selected;
+          if (isMascSelected) {
+            contMasculinizado.removeAttribute("selected");
+          }
+          if (isFemSelected) {
+            contFeminilizado.removeAttribute("selected");
+          }
+        }
+        if (genFisAlin.value === "masculinizado") {
+          genValue = "masculino";
+          return genValue;
+        } else if (genFisAlin.value === "feminilizado") {
+          genValue = "feminino";
+          return genValue;
+        } else if (genFisAlin.value === "neutro") {
+          genValue = "neutro";
+          return genValue;
+        }
+      }
+    } else if (
+      genBirthRel.value === "outros" ||
+      genBirthRel.value === "undefined"
+    ) {
+      showGenFisAlin(genFisAlin);
+      if (genFisAlin.value === "masculinizado") {
+        genValue = "masculino";
+        return genValue;
+      } else if (genFisAlin.value === "feminilizado") {
+        genValue = "feminino";
+        return genValue;
+      } else if (genFisAlin.value === "neutro") {
+        genValue = "neutro";
+        return genValue;
+      }
+    }
+  } else if (
+    gen.value === "naoBinario" ||
+    gen.value === "outros" ||
+    gen.value === "undefined"
+  ) {
+    if (genBirthRel.value === "trans") {
+      showStgTransHorm(genTrans);
+    } else {
+      hideStgTransHorm(genTrans);
+    }
+    showGenFisAlin(genFisAlin);
+    if (genFisAlin.value === "masculinizado") {
+      genValue = "masculino";
+      return genValue;
+    } else if (genFisAlin.value === "feminilizado") {
+      genValue = "feminino";
+      return genValue;
+    } else if (genFisAlin.value === "neutro") {
+      genValue = "neutro";
+      return genValue;
+    }
+  }
+}
+
+function showGenFisAlin(genFisAlin) {
   if (genFisAlin) {
     genFisAlin.closest(".spanFsAnamG")?.removeAttribute("hidden");
+    return true;
   } else {
     console.warn("Erro na abertura de genFisAlin");
+  }
+}
+
+function hideGenFisAlin(genFisAlin) {
+  if (genFisAlin) {
+    genFisAlin.closest(".spanFsAnamG")?.setAttribute("hidden", "");
+    return false;
+  } else {
+    console.warn("Erro no fechamento de genFisAlin");
+  }
+}
+
+function showStgTransHorm(genTrans) {
+  if (genTrans) {
+    genTrans.closest(".spanFsAnamG")?.removeAttribute("hidden");
+    return true;
+  } else {
+    console.warn("Erro na abertura de genTrans");
+  }
+}
+
+function hideStgTransHorm(genTrans) {
+  if (genTrans) {
+    genTrans.closest(".spanFsAnamG")?.setAttribute("hidden", "");
+    return false;
+  } else {
+    console.warn("Erro no fechamento de genTrans");
   }
 }
 

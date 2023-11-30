@@ -304,7 +304,7 @@ if (resetFormBtn) {
   console.warn("Botão de Resetar não encontrado");
 }
 
-export function cursorCheckTimer(cursorPosition: number) {
+export function cursorCheckTimer(cursorPosition: number): number | void {
   let selection = window.getSelection();
   if (selection && selection.focusNode !== null) {
     cursorPosition = selection.getRangeAt(0)?.startOffset;
@@ -338,7 +338,7 @@ function applyIndexesCalc(
   }
 }
 
-if (tabDC) {
+if (tabDC && tabDC instanceof HTMLTableElement) {
   const rowsDC = tabDC.getElementsByClassName("tabRowDCut");
   const rowsDCArray = Array.from(rowsDC).filter(
     (rowDC) => rowDC instanceof HTMLTableRowElement
@@ -349,12 +349,42 @@ if (tabDC) {
   const sumDCInps: NodeListOf<HTMLInputElement> = tabDC.querySelectorAll(
     'input[id^="tabInpRowDCut9"]'
   );
+  const protocolo: Element | null = document.getElementById("tabSelectDCutId");
 
   sumDCBtns.forEach((sumDCBtn) => {
     sumDCBtn?.addEventListener("click", () => {
       if (rowsDCArray) Handlers.createArraysRels(sumDCBtn?.id, rowsDCArray);
     });
   });
+
+  if (protocolo && protocolo instanceof HTMLSelectElement) {
+    protocolo.addEventListener("change", () =>
+      Model.changeTabDCutLayout(
+        protocolo as HTMLSelectElement,
+        tabDC as HTMLTableElement
+      )
+    );
+    if (textBodytype && textBodytype instanceof HTMLSelectElement) {
+      textBodytype.addEventListener("change", () =>
+        Model.changeTabDCutLayout(
+          protocolo as HTMLSelectElement,
+          tabDC as HTMLTableElement
+        )
+      );
+    } else {
+      console.warn(
+        `Erro validando campo de Bodytype. Elemento: ${protocolo}, instância: ${Object.prototype.toString
+          .call(textBodytype)
+          .slice(8, -1)}`
+      );
+    }
+  } else {
+    console.warn(
+      `Erro validando campo de Protocolo. Elemento: ${protocolo}, instância: ${Object.prototype.toString
+        .call(protocolo)
+        .slice(8, -1)}`
+    );
+  }
 
   if (tabMedAnt && tabIndPerc) {
     const weightCells: NodeListOf<HTMLInputElement> =
@@ -379,7 +409,22 @@ if (tabDC) {
         });
       });
     }
+  } else {
+    console.warn(
+      `Erro validando Tabelas. Tabela de Medidas Antropométricas: elemento ${tabMedAnt}, instância: ${Object.prototype.toString
+        .call(tabMedAnt)
+        .slice(
+          8,
+          -1
+        )}; Tabela de Índices: elemento ${tabIndPerc}, instância ${Object.prototype.toString
+        .call(tabIndPerc)
+        .slice(8, -1)}`
+    );
   }
 } else {
-  console.warn("Tabela de Dobras Cutâneas não encontrada");
+  console.warn(
+    `Erro validando Tabela de Dobras Cutâneas: elemento ${tabDC}, instância ${Object.prototype.toString
+      .call(tabDC)
+      .slice(8, -1)}`
+  );
 }

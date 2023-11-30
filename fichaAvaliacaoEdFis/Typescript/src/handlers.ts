@@ -346,6 +346,7 @@ export function createArraysRels(
       columnValues
     ) {
       //define qual coluna será utilizada de acordo com a posição do botão e validando se há algum preenchimento na coluna
+      let inputAcc = 0;
       for (let iR = 0; iR < btnRow - 1; iR++) {
         const targCelInp = document.getElementById(
           `tabInpRowDCut${2 + iR}_${btnCol}`
@@ -356,12 +357,42 @@ export function createArraysRels(
               colAcc += parseInt(targCelInp?.value);
             }
           } else if (iR < btnRow - 1) {
-            targCelInp.value = colAcc.toString();
+            const tbodyQuery = document.getElementById("tabTbodyDCut");
+            if (tbodyQuery) {
+              const tBodyChildren = Array.from(tbodyQuery.children);
+              if (tBodyChildren) {
+                for (let iC = 0; iC < tBodyChildren.length; iC++) {
+                  const innerInp = (
+                    tBodyChildren[iC] as HTMLTableRowElement
+                  ).querySelector("input");
+                  if (
+                    !(tBodyChildren[iC] as HTMLTableRowElement).hidden &&
+                    inputAcc <= 3 &&
+                    innerInp &&
+                    innerInp.value !== ""
+                  ) {
+                    inputAcc++;
+                  }
+                }
+              } else {
+                console.warn(
+                  `Erro validando children do tbody. Coleção: ${tBodyChildren}`
+                );
+              }
+              if (inputAcc === 3) {
+                targCelInp.value = colAcc.toString();
+              } else {
+                //TODO DIALOG DE ALERTA
+                console.warn(
+                  `Número de preenchimentos insuficiente. Número obtido: ${inputAcc}; Número exigido: 3`
+                );
+              }
+            }
           }
         }
       }
     } else if (!columnValues) {
-      // const dlgNoValues = document.createElement("dialog");
+      //TODO DIALOG DE ALERTA
     }
   }
 }
@@ -414,74 +445,128 @@ function getRowValues(
 export function changeToAstDigit(
   click: Event,
   toFileInpBtn: HTMLButtonElement
-): void {
-  const useAstDigitRegex: RegExp = /Usar Assinatura Digital/;
-  const useAstDigtRegexObj: RegExp = new RegExp(useAstDigitRegex);
-  const useAstTextRegex: RegExp = /Retornar à Assinatura Escrita/;
-  const useAstTextRegexObj: RegExp = new RegExp(useAstTextRegex);
+) {
+  const useAstDigitRegex = /Usar Assinatura Digital/;
+  const useAstDigtRegexObj = new RegExp(useAstDigitRegex);
+  const useAstTextRegex = /Retornar à Assinatura Escrita/;
+  const useAstTextRegexObj = new RegExp(useAstTextRegex);
+  let labCont: HTMLCollectionOf<Element> | Element[] | undefined =
+    toFileInpBtn.parentElement?.getElementsByClassName("labAst");
+  if (
+    labCont &&
+    !labCont[0] &&
+    (toFileInpBtn.parentElement?.tagName === "LABEL" ||
+      toFileInpBtn.parentElement?.tagName === "SPAN")
+  ) {
+    labCont = Array.of(toFileInpBtn.parentElement);
+  }
 
-  let astCount: number = 0;
-  if (click.target === toFileInpBtn) {
+  let astCount = 0;
+  if (labCont && click.target === toFileInpBtn) {
     if (
       toFileInpBtn.textContent &&
       useAstDigtRegexObj.test(toFileInpBtn.textContent)
     ) {
-      const inpAst: Element = searchPreviousSiblings(toFileInpBtn, "inpAst");
+      // console.log("true teste 1");
+      const inpAst = searchPreviousSiblings(toFileInpBtn, "inpAst");
 
       if (inpAst instanceof HTMLInputElement) {
-        const fileInp: HTMLInputElement = document.createElement("input");
+        const fileInp = document.createElement("input");
         fileInp.type = "file";
-        fileInp.name = inpAst.name;
+        fileInp.name = inpAst.name; //ignorar TS
         fileInp.id = inpAst.id;
         fileInp.className = inpAst.className;
         fileInp.setAttribute("accept", "image/*");
         if (inpAst.required) {
-          fileInp.required = inpAst.required;
+          fileInp.required = inpAst.required; //ignorar TS
         }
         if (inpAst.parentElement) {
           inpAst.parentElement.replaceChild(fileInp, inpAst);
-          toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
+          const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
+          const idInpMatch = fileInp.id.match(/Ast/)?.toString();
+          if (idLabMatch && idInpMatch) {
+            const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
+            const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
+            const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
+            const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
+            labCont[0].id = sliceOneLabId + sliceTwoInpId;
+            toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
+          } else {
+            console.warn("Erro no match de ids do input");
+          }
+          if (
+            toFileInpBtn.previousElementSibling instanceof HTMLButtonElement
+          ) {
+            toFileInpBtn.previousElementSibling?.setAttribute("hidden", "");
+          }
 
           if (fileInp) {
-            fileInp.addEventListener("change", (chose: Event) => {
-              console.log("evento ouvido");
+            fileInp.addEventListener("change", (chose) => {
+              // console.log("evento ouvido");
               try {
                 if (
                   chose.target instanceof HTMLInputElement &&
                   fileInp.files &&
                   fileInp.files.length > 0
                 ) {
-                  const imgFile: File = fileInp.files[0];
-                  console.log(imgFile);
-                  console.log(imgFile.type);
+                  const imgFile = fileInp.files[0];
                   if (imgFile && imgFile.type.startsWith("image")) {
-                    console.log("img reconhecida");
-                    const fileReader: FileReader = new FileReader();
+                    // console.log("img reconhecida");
+                    const fileReader = new FileReader();
 
-                    fileReader.onload = (load: ProgressEvent<FileReader>) => {
+                    fileReader.onload = (load) => {
                       //definir lógica para carregamento
                       //inicia preparo para evento de carregamento
-                      console.log("loading iniciado");
+                      // console.log("loading iniciado");
                       astCount++;
-                      const imgUrl: string | ArrayBuffer | null | undefined =
-                        load.target?.result; //checa a url do file que será carregado
-                      const imgAstDigt: HTMLImageElement =
-                        document.createElement("img"); //cria container
-                      imgAstDigt.className = "imgAstDigit";
-                      imgAstDigt.id = `imgAstDigit${astCount}`;
+                      const imgUrl = load.target?.result; //checa a url do file que será carregado
+                      const imgAstDigt = document.createElement("img"); //cria container
+                      fileInp.id = inpAst.id;
+                      fileInp.className = inpAst.className;
                       imgAstDigt.innerHTML = "";
                       if (typeof imgUrl === "string") {
                         imgAstDigt.src = imgUrl; //associação entre container e file carregado
-                        console.log("string validada");
+                        // console.log("string validada");
                       }
+                      imgAstDigt.id = fileInp.id;
+                      imgAstDigt.className = fileInp.className;
                       imgAstDigt.setAttribute("alt", "Assinatura Digital");
                       imgAstDigt.setAttribute("decoding", "async");
                       imgAstDigt.setAttribute("loading", "eager");
                       imgAstDigt.setAttribute("crossorigin", "anonymous");
-                      imgAstDigt.style.setProperty("max-width", "1006px");
-                      imgAstDigt.style.setProperty("max-height", "552px");
-                      if (fileInp.parentElement) {
+                      imgAstDigt.style.setProperty("max-width", "300px");
+                      imgAstDigt.style.setProperty("max-height", "200px");
+                      if (
+                        fileInp.parentElement &&
+                        labCont &&
+                        labCont.length > 0
+                      ) {
                         fileInp.parentElement.replaceChild(imgAstDigt, fileInp);
+                        const idLabMatch = labCont[0].id
+                          .match(/Ast/)
+                          ?.toString();
+                        const idInpMatch = imgAstDigt.id
+                          .match(/Ast/)
+                          ?.toString();
+                        if (idLabMatch && idInpMatch) {
+                          const idLabMatchIndex =
+                            labCont[0].id.indexOf(idLabMatch);
+                          const idInpMatchIndex =
+                            imgAstDigt.id.indexOf(idInpMatch);
+                          const sliceOneLabId = labCont[0].id.slice(
+                            0,
+                            idLabMatchIndex
+                          );
+                          const sliceTwoInpId =
+                            imgAstDigt.id.slice(idInpMatchIndex);
+                          labCont[0].id = sliceOneLabId + sliceTwoInpId;
+                          console.log(labCont[0].id);
+                        } else {
+                          console.warn("Erro no match de ids do input");
+                        }
+                      } else {
+                        console.warn(`Erro na validação de labCont: elemento ${labCont}
+                        e/ou parent: elemento ${fileInp.parentElement}`);
                       }
 
                       // imgAstDigt.style.width = imgAstDigt.parentElement.style.width;
@@ -503,29 +588,46 @@ export function changeToAstDigit(
           }
         }
       }
-
       //TODO INCLUIR TOKEN ANTI-CSRF QUANDO HOUVER SERVIDOR
+
+      // fileInp.name = inpAst.name;
+      // fileInp.id = inpAst.id;
+      // fileInp.className = inpAst.className;
     } else if (
       toFileInpBtn.textContent &&
       useAstTextRegexObj.test(toFileInpBtn.textContent)
     ) {
-      const inpAst: Element = searchPreviousSiblings(toFileInpBtn, "inpAst");
+      const inpAst =
+        searchPreviousSiblings(toFileInpBtn, "inpAst") ||
+        searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
       if (
         inpAst instanceof HTMLImageElement ||
         inpAst instanceof HTMLInputElement
       ) {
-        console.log("replace direcionado 1");
-        const fileInp: HTMLInputElement = document.createElement("input");
+        const fileInp = document.createElement("input");
         fileInp.type = "text";
-        fileInp.name = "confirmAstName";
-        fileInp.id = "inpAstConfirmId";
-        fileInp.className = "contQuint inpAst";
+        fileInp.name = inpAst.name;
+        fileInp.id = inpAst.id;
+        fileInp.className = inpAst.className;
         fileInp.setAttribute("required", "");
-        console.log("atributos aplicados");
         if (inpAst.parentElement) {
           inpAst.parentElement.replaceChild(fileInp, inpAst);
-          toFileInpBtn.textContent = "Usar Assinatura Digital";
-          console.log("replace direcionado 2");
+          const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
+          const idInpMatch = fileInp.id.match(/Ast/)?.toString();
+          if (idLabMatch && idInpMatch) {
+            const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
+            const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
+            const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
+            const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
+            labCont[0].id = sliceOneLabId + sliceTwoInpId;
+            toFileInpBtn.textContent = "Usar Assinatura Digital";
+            toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+            fileInp.addEventListener("input", () =>
+              Model.autoCapitalizeInputs(fileInp)
+            );
+          } else {
+            console.warn("Erro no match de ids dos inputs");
+          }
         }
       }
     }
@@ -533,7 +635,7 @@ export function changeToAstDigit(
 }
 
 export function resetarFormulario(
-  click: MouseEvent,
+  click: Event,
   toFileInpBtns: NodeListOf<HTMLButtonElement>
 ) {
   if (
@@ -554,7 +656,6 @@ export function resetarFormulario(
       Model.removeFirstClick(editableCite);
     }
 
-    console.log("tofileinp " + toFileInpBtns[0].id + " " + toFileInpBtns[1].id);
     toFileInpBtns.forEach((toFileInpBtn) => {
       if (toFileInpBtn.textContent === "Retornar à Assinatura Escrita") {
         const inpAst =
@@ -572,7 +673,7 @@ export function resetarFormulario(
           fileInp.className = inpAst.className;
           fileInp.setAttribute("required", "");
           if (inpAst.parentElement) {
-            let labCont: HTMLCollectionOf<Element> | Element[] | never[] =
+            let labCont: HTMLCollectionOf<Element> | HTMLElement[] | never[] =
               toFileInpBtn.parentElement?.getElementsByClassName("labAst") ??
               [];
             if (
@@ -580,7 +681,7 @@ export function resetarFormulario(
               (toFileInpBtn.parentElement?.tagName === "LABEL" ||
                 toFileInpBtn.parentElement?.tagName === "SPAN")
             ) {
-              labCont = Array.of(toFileInpBtn.parentElement);
+              labCont = Array.of(toFileInpBtn.parentElement as HTMLElement);
             }
             inpAst.parentElement.replaceChild(fileInp, inpAst);
             const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
@@ -591,9 +692,13 @@ export function resetarFormulario(
               const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
               const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
               labCont[0].id = sliceOneLabId + sliceTwoInpId;
-              console.log(labCont[0].id);
+              fileInp.addEventListener("input", () =>
+                Model.autoCapitalizeInputs(fileInp)
+              );
               toFileInpBtn.textContent = "Usar Assinatura Digital";
               toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+            } else {
+              console.warn("Erro no match de ids do input");
             }
           } else {
             console.warn(`Erro localizando Parent Element de inpAst`);

@@ -21,8 +21,9 @@ const quadrDents = document.getElementsByClassName("quadrMainDiv"); //retorna HT
 const quadrDentsArray = Array.from(quadrDents); // tem que ser aplicada em Arrray, não coleção HTML
 const avElemDents = document.getElementsByClassName("inpAvDent");
 const avElemDentsArray = Array.from(avElemDents);
-const subDivsQuadrs = document.querySelectorAll(".quadrSubDiv");
+// const subDivsQuadrs = document.querySelectorAll(".quadrSubDiv");
 const resetDivsQuadrs = document.querySelectorAll(".resetBut");
+const quadrInps = document.querySelectorAll('input[id^="inpD"]');
 const tratContainer = document.getElementById("tratContainer");
 // const tratTypeSpans = document.querySelectorAll('span[id^="tratTypeSpan"]');
 // const taTrats = document.querySelectorAll("textarea[id^=taTrat");
@@ -59,7 +60,7 @@ radioButtons.forEach((radio) => {
   radio.addEventListener("keydown", (keydown) => {
     Handlers.opRadioHandler(keydown);
   });
-  radio.addEventListener("dblclick", Handlers.doubleClickHandler.bind(radio));
+  radio.addEventListener("dblclick", () => Handlers.doubleClickHandler(radio));
   radio.addEventListener("touchstart", Handlers.touchStartHandler);
 });
 
@@ -107,17 +108,21 @@ document.addEventListener("DOMContentLoaded", () => {
   Model.orderLabels();
 });
 
-subDivsQuadrs.forEach((subDivQuadrs) => {
-  subDivQuadrs.addEventListener("click", (selectedBut) => {
-    Handlers.reorderLabels(selectedBut);
+// subDivsQuadrs.forEach((subDivQuadrs) => {
+//   subDivQuadrs.addEventListener("click", (selectedBut) => {
+//     Handlers.reorderLabels(selectedBut);
+//   });
+// });
+
+resetDivsQuadrs.forEach((resetBtn) => {
+  resetBtn.addEventListener("click", () => {
+    Handlers.resetLabels(resetBtn);
   });
 });
 
-resetDivsQuadrs.forEach((resetDivQuadrs) => {
-  resetDivQuadrs.addEventListener("click", (resetBut) => {
-    Handlers.resetLabels(resetBut);
-  });
-});
+quadrInps.forEach((quadrInp) =>
+  quadrInp.addEventListener("click", () => Handlers.clearQuadrInps(quadrInp))
+);
 
 if (tratContainer) {
   tratContainer.addEventListener("click", (click) =>
@@ -174,7 +179,6 @@ if (resetFormBtn) {
   resetFormBtn.addEventListener("click", (click) =>
     Handlers.resetarFormulario(click, astDigtBtns)
   );
-  console.log("astdigt " + astDigtBtns[0].id + " " + astDigtBtns[1].id);
 } else {
   console.warn("Erro validando Botão de Reset");
 }

@@ -24,72 +24,45 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cursorCheckTimer = void 0;
-const Handlers = __importStar(require("./handlers.js"));
 const Model = __importStar(require("./model.js"));
-const textInputs = document.querySelectorAll('input[type="text"]');
+const Handlers = __importStar(require("./handlers.js"));
+const Classes = __importStar(require("./classes.js"));
 const textareas = document.querySelectorAll("textarea");
-const textConts = [...textareas, ...textInputs];
-const numInps = document.querySelectorAll('input[type="number"]');
-const radioButtons = document.querySelectorAll('input[type="radio"]');
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const textInputs = document.querySelectorAll('input[type="text"]');
+const textConts = [
+    ...textareas,
+    ...textInputs,
+];
 const gen = document.getElementById("genId");
 const genBirthRel = document.getElementById("genBirthRelId");
 const genTrans = document.getElementById("genTransId");
 const genFisAlin = document.getElementById("genFisAlinId");
-// const textBodytype = document.getElementById("textBodytype");
-const antFamChecks = document.querySelectorAll("input[id^='antFam']");
-const antMedContainer = document.getElementById("antMedContainer");
-const telInputs = document.querySelectorAll('input[type="text"][id^="tel"]');
-const emailInputs = document.querySelectorAll('input[id^="email"]');
-const cepElement = document.getElementById("cepId");
-const cepElementBtn = document.getElementById("autoCompCepBtn");
-const qxPrinc = document.getElementById("qxPrinc");
+const textBodytype = document.getElementById("textBodytype");
+const age = document.getElementById("ageId");
+const lvlAtvFis = document.getElementById("selectLvlAtFis");
+const numInps = document.querySelectorAll('input[type="number"]');
+const radioButtons = document.querySelectorAll('input[type="radio"]');
+const comorbBtns = document.getElementsByClassName("countComorb");
+const comorbBtnsArray = Array.from(comorbBtns);
+const ativFisContainerBtns = document.getElementsByClassName("countAtFis");
+const ativFisContainerBtnsArray = Array.from(ativFisContainerBtns);
+const tabMedAnt = document.getElementById("tabMedAnt");
+const tabDC = document.getElementById("tabDCut");
+const tabIndPerc = document.getElementById("tabIndPerc");
 const editableCite = document.querySelector('cite[contenteditable="true"]');
 const astDigtBtns = document.querySelectorAll('button[id$="AstDigtBtn');
 const deactAutocorrectBtns = document.querySelectorAll('button[id^="deactAutocorrectBtn"]');
 const dateBtns = document.querySelectorAll('button[id$="DatBtn"]');
 const resetFormBtn = document.getElementById("resetFormBtn");
 const subButton = document.getElementById("submitFormButId");
-const allInputs = Array.from([
-    ...textConts,
-    editableCite,
-    ...numInps,
-    ...radioButtons,
-    ...checkboxes,
-]).flat(1);
-const JSONBtn = document.getElementById("btnJSON");
-if (JSONBtn && allInputs.length > 0) {
-    let formDescription = [[], []];
-    JSONBtn.addEventListener("click", () => {
-        if (formDescription && formDescription[0] && formDescription[1]) {
-            formDescription = Handlers.getJSONDesc(allInputs);
-            const JSONBlob = new Blob([JSON.stringify(formDescription[1])], {
-                type: "application/json",
-            });
-            const JSONLink = document.createElement("a");
-            JSONLink.id = JSONBtn.id;
-            JSONLink.className = JSONBtn.className;
-            JSONLink.href = URL.createObjectURL(JSONBlob);
-            JSONLink.download = "formData.json";
-            JSONBtn.replaceWith(JSONLink);
-        }
-        else {
-            console.warn(`Erro obtendo formDescription`);
+textConts.forEach(function (textCont) {
+    textCont.addEventListener("input", function (input) {
+        if (input.target &&
+            (input.target instanceof HTMLTextAreaElement ||
+                input.target instanceof HTMLInputElement)) {
+            Model.autoCapitalizeInputs(input.target);
         }
     });
-}
-textConts.forEach(function (textCont) {
-    const isTelInput = textCont.classList.contains("inpTel");
-    const isEmailInput = textCont.classList.contains("inpEmail");
-    if (!isTelInput && !isEmailInput && !(textCont.id === "cepId")) {
-        textCont.addEventListener("input", function (input) {
-            if (input.target &&
-                (input.target instanceof HTMLTextAreaElement ||
-                    input.target instanceof HTMLInputElement)) {
-                Model.autoCapitalizeInputs(input.target);
-            }
-        });
-    }
 });
 numInps.forEach(function (numInp) {
     numInp.addEventListener("input", function (input) {
@@ -98,6 +71,19 @@ numInps.forEach(function (numInp) {
         }
     });
 });
+if (radioButtons) {
+    radioButtons.forEach((radio) => {
+        radio.addEventListener("keydown", (keydown) => {
+            Handlers.opRadioHandler(keydown);
+        });
+        radio.addEventListener("change", () => Handlers.cpbInpHandler(radio));
+        radio.addEventListener("keydown", () => Handlers.cpbInpHandler(radio));
+        radio.addEventListener("dblclick", Handlers.doubleClickHandler);
+    });
+}
+else {
+    console.warn("Radios não encontrados");
+}
 function checkAllGenConts(gen, genBirthRel, genTrans, genFisAlin) {
     let isGenValid = false;
     let isGenBirthRelValid = false;
@@ -171,74 +157,49 @@ function checkAllGenConts(gen, genBirthRel, genTrans, genFisAlin) {
     }
 }
 let areAllGenContChecked = checkAllGenConts(gen, genBirthRel, genTrans, genFisAlin);
-if (areAllGenContChecked && gen instanceof HTMLSelectElement) {
+if (areAllGenContChecked &&
+    gen instanceof HTMLSelectElement &&
+    textBodytype &&
+    textBodytype instanceof HTMLSelectElement) {
     let genValue = gen?.value;
     if (typeof genValue === "string") {
         gen?.addEventListener("change", () => {
             genValue = Model.fluxGen(gen, gen?.value, genBirthRel, genTrans, genFisAlin);
+            console.log("gen value " + genValue);
+            textBodytype.value = genValue;
         });
         genBirthRel?.addEventListener("change", () => {
             genValue = Model.fluxGen(gen, gen?.value, genBirthRel, genTrans, genFisAlin);
+            console.log("gen value " + genValue);
+            textBodytype.value = genValue;
         });
         genTrans?.addEventListener("change", () => {
             genValue = Model.fluxGen(gen, gen?.value, genBirthRel, genTrans, genFisAlin);
+            console.log("gen value " + genValue);
+            textBodytype.value = genValue;
         });
         genFisAlin?.addEventListener("change", () => {
             genValue = Model.fluxGen(gen, gen?.value, genBirthRel, genTrans, genFisAlin);
+            console.log("gen value " + genValue);
+            textBodytype.value = genValue;
         });
     }
 } //TS não reconhece o filtro feito pela função anterior
-telInputs.forEach((telInput) => {
-    telInput.addEventListener("input", (inputTel) => {
-        if (inputTel.target && inputTel.target instanceof HTMLInputElement) {
-            Model.formatTel(inputTel.target);
-        }
-    });
+comorbBtnsArray.forEach((comorbBtn) => {
+    if (comorbBtn && comorbBtn instanceof HTMLButtonElement) {
+        comorbBtn.addEventListener("click", () => Handlers.addRowComorb(comorbBtn));
+    }
 });
-emailInputs.forEach((emailInput) => {
-    emailInput.addEventListener("click", () => Model.addEmailExtension(emailInput));
-    emailInput.addEventListener("input", () => Model.addEmailExtension(emailInput));
+ativFisContainerBtnsArray.forEach((ativFisContainerBtn) => {
+    if (ativFisContainerBtn && ativFisContainerBtn instanceof HTMLButtonElement) {
+        ativFisContainerBtn.addEventListener("click", () => Handlers.addRowAtivFis(ativFisContainerBtn));
+    }
 });
-radioButtons.forEach((radio) => {
-    radio.addEventListener("keydown", (keydown) => {
-        Handlers.opRadioHandler(keydown);
-    });
-    radio.addEventListener("change", Handlers.cpbInpHandler);
-    radio.addEventListener("keydown", Handlers.cpbInpHandler);
-    radio.addEventListener("dblclick", () => Handlers.doubleClickHandler(radio));
-    radio.addEventListener("touchstart", Handlers.touchStartHandler);
-    radio.addEventListener("change", Handlers.deactTextInput);
-});
-antFamChecks.forEach((antFamCheck) => {
-    antFamCheck.addEventListener("change", Handlers.cpbInpHandler);
-    antFamCheck.addEventListener("dblclick", () => Handlers.doubleClickHandler(antFamCheck));
-});
-if (antMedContainer) {
-    antMedContainer.addEventListener("click", Handlers.addAntMedHandler);
-}
 dateBtns.forEach(function (dateBtn) {
-    dateBtn.addEventListener("click", (activation) => {
-        Handlers.useCurrentDate(activation, dateBtn);
+    dateBtn.addEventListener("click", function (activation) {
+        return Handlers.useCurrentDate(activation, dateBtn);
     });
 });
-if (cepElement &&
-    cepElement instanceof HTMLInputElement &&
-    cepElementBtn &&
-    cepElementBtn instanceof HTMLButtonElement) {
-    cepElement.addEventListener("input", () => Model.formatCEP(cepElement));
-    cepElement.addEventListener("input", () => {
-        let isCepBtnOff = Handlers.enableCEPBtn(cepElement.value.length, cepElementBtn);
-        if (cepElementBtn &&
-            cepElementBtn instanceof HTMLButtonElement &&
-            !isCepBtnOff) {
-            cepElementBtn.addEventListener("click", () => Handlers.searchCEP(cepElement));
-        }
-    });
-}
-if (qxPrinc && qxPrinc instanceof HTMLTextAreaElement) {
-    qxPrinc.addEventListener("click", () => Model.addDblQuotes(qxPrinc));
-    qxPrinc.addEventListener("input", () => Model.addDblQuotes(qxPrinc));
-}
 if (editableCite) {
     let firstClick = true;
     const citeClickHandler = function (click) {
@@ -255,6 +216,9 @@ if (editableCite) {
     });
     editableCite.addEventListener("click", citeClickHandler);
 }
+else {
+    console.warn("Cite editável não encontrado");
+}
 deactAutocorrectBtns.forEach(function (deactAutocorrectBtn) {
     deactAutocorrectBtn.addEventListener("click", function (click) {
         return Model.switchAutocorrect(click, deactAutocorrectBtn);
@@ -268,8 +232,14 @@ astDigtBtns.forEach(function (astDigtBtn) {
 if (subButton) {
     subButton.addEventListener("click", Handlers.subForm);
 }
+else {
+    console.warn("Botão de Submeter não encontrado");
+}
 if (resetFormBtn) {
     resetFormBtn.addEventListener("click", (click) => Handlers.resetarFormulario(click, astDigtBtns));
+}
+else {
+    console.warn("Botão de Resetar não encontrado");
 }
 function cursorCheckTimer(cursorPosition) {
     let selection = window.getSelection();
@@ -281,3 +251,75 @@ function cursorCheckTimer(cursorPosition) {
     }
 }
 exports.cursorCheckTimer = cursorCheckTimer;
+//TODO AGUARDAR REUNIÃO
+//TODO INCLUIR CÁLCULO DE IMC/TMC/GET
+//TODO FINALIZAR CÁLCULO DE PGC
+function applyIndexesCalc(gen, age, sumDCut, weight, height) {
+    let person = {};
+    if (gen instanceof HTMLSelectElement) {
+        if (gen.value === "masculino") {
+            person = new Classes.Man(30, 70, 170, 60); //TODO VALORES HARDCODED PARA FINS DE TESTE
+            // person = new Classes.Man(age, weight, height, sumDCut);
+        }
+        else if (gen.value === "feminino") {
+            person = new Classes.Woman(30, 70, 170, 60);
+            // person = new Classes.Woman(age, weight, height, sumDCut);
+        }
+        if (person) {
+        }
+    }
+}
+if (tabDC && tabDC instanceof HTMLTableElement) {
+    const rowsDC = tabDC.getElementsByClassName("tabRowDCut");
+    const rowsDCArray = Array.from(rowsDC).filter((rowDC) => rowDC instanceof HTMLTableRowElement);
+    const sumDCBtns = tabDC.querySelectorAll('button[id^="sumDCBtn"]');
+    const sumDCInps = tabDC.querySelectorAll('input[id^="tabInpRowDCut9"]');
+    const protocolo = document.getElementById("tabSelectDCutId");
+    sumDCBtns.forEach((sumDCBtn) => {
+        sumDCBtn?.addEventListener("click", () => {
+            if (rowsDCArray)
+                Handlers.createArraysRels(sumDCBtn?.id, rowsDCArray);
+        });
+    });
+    if (protocolo && protocolo instanceof HTMLSelectElement) {
+        protocolo.addEventListener("change", () => Model.changeTabDCutLayout(protocolo, tabDC));
+        if (textBodytype && textBodytype instanceof HTMLSelectElement) {
+            textBodytype.addEventListener("change", () => Model.changeTabDCutLayout(protocolo, tabDC));
+        }
+        else {
+            console.warn(`Erro validando campo de Bodytype. Elemento: ${protocolo}, instância: ${Object.prototype.toString
+                .call(textBodytype)
+                .slice(8, -1)}`);
+        }
+    }
+    else {
+        console.warn(`Erro validando campo de Protocolo. Elemento: ${protocolo}, instância: ${Object.prototype.toString
+            .call(protocolo)
+            .slice(8, -1)}`);
+    }
+    if (tabMedAnt && tabIndPerc) {
+        const weightCells = tabMedAnt.querySelectorAll('input^=["tabInpRowMedAnt2"]');
+        const heightCells = tabMedAnt.querySelectorAll('input^=["tabInpRowMedAnt3"]');
+        const tabBtnsInd = tabIndPerc.getElementsByClassName("tabBtnInd");
+        const tabBtnsIndArray = Array.from(tabBtnsInd).filter((btn) => btn instanceof HTMLButtonElement);
+        if (gen instanceof HTMLSelectElement && age instanceof HTMLInputElement) {
+            tabBtnsIndArray?.forEach((tabBtnInd) => {
+                tabBtnInd?.addEventListener("click", () => {
+                    applyIndexesCalc(gen, age, sumDCInps[0], weightCells[0], heightCells[0]);
+                });
+            });
+        }
+    }
+    else {
+        console.warn(`Erro validando Tabelas. Tabela de Medidas Antropométricas: elemento ${tabMedAnt}, instância: ${Object.prototype.toString
+            .call(tabMedAnt)
+            .slice(8, -1)}; Tabela de Índices: elemento ${tabIndPerc}, instância ${Object.prototype.toString
+            .call(tabIndPerc)
+            .slice(8, -1)}`);
+    }
+}
+else {
+    console.warn(`Erro validando Tabela de Dobras Cutâneas: elemento ${tabDC}, instância ${Object.prototype.toString
+        .call(tabDC)
+        .slice(8, -1)}`);
+}

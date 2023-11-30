@@ -21,8 +21,9 @@
   <body>
     <header>
       <h1 class="contPrim hGeneric" id="hForm">Anamnese Geral
+        <button type="button" class="contSec" id="btnJSON">Gerar JSON</button>
         <span class="flexSpan" id="spanHFlex">
-          <input type="date" class="contSec" >
+          <input type="date" class="contSec" id="dateHeader">
           <button
           type="button"
           class="contSec datBtn atualTratBtn"
@@ -113,7 +114,7 @@
                 </span>
   
                 <span class="contQuat spanMain fsAnamGSpan" id="fsAnamGSpan21">
-                  <label for="tel2CountryCodeId" class="labelIdentif">Se estrangeiro, informe o código do País:
+                  <label for="tel2CountryCodeId" class="labelIdentif">Se estrangeiro (secundário), informe o código do País:
                     <input type="number" name="tel2CountryCodeName" id="tel2CountryCodeId" class="inpIdentif" min="1" max="999" autocomplete="tel-country-code" />
                   </label>
                   <br />  
@@ -262,59 +263,54 @@
               </span>
             </div>
 
-            <div class="contTerc divMain fsAnamGDiv" id="fsAnamGDiv5">
-              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan13">
-                <label for="genId" class="labelIdentif">Gênero:
-                  <select name="genName" id="genId" required>
-                    <option class="optIdentif optGen" value="masculino">Masculino</option>
-                    <option class="optIdentif optGen" value="feminino">Feminino</option>
-                    <option class="optIdentif optGen" value="nao-binario">Não-Binário</option>
-                    <option class="optIdentif optGen" value="travesti">Travesti</option>
-                    <option class="optIdentif optGen" value="neutro">Neutro</option>
-                    <option class="optIdentif optGen" value="agenero">Agênero</option>
-                    <option class="optIdentif optGen" value="outros">Outros</option>
-                    <option selected class="optIdentif optGen" value="undefined">Não desejo declarar</option>
-                  </select>
-                </label>
-                <br />
-              </span>
+            <span class="contQuat spanFsAnamG" id="spanFsAnamG13">
+              <label for="genId" class="labelIdentif">Gênero:
+                <select name="genName" id="genId" required>
+                  <option class="optIdentif optGen" value="masculino" selected>Masculino | Homem binário</option>
+                  <option class="optIdentif optGen" value="feminino">Feminino | Mulher binária</option>
+                  <option class="optIdentif optGen" value="naoBinario">Não-Binário</option>
+                  <option class="optIdentif optGen" value="outros">Outros</option>
+                  <option class="optIdentif optGen" value="undefined">Não deseja declarar</option>
+                </select>
+              </label>
+              <br />
+            </span>
 
-              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan16">
-                <label for="racaId" class="labelIdentif">Etnia/Cor:
-                  <input type="text" list="listEtn" name="profName" id="racaId" class="inpIdentif" maxlength="100" />
-                  <datalist id="listEtn">
-                    <option value="Amarelo"></option>
-                    <option value="Branco"></option>
-                    <option value="Indígena"></option>
-                    <option value="Pardo"></option>
-                    <option value="Preto"></option>
-                    <option value="Outros"></option>
-                  </datalist>
-                </label>
-                <br />
-              </span>
-    
-              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan14">
-                <label for="estCivId" class="labelIdentif">Estado Civil:
-                  <select name="estCivName" id="estCivId" required>
-                    <option class="optIdentif optEstCiv" value="casado">Casado&#40a/e&#41</option>
-                    <option class="optIdentif optEstCiv" value="desquitado">Desquitado&#40a/e&#41</option>
-                    <option class="optIdentif optEstCiv" value="divorciado">Divorciado&#40a/e&#41</option>
-                    <option class="optIdentif optEstCiv" value="separado">Separado&#40a/e&#41</option>
-                    <option selected class="optIdentif optEstCiv" value="solteiro">Solteiro&#40a/e&#41</option>
-                  </select>
-                </label>
-                <br />
-              </span>
-    
-              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan15">
-                <label for="profId" class="labelIdentif">Profissão:
-                  <input type="text" name="profName" id="profId" class="inpIdentif" maxlength="100" />
-                </label>
-                <br />
-              </span>
+            <span class="contQuat spanFsAnamG" id="spanFsAnamG14">
+              <label for="genBirthRelId" class="labelIdentif">Identidade em relação ao gênero designado na nascença:
+                <select name="genBirthRelName" id="genBirthRelId" required>
+                  <option class="optIdentif optgenBirthRel" value="cis" selected>Cisgênero | Cissexual</option>
+                  <option class="optIdentif optgenBirthRel" value="trans">Transgênero | Transsexual</option>
+                  <option class="optIdentif optgenBirthRel" value="outros">Outros</option>
+                  <option class="optIdentif optgenBirthRel" value="undefined">Não deseja declarar</option>
+                </select>
+              </label>
+              <br />
+            </span>
 
-            </div>
+            <span class="contQuat spanFsAnamG" id="spanFsAnamG15" hidden>
+              <label for="genTransId" class="labelIdentif">Estágio da Transição Hormonal:
+                <select name="genTransName" id="genTransId">
+                  <option class="optIdentif optgenTrans" value="undefined">Indefinido</option>
+                  <option class="optIdentif optgenTrans" value="no">Não está em transição</option>
+                  <option class="optIdentif optgenTrans" value="inicial">Inicial</option>
+                  <option class="optIdentif optgenTrans" value="intermediario">Intermediário</option>
+                  <option class="optIdentif optgenTrans" value="avancado" selected>Avançado</option>
+                </select>
+              </label>
+              <br />
+            </span>
+
+            <span class="contQuat spanFsAnamG" id="spanFsAnamG16" hidden>
+              <label for="genFisAlinId" class="labelIdentif">Alinhamento de características físicas predominante:
+                <select name="genFisAlinName" id="genFisAlinId">
+                  <option class="optIdentif optgenFisAlin" value="masculinizado">Masculinizado</option>
+                  <option class="optIdentif optgenFisAlin" value="feminilizado">Feminilizado</option>
+                  <option class="optIdentif optgenFisAlin" value="neutro">Indeterminado | Neutro</option>
+                </select>
+              </label>
+              <br />
+            </span>
 
           </section>
           <hr />  
@@ -343,190 +339,190 @@
 
           <section class="sectionMain sectionConfirm" id="fsAnamGRadSectId">
             <span class="contTerc spanMain spanMainFsAnamGRad" id="febrRSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="febrRSpan">Febre Reumática</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="febrRSpanSub">Febre Reumática</span>
               <input type="radio" name="febrRName" id="febrRYes" class="radOp radYes" tabindex="0"/>
-              <label for="febrRYes" class="labOp">Sim</label>
+              <label for="febrRYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="febrRName" id="febrRNo" class="radOp radNo" tabindex="0"/>
-              <label for="febrRNo" class="labOp">Não</label>
+              <label for="febrRNo" class="labOp boolOp">Não</label>
             </span>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="hepSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="hepSpan">Hepatite ou Outra&#40s&#41 Doença&#40s&#41 Hepática&#40s&#41</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="hepSpanSub">Hepatite ou Outra&#40s&#41 Doença&#40s&#41 Hepática&#40s&#41</span>
               <input type="radio" name="hepName" id="CpbHepYes" class="radOp radYes" />
-              <label for="CpbHepYes" class="labOp">Sim</label>
+              <label for="CpbHepYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="hepName" id="CpbHepNo" class="radOp radNo" />
-              <label for="CpbHepNo" class="labOp">Não</label>
+              <label for="CpbHepNo" class="labOp boolOp">Não</label>
             </span>
             <div class="contQuat divMain" id="divAddHep">
-              <input type="checkbox" name="hepAName" id="hepAId" class="cpbOp opHep" > A
-              <input type="checkbox" name="hepBName" id="hepBId" class="cpbOp opHep" > B
-              <input type="checkbox" name="hepCName" id="hepCId" class="cpbOp opHep" > C
-              <input type="checkbox" name="hepDName" id="hepDId" class="cpbOp opHep" > D
-              <input type="checkbox" name="hepEName" id="hepEId" class="cpbOp opHep" > E
-              <input type="checkbox" name="hepInfcName" id="hepInfcId" class="cpbOp opHep" /> Induzida por Outras Infecções
+              <input type="checkbox" name="hepAName" id="hepAId" class="cpbOp indivOp opHep" > A
+              <input type="checkbox" name="hepBName" id="hepBId" class="cpbOp indivOp opHep" > B
+              <input type="checkbox" name="hepCName" id="hepCId" class="cpbOp indivOp opHep" > C
+              <input type="checkbox" name="hepDName" id="hepDId" class="cpbOp indivOp opHep" > D
+              <input type="checkbox" name="hepEName" id="hepEId" class="cpbOp indivOp opHep" > E
+              <input type="checkbox" name="hepInfcName" id="hepInfcId" class="cpbOp indivOp opHep" /> Induzida por Outras Infecções
               <br />
-              <input type="checkbox" name="hepImunName" id="hepImunId" class="cpbOp opHep" /> Autoimune
-              <input type="checkbox" name="hepOncName" id="hepOncId" class="cpbOp opHep" /> Oncológica
+              <input type="checkbox" name="hepImunName" id="hepImunId" class="cpbOp indivOp opHep" /> Autoimune
+              <input type="checkbox" name="hepOncName" id="hepOncId" class="cpbOp indivOp opHep" /> Oncológica
               <br />
-              <input type="checkbox" name="hepAlcName" id="hepAlcId" class="cpbOp opHep" /> Alcoólica
-              <input type="checkbox" name="hepDrgName" id="hepDrgId" class="cpbOp opHep" /> Induzida por Toxinas, Medicamentos ou Outra&#40s&#41 Droga&#40s&#41
+              <input type="checkbox" name="hepAlcName" id="hepAlcId" class="cpbOp indivOp opHep" /> Alcoólica
+              <input type="checkbox" name="hepDrgName" id="hepDrgId" class="cpbOp indivOp opHep" /> Induzida por Toxinas, Medicamentos ou Outra&#40s&#41 Droga&#40s&#41
             </div>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="CpbDiabSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="CpbDiabSpan">Diabetes</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="CpbDiabSpanSub">Diabetes</span>
               <input type="radio" name="pbDiabName" id="CpbDiabYes" class="radOp radYes" />
-              <label for="CpbDiabYes" class="labOp">Sim</label>
+              <label for="CpbDiabYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbDiabName" id="CpbDiabNo" class="radOp radNo" />
-              <label for="CpbDiabNo" class="labOp">Não</label>
+              <label for="CpbDiabNo" class="labOp boolOp">Não</label>
             </span>
             <div class="contQuat divMain" id="divAddDiab">
-              <input type="checkbox" name="diabTipo1Name" id="diabTipo1Id" class="cpbOp opDiab opDiabIndiv" > Tipo 1
-              <input type="checkbox" name="diabTipo2Name" id="diabTipo2Id" class="cpbOp opDiab opDiabIndiv" > Tipo 2
-              <input type="checkbox" name="diabGestName" id="diabGestId" class="cpbOp opDiab opDiabIndiv" > Gestacional
-              <input type="checkbox" name="diabInsName" id="diabInsId" class="cpbOp opDiab opDiabIndiv" > Insípido
-              <input type="checkbox" name="diabLadaName" id="diabLadaId" class="cpbOp opDiab opDiabIndiv" > LADA
-              <input type="checkbox" name="diabModyName" id="diabModyId" class="cpbOp opDiab opDiabIndiv" /> MODY
+              <input type="checkbox" name="diabTipo1Name" id="diabTipo1Id" class="cpbOp indivOp opDiab opDiabIndiv" > Tipo 1
+              <input type="checkbox" name="diabTipo2Name" id="diabTipo2Id" class="cpbOp indivOp opDiab opDiabIndiv" > Tipo 2
+              <input type="checkbox" name="diabGestName" id="diabGestId" class="cpbOp indivOp opDiab opDiabIndiv" > Gestacional
+              <input type="checkbox" name="diabInsName" id="diabInsId" class="cpbOp indivOp opDiab opDiabIndiv" > Insípido
+              <input type="checkbox" name="diabLadaName" id="diabLadaId" class="cpbOp indivOp opDiab opDiabIndiv" > LADA
+              <input type="checkbox" name="diabModyName" id="diabModyId" class="cpbOp indivOp opDiab opDiabIndiv" /> MODY
             </div>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="hivSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="hivSpan">Portador de HIV</span> 
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="hivSpanSub">Portador de HIV</span> 
               <input type="radio" name="hivName" id="CpbHivYes" class="radOp radYes" />
-              <label for="CpbHivYes" class="labOp">Sim</label>
+              <label for="CpbHivYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="hivName" id="CpbHivNo" class="radOp radNo" />
-              <label for="CpbHivNo" class="labOp">Não</label> 
+              <label for="CpbHivNo" class="labOp boolOp">Não</label> 
             </span>
             <div class="contQuat divMain" id="divAddHiv">
               <span class="spanSub spanSubFsAnamGRad spanDivAddHiv" id="spanCargHiv">Carga Viral:</span>
-              <input type="number" name="hepAName" id="hivCargId" class="cpbOp opHiv" >
-              <label for="hivCargId" class="LbCpbOp">cópias/ml</label>
+              <input type="number" name="hepAName" id="hivCargId" class="cpbOp indivOp opHiv" >
+              <label for="hivCargId" class="LbCpbOp" id="labHivCarg">cópias/ml</label>
               <br />
               <span class="spanSub spanSubFsAnamGRad spanDivAddHiv spanDivAddDatHiv" id="spanDatDiagHiv">Data do Diagnóstico:</span>
-              <input type="date" name="hepBName" id="hepBId" class="cpbOp opHiv" >
+              <input type="date" name="hepBName" id="hepBId" class="cpbOp indivOp opHiv" >
               <span class="spanSub spanSubFsAnamGRad spanDivAddHiv spanDivAddDatHiv" id="spanExamHiv">Data do Último Exame:</span>
-              <input type="date" name="hepBName" id="hepBId" class="cpbOp opHiv" >
+              <input type="date" name="hepBName" id="hepBId" class="cpbOp indivOp opHiv" >
             </div>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="tSangSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="tSangSpan">Tranfusão de Sangue</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="tSangSpanSub">Tranfusão de Sangue</span>
               <input type="radio" name="tSangName" id="tSangYes" class="radOp radYes" />
-              <label for="tSangYes" class="labOp">Sim</label>
+              <label for="tSangYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="tSangName" id="tSangNo" class="radOp radNo" />
-              <label for="tSangNo" class="labOp">Não</label>
+              <label for="tSangNo" class="labOp boolOp">Não</label>
             </span>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="prAltaSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="prAltaSpan">Hipertensão Arterial Sistêmica</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="prAltaSpanSub">Hipertensão Arterial Sistêmica</span>
               <input type="radio" name="prAltaName" id="CpbPrAltaYes" class="radOp radYes" />
-              <label for="CpbPrAltaYes" class="labOp">Sim</label>
+              <label for="CpbPrAltaYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="prAltaName" id="CpbPrAltaNo" class="radOp radNo" />
-              <label for="CpbPrAltaNo" class="labOp">Não</label>
+              <label for="CpbPrAltaNo" class="labOp boolOp">Não</label>
             </span>
             <div class="contQuat divMain" id="divAddHAS">
-              <input type="radio" name="HASStgName" id="HASPreId" class="cpbOp opHAS" > Pré-hipertensão
-              <input type="radio" name="HASStgName" id="HASStg1Id" class="cpbOp opHAS" > Estágio 1
-              <input type="radio" name="HASStgName" id="HASStg2Id" class="cpbOp opHAS" > Estágio 2
-              <input type="radio" name="HASStgName" id="HASStg3Id" class="cpbOp opHAS" > Estágio 3 | Em Crise
+              <input type="radio" name="HASStgName" id="HASPreId" class="cpbOp indivOp opHAS" > Pré-hipertensão
+              <input type="radio" name="HASStgName" id="HASStg1Id" class="cpbOp indivOp opHAS" > Estágio 1
+              <input type="radio" name="HASStgName" id="HASStg2Id" class="cpbOp indivOp opHAS" > Estágio 2
+              <input type="radio" name="HASStgName" id="HASStg3Id" class="cpbOp indivOp opHAS" > Estágio 3 | Em Crise
               <br />
-              <input type="radio" name="HASLvlName" id="HASPrimId" class="cpbOp opHAS" > Primária | Essencial
-              <input type="radio" name="HASLvlName" id="HASSecId" class="cpbOp opHAS" /> Secundária
+              <input type="radio" name="HASLvlName" id="HASPrimId" class="cpbOp indivOp opHAS" > Primária | Essencial
+              <input type="radio" name="HASLvlName" id="HASSecId" class="cpbOp indivOp opHAS" /> Secundária
               <br />
-              <input type="checkbox" name="HASResName" id="HASResId" class="cpbOp opHAS" /> Resistente
-              <input type="checkbox" name="HASIsolName" id="HASIsolId" class="cpbOp opHAS" /> Sistólica Isolada
-              <input type="checkbox" name="HASMalName" id="HASMalId" class="cpbOp opHAS" /> Maligna
+              <input type="checkbox" name="HASResName" id="HASResId" class="cpbOp indivOp opHAS" /> Resistente
+              <input type="checkbox" name="HASIsolName" id="HASIsolId" class="cpbOp indivOp opHAS" /> Sistólica Isolada
+              <input type="checkbox" name="HASMalName" id="HASMalId" class="cpbOp indivOp opHAS" /> Maligna
             </div>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbCardSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbCardSpan">Problema&#40s&#41 Cardíacos</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbCardSpanSub">Problema&#40s&#41 Cardíacos</span>
               <input type="radio" name="pbCardName" id="pbCardYes" class="radOp radYes" />
-              <label for="pbCardYes" class="labOp">Sim</label>
+              <label for="pbCardYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbCardName" id="pbCardNo" class="radOp radNo" />
-              <label for="pbCardNo" class="labOp">Não</label>
+              <label for="pbCardNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp taCard" id="textAddCard" maxlength="1000" placeholder="Escreva aqui os problemas específicos"></textarea>
+            <textarea class="taOp taCard" id="textAddCard" maxlength="1000" placeholder="Escreva aqui os Problemas Cardíacos específicos"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbRenSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbRenSpan">Problema&#40s&#41 Renais</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbRenSpanSub">Problema&#40s&#41 Renais</span>
               <input type="radio" name="pbRenName" id="pbRenYes" class="radOp radYes" />
-              <label for="pbRenYes" class="labOp">Sim</label>
+              <label for="pbRenYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbRenName" id="pbRenNo" class="radOp radNo" />
-              <label for="pbRenNo" class="labOp">Não</label>
+              <label for="pbRenNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddRen" maxlength="1000" placeholder="Escreva aqui os problemas específicos"></textarea>
+            <textarea class="taOp" id="textAddRen" maxlength="1000" placeholder="Escreva aqui os Problemas Renais específicos"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbGastSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbGastSpan">Problema&#40s&#41 Gástricos</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbGastSpanSub">Problema&#40s&#41 Gástricos</span>
               <input type="radio" name="pbGastName" id="pbGastYes" class="radOp radYes" />
-              <label for="pbGastYes" class="labOp">Sim</label>
+              <label for="pbGastYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbGastName" id="pbGastNo" class="radOp radNo" />
-              <label for="pbGastNo" class="labOp">Não</label>
+              <label for="pbGastNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddGast" maxlength="1000" placeholder="Escreva aqui os problemas específicos"></textarea>
+            <textarea class="taOp" id="textAddGast" maxlength="1000" placeholder="Escreva aqui os Problemas Gástricos específicos"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbRespSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbRespSpan">Problema&#40s&#41 Respiratórios</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbRespSpanSub">Problema&#40s&#41 Respiratórios</span>
               <input type="radio" name="pbRespName" id="pbRespYes" class="radOp radYes" />
-              <label for="pbRespYes" class="labOp">Sim</label>
+              <label for="pbRespYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbRespName" id="pbRespNo" class="radOp radNo" />
-              <label for="pbRespNo" class="labOp">Não</label>
+              <label for="pbRespNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp taResp" id="textAddResp" maxlength="1000" placeholder="Escreva aqui os problemas específicos"></textarea>
+            <textarea class="taOp taResp" id="textAddResp" maxlength="1000" placeholder="Escreva aqui os Problemas Respiratórios específicos"></textarea>
             <br />
             
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbAlergSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbAlergSpan">Problema&#40s&#41 Alérgicos</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbAlergSpanSub">Problema&#40s&#41 Alérgicos</span>
               <input type="radio" name="pbAlergName" id="pbAlergYes" class="radOp radYes" />
-              <label for="pbAlergYes" class="labOp">Sim</label>
+              <label for="pbAlergYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbAlergName" id="pbAlergNo" class="radOp radNo" />
-              <label for="pbAlergNo" class="labOp">Não</label>
+              <label for="pbAlergNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddAlerg" maxlength="1000" placeholder="Escreva aqui os problemas específicos"></textarea>
+            <textarea class="taOp" id="textAddAlerg" maxlength="1000" placeholder="Escreva aqui os Problemas Alérgicos específicos"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbArtReumSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbArtReumSpan">Problema&#40s&#41 Articular&#40es&#41 ou Reumatismo</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbArtReumSpanSub">Problema&#40s&#41 Articular&#40es&#41 ou Reumatismo</span>
               <input type="radio" name="pbArtReumName" id="pbArtReumYes" class="radOp radYes" />
-              <label for="pbArtReumYes" class="labOp">Sim</label>
+              <label for="pbArtReumYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbArtReumName" id="pbArtReumNo" class="radOp radNo" />
-              <label for="pbArtReumNo" class="labOp">Não</label>
+              <label for="pbArtReumNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddArtReum" maxlength="1000" placeholder="Escreva aqui os problemas específicos"></textarea>
+            <textarea class="taOp" id="textAddArtReum" maxlength="1000" placeholder="Escreva aqui os Problemas Articulares específicos"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbSistSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbSistSpan">Alguma Outra Doença Sistêmica</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbSistSpanSub">Alguma Outra Doença Sistêmica</span>
               <input type="radio" name="pbSistName" id="pbSistYes" class="radOp radYes" />
-              <label for="pbSistYes" class="labOp">Sim</label>
+              <label for="pbSistYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbSistName" id="pbSistNo" class="radOp radNo" />
-              <label for="pbSistNo" class="labOp">Não</label>
+              <label for="pbSistNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddSist" maxlength="1000" placeholder="Escreva aqui os nomes específicos"></textarea>
+            <textarea class="taOp" id="textAddSist" maxlength="1000" placeholder="Escreva aqui os nomes específicos das Doenças Sistêmicas"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbAlcSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbAlcSpan">Uso de Bebidas Alcoólicas</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbAlcSpanSub">Uso de Bebidas Alcoólicas</span>
               <input type="radio" name="pbAlcName" id="pbAlcYes" class="radOp radYes" />
-              <label for="pbAlcYes" class="labOp">Sim</label>
+              <label for="pbAlcYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbAlcName" id="pbAlcNo" class="radOp radNo" />
-              <label for="pbAlcNo" class="labOp">Não</label>
+              <label for="pbAlcNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddAlc" maxlength="1000" placeholder="Escreva aqui os detalhes, se necessários"></textarea>
+            <textarea class="taOp" id="textAddAlc" maxlength="1000" placeholder="Escreva aqui os detalhes sobre o uso de bebida alcoólicas, se necessários"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="CpbFumoSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="CpbFumoSpan">É fumante</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="CpbFumoSpanSub">É fumante</span>
               <input type="radio" name="CpbFumoName" id="CpbFumoYes" class="radOp radYes" />
-              <label for="CpbFumoYes" class="labOp">Sim</label>
+              <label for="CpbFumoYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="CpbFumoName" id="CpbFumoNo" class="radOp radNo" />
-              <label for="CpbFumoNo" class="labOp">Não</label>
+              <label for="CpbFumoNo" class="labOp boolOp">Não</label>
             </span>
             <div class="contQuat divMain" id="divAddFumo">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="spanFumSubs">
@@ -553,19 +549,19 @@
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbDrgSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="pbDrgSpan">Uso de Drogas</span>
               <input type="radio" name="pbDrgName" id="pbDrgYes" class="radOp radYes" />
-              <label for="pbDrgYes" class="labOp">Sim</label>
+              <label for="pbDrgYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbDrgName" id="pbDrgNo" class="radOp radNo" />
-              <label for="pbDrgNo" class="labOp">Não</label>
+              <label for="pbDrgNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddDrg" maxlength="1000" placeholder="Qual ou quais?"></textarea>
+            <textarea class="taOp" id="textAddDrg" maxlength="1000" placeholder="Qual ou quais Drogas?"></textarea>
             <br />
      
             <span class="contTerc spanMain spanMainFsAnamGRad" id="CpbGrvSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="CpbGrvSpan">Gravidez</span>
               <input type="radio" name="CpbGrvName" id="CpbGrvYes" class="radOp radYes" />
-              <label for="CpbGrvYes" class="labOp">Sim</label>
+              <label for="CpbGrvYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="CpbGrvName" id="CpbGrvNo" class="radOp radNo" />
-              <label for="CpbGrvNo" class="labOp">Não</label>
+              <label for="CpbGrvNo" class="labOp boolOp">Não</label>
             </span>
             <div class="divMain" id="divAddGrv">
               <input type="checkbox" name="GrvAtName" id="GrvAtId" class="radOp radAdd radGrv" /> Atual
@@ -576,128 +572,128 @@
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbAntCSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="pbAntCSpan">Uso de Anticoncepional</span>
               <input type="radio" name="pbAntCName" id="pbAntCYes" class="radOp radYes" />
-              <label for="pbAntCYes" class="labOp">Sim</label>
+              <label for="pbAntCYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbAntCName" id="pbAntCNo" class="radOp radNo" />
-              <label for="pbAntCNo" class="labOp">Não</label>
+              <label for="pbAntCNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddAntC" maxlength="1000" placeholder="Qual?"></textarea>
+            <textarea class="taOp" id="textAddAntC" maxlength="1000" placeholder="Qual Anticoncepcional?"></textarea>
             <br />
    
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbOpSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="pbOpSpan">Operação ou Extração de Dente</span>
               <input type="radio" name="pbOpName" id="pbOpYes" class="radOp radYes" />
-              <label for="pbOpYes" class="labOp">Sim</label>
+              <label for="pbOpYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbOpName" id="pbOpNo" class="radOp radNo" />
-              <label for="pbOpNo" class="labOp">Não</label>
+              <label for="pbOpNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddOp" maxlength="1000" placeholder="Qual ou quais?"></textarea>
+            <textarea class="taOp" id="textAddOp" maxlength="1000" placeholder="Qual ou quais Dente(s) Operado(s) e/ou Extraído(s)?"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbCicSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="pbCicSpan">Problema&#40s&#41 com Cicatrização</span>
               <input type="radio" name="pbCicName" id="pbCicYes" class="radOp radYes" />
-              <label for="pbCicYes" class="labOp">Sim</label>
+              <label for="pbCicYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbCicName" id="pbCicNo" class="radOp radNo" />
-              <label for="pbCicNo" class="labOp">Não</label>
+              <label for="pbCicNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddCic" maxlength="1000" placeholder="Qual ou quais?"></textarea>
+            <textarea class="taOp" id="textAddCic" maxlength="1000" placeholder="Qual ou quais Problema(s) com Cicatrização?"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbAnstSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="pbAnstSpan">Problema&#40s&#41 com Anestesia</span>
               <input type="radio" name="pbAnstName" id="pbAnstYes" class="radOp radYes" />
-              <label for="pbAnstYes" class="labOp">Sim</label>
+              <label for="pbAnstYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbAnstName" id="pbAnstNo" class="radOp radNo" />
-              <label for="pbAnstNo" class="labOp">Não</label>
+              <label for="pbAnstNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddAnst" maxlength="1000" placeholder="Qual ou quais?"></textarea>
+            <textarea class="taOp" id="textAddAnst" maxlength="1000" placeholder="Qual ou quais Problema(s) com Anestesia?"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbHemSpan">
-              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbHemSpan">Problema&#40s&#41 com Hematrização</span>
+              <span class="contQuat spanSub spanSubFsAnamGRad" id="pbHemSpan">Problema&#40s&#41 com Hemorragia</span>
               <input type="radio" name="pbHemName" id="pbHemYes" class="radOp radYes" />
-              <label for="pbHemYes" class="labOp">Sim</label>
+              <label for="pbHemYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbHemName" id="pbHemNo" class="radOp radNo" />
-              <label for="pbHemNo" class="labOp">Não</label>
+              <label for="pbHemNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddHem" maxlength="1000" placeholder="Qual ou quais?"></textarea>
+            <textarea class="taOp" id="textAddHem" maxlength="1000" placeholder="Qual ou quais Problema(s) com Hemorragia?"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbIntrnpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="pbIntrnSpan">Internação Recente</span>
               <input type="radio" name="pbIntrnName" id="pbIntrnYes" class="radOp radYes" />
-              <label for="pbIntrnYes" class="labOp">Sim</label>
+              <label for="pbIntrnYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbIntrnName" id="pbIntrnNo" class="radOp radNo" />
-              <label for="pbIntrnNo" class="labOp">Não</label>
+              <label for="pbIntrnNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddIntrn" maxlength="1000" placeholder="Tempo aproximado"></textarea>
+            <textarea class="taOp" id="textAddIntrn" maxlength="1000" placeholder="Tempo aproximado de Internação"></textarea>
             <br />
   
             <span class="contTerc spanMain spanMainFsAnamGRad" id="pbMedSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" for="pbMedSpan">Uso Atual de Medicação Controlada</span>
               <input type="radio" name="pbMedName" id="pbMedYes" class="radOp radYes" />
-              <label for="pbMedYes" class="labOp">Sim</label>
+              <label for="pbMedYes" class="labOp boolOp">Sim</label>
               <input type="radio" name="pbMedName" id="pbMedNo" class="radOp radNo" />
-              <label for="pbMedNo" class="labOp">Não</label>
+              <label for="pbMedNo" class="labOp boolOp">Não</label>
             </span>
-            <textarea class="taOp" id="textAddMed" maxlength="1000" placeholder="Qual ou quais?"></textarea>
+            <textarea class="taOp" id="textAddMed" maxlength="1000" placeholder="Qual ou quais Medicações Controladas?"></textarea>
           </section>
           <hr />
 
           <section class="sectionMain sectionConfirm" id="fsAnamGRadODSectId">
             <h4 class="hGeneric" id="hOD">Outras Doenças</h4>
             <div class="contTerc divMain sectODdiv">
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanCand">
                 <input type="checkbox" name="candName" id="candId" class="radOD"/>
-                <label for="candId" class="labelOD">Candidíase</label>
+                <label for="candId" class="labelOD" id="labCand">Candidíase</label>
                 <br />
               </span>              
 
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanGon">
                 <input type="checkbox" name="gonName" id="gonId" class="radOD" />
-                <label for="gonId" class="labelOD">Gonorreia</label>
+                <label for="gonId" class="labelOD" id="labGon">Gonorreia</label>
                 <br />
               </span>
 
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanHerp">
                 <input type="checkbox" name="herpName" id="herpId" class="radOD" />
-                <label for="herpId" class="labelOD">Herpes</label>
+                <label for="herpId" class="labelOD" id="labHerp">Herpes</label>
                 <br />
               </span>
               
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanHerpZ">
                 <input type="checkbox" name="herpZName" id="herpZId" class="radOD" />
-                <label for="herpZId" class="labelOD">Herpes Zoster</label>
+                <label for="herpZId" class="labelOD" id="labHerpZ">Herpes Zoster</label>
                 <br />
               </span>
 
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanPneu">
                 <input type="checkbox" name="pneuName" id="pneuId" class="radOD" />
-                <label for="pneuId" class="labelOD">Pneumonia</label>
+                <label for="pneuId" class="labelOD" id="labPneu">Pneumonia</label>
                 <br />
               </span>
               
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanSif">
                 <input type="checkbox" name="sifName" id="sifId" class="radOD" />
-                <label for="sifId" class="labelOD">Sífilis</label>
+                <label for="sifId" class="labelOD" id="labSif">Sífilis</label>
                 <br />
               </span>
 
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanToxop">
                 <input type="checkbox" name="toxopName" id="toxopId" class="radOD" />
-                <label for="toxopId" class="labelOD">Toxoplasmose</label>
+                <label for="toxopId" class="labelOD" id="labToxop">Toxoplasmose</label>
                 <br />
               </span>
 
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanTuberc">
                 <input type="checkbox" name="tubercName" id="tubercId" class="radOD" />
-                <label for="tubercId" class="labelOD">Tuberculose</label>
+                <label for="tubercId" class="labelOD" id="labTuberc">Tuberculose</label>
                 <br />
               </span>
 
-              <span class="contQuat spanMain sectODSpan">
+              <span class="contQuat spanMain sectODSpan" id="spanOtherD">
                 <input type="radio" name="pbOtherDName" id="pbOtherDIdYes" class="radOD" />
-                <label for="pbOtherDIdYes" class="labelOD">Outra&#40s&#41</label>
+                <label for="pbOtherDIdYes" class="labelOD" id="labPbOtherIdYes">Outra&#40s&#41</label>
                 <br />
                 <textarea id="textAddOtherDId" class="tAOD" maxlength="1000" placeholder="Qual ou quais?"></textarea>
                 <br />
@@ -719,34 +715,34 @@
                     <label for="antFamDiabId" class="famLabel" id="labAntFamDiab">Diabetes</label>
                   </span>
                   <div class="contQuat divMain" id="divAddDiabFam">
-                    <input type="checkbox" name="diabFamTipo1Name" id="diabFamTipo1Id" class="cpbOp opDiab opDiabFam opDiabTypeFam" > Tipo 1
-                    <input type="checkbox" name="diabFamTipo2Name" id="diabFamTipo2Id" class="cpbOp opDiab opDiabFam opDiabTypeFam" > Tipo 2
-                    <input type="checkbox" name="diabFamGestName" id="diabFamGestId" class="cpbOp opDiab opDiabFam opDiabTypeFam" > Gestacional
-                    <input type="checkbox" name="diabFamInsName" id="diabFamInsId" class="cpbOp opDiab opDiabFam opDiabTypeFam" > Insípido
-                    <input type="checkbox" name="diabFamLadaName" id="diabFamLadaId" class="cpbOp opDiab opDiabFam opDiabTypeFam" > LADA
-                    <input type="checkbox" name="diabFamModyName" id="diabFamModyId" class="cpbOp opDiab opDiabFam opDiabTypeFam" /> MODY
+                    <input type="checkbox" name="diabFamTipo1Name" id="diabFamTipo1Id" class="cpbOp famOp opDiab opDiabFam opDiabTypeFam" > Tipo 1
+                    <input type="checkbox" name="diabFamTipo2Name" id="diabFamTipo2Id" class="cpbOp famOp opDiab opDiabFam opDiabTypeFam" > Tipo 2
+                    <input type="checkbox" name="diabFamGestName" id="diabFamGestId" class="cpbOp famOp opDiab opDiabFam opDiabTypeFam" > Gestacional
+                    <input type="checkbox" name="diabFamInsName" id="diabFamInsId" class="cpbOp famOp opDiab opDiabFam opDiabTypeFam" > Insípido
+                    <input type="checkbox" name="diabFamLadaName" id="diabFamLadaId" class="cpbOp famOp opDiab opDiabFam opDiabTypeFam" > LADA
+                    <input type="checkbox" name="diabFamModyName" id="diabFamModyId" class="cpbOp famOp opDiab opDiabFam opDiabTypeFam" /> MODY
                     <br />
                     <span class="spanSub spanSectAnt" id="spanDiabFamG">Geradores Anteriores com Diagnóstico ou Suspeita:</span>
                     <br />
-                    <input type="checkbox" name="diabFamG1Name" id="diabFamMaeId" class="cpbOp opDiab opDiabFam opDiabGFam"> Mãe
-                    <input type="checkbox" name="diabFamG1Name" id="diabFamPaitId" class="cpbOp opDiab opDiabFam opDiabGFam"> Pai
+                    <input type="checkbox" name="diabFamG1Name" id="diabFamMaeId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Mãe
+                    <input type="checkbox" name="diabFamG1Name" id="diabFamPaitId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Pai
                     <br />
-                    <input type="checkbox" name="diabFamAvóMatName" id="diabFamAvóMatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Avó Materna
-                    <input type="checkbox" name="diabFamAvóPatName" id="diabFamAvóPatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Avó Paterna
-                    <input type="checkbox" name="diabFamAvoMatName" id="diabFamAvoMatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Avô Materno
-                    <input type="checkbox" name="diabFamAvóPatName" id="diabFamAvoPatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Avô Paterno
+                    <input type="checkbox" name="diabFamAvóMatName" id="diabFamAvóMatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Avó Materna
+                    <input type="checkbox" name="diabFamAvóPatName" id="diabFamAvóPatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Avó Paterna
+                    <input type="checkbox" name="diabFamAvoMatName" id="diabFamAvoMatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Avô Materno
+                    <input type="checkbox" name="diabFamAvóPatName" id="diabFamAvoPatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Avô Paterno
                     <br />
-                    <input type="checkbox" name="diabFamBisavóMatMatName" id="diabFamBisavóMatMatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavó Mater-materna
-                    <input type="checkbox" name="diabFamBisavóMatPatName" id="diabFamBisavóMatPatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavó Mater-paterna
-                    <input type="checkbox" name="diabFamBisavóPatMatName" id="diabFamBisavóPatMatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavó Pater-materna
-                    <input type="checkbox" name="diabFamBisavóPatPatName" id="diabFamBisavóPatPatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavó Pater-paterna
+                    <input type="checkbox" name="diabFamBisavóMatMatName" id="diabFamBisavóMatMatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavó Mater-materna
+                    <input type="checkbox" name="diabFamBisavóMatPatName" id="diabFamBisavóMatPatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavó Mater-paterna
+                    <input type="checkbox" name="diabFamBisavóPatMatName" id="diabFamBisavóPatMatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavó Pater-materna
+                    <input type="checkbox" name="diabFamBisavóPatPatName" id="diabFamBisavóPatPatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavó Pater-paterna
                     <br />
-                    <input type="checkbox" name="diabFamBisavoMatMatName" id="diabFamBisavoMatMatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavô Mater-materno
-                    <input type="checkbox" name="diabFamBisavoMatPatName" id="diabFamBisavoMatPatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavô Mater-paterno
-                    <input type="checkbox" name="diabFamBisavoPatMatName" id="diabFamBisavoPatMatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavô Pater-materno
-                    <input type="checkbox" name="diabFamBisavoPatPatName" id="diabFamBisavoPatPatId" class="cpbOp opDiab opDiabFam opDiabGFam"> Bisavô Pater-paterno
+                    <input type="checkbox" name="diabFamBisavoMatMatName" id="diabFamBisavoMatMatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavô Mater-materno
+                    <input type="checkbox" name="diabFamBisavoMatPatName" id="diabFamBisavoMatPatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavô Mater-paterno
+                    <input type="checkbox" name="diabFamBisavoPatMatName" id="diabFamBisavoPatMatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavô Pater-materno
+                    <input type="checkbox" name="diabFamBisavoPatPatName" id="diabFamBisavoPatPatId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Bisavô Pater-paterno
                     <br />
-                    <input type="checkbox" name="diabFamOtherName" id="diabFamOtherId" class="cpbOp opDiab opDiabFam opDiabGFam"> Trisavós ou anteriores     
+                    <input type="checkbox" name="diabFamOtherName" id="diabFamOtherId" class="cpbOp famOp opDiab opDiabFam opDiabGFam"> Trisavós ou anteriores     
                   </div>
                   <br />
 
@@ -757,33 +753,33 @@
                     <br />
                   </span>
                   <div class="contQuat divMain" id="divAddDislipFam">
-                    <input type="checkbox" name="dislipFamGeralName" id="dislipFamGeralId" class="cpbOp opDislip opDislipFam opDislipTypeFam" > Geral
-                    <input type="checkbox" name="dislipFamIsolName" id="dislipFamIsolId" class="cpbOp opDislip opDislipFam opDislipTypeFam" > Isolada
-                    <input type="checkbox" name="dislipFamMixName" id="dislipFamMixId" class="cpbOp opDislip opDislipFam opDislipTypeFam" > Mista | Combinada
-                    <input type="checkbox" name="dislipFamHipoName" id="dislipFamHipoId" class="cpbOp opDislip opDislipFam opDislipTypeFam" > Hipoalfalipoproteinemia
-                    <input type="checkbox" name="dislipFamHiperName" id="dislipFamHiperId" class="cpbOp opDislip opDislipFam opDislipTypeFam" > Hipertrigliceridemia
+                    <input type="checkbox" name="dislipFamGeralName" id="dislipFamGeralId" class="cpbOp famOp opDislip opDislipFam opDislipTypeFam" > Geral
+                    <input type="checkbox" name="dislipFamIsolName" id="dislipFamIsolId" class="cpbOp famOp opDislip opDislipFam opDislipTypeFam" > Isolada
+                    <input type="checkbox" name="dislipFamMixName" id="dislipFamMixId" class="cpbOp famOp opDislip opDislipFam opDislipTypeFam" > Mista | Combinada
+                    <input type="checkbox" name="dislipFamHipoName" id="dislipFamHipoId" class="cpbOp famOp opDislip opDislipFam opDislipTypeFam" > Hipoalfalipoproteinemia
+                    <input type="checkbox" name="dislipFamHiperName" id="dislipFamHiperId" class="cpbOp famOp opDislip opDislipFam opDislipTypeFam" > Hipertrigliceridemia
                     <br />
                     <span class="spanSub spanSectAnt" id="spanDislipFamG">Geradores Anteriores com Diagnóstico ou Suspeita:</span>
                     <br />
-                    <input type="checkbox" name="dislipFamG1Name" id="dislipFamMaeId" class="cpbOp opDislip opDislipFam opDislipGFam"> Mãe
-                    <input type="checkbox" name="dislipFamG1Name" id="dislipFamPaitId" class="cpbOp opDislip opDislipFam opDislipGFam"> Pai
+                    <input type="checkbox" name="dislipFamG1Name" id="dislipFamMaeId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Mãe
+                    <input type="checkbox" name="dislipFamG1Name" id="dislipFamPaitId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Pai
                     <br />
-                    <input type="checkbox" name="dislipFamAvóMatName" id="dislipFamAvóMatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Avó Materna
-                    <input type="checkbox" name="dislipFamAvóPatName" id="dislipFamAvóPatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Avó Paterna
-                    <input type="checkbox" name="dislipFamAvoMatName" id="dislipFamAvoMatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Avô Materno
-                    <input type="checkbox" name="dislipFamAvóPatName" id="dislipFamAvoPatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Avô Paterno
+                    <input type="checkbox" name="dislipFamAvóMatName" id="dislipFamAvóMatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Avó Materna
+                    <input type="checkbox" name="dislipFamAvóPatName" id="dislipFamAvóPatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Avó Paterna
+                    <input type="checkbox" name="dislipFamAvoMatName" id="dislipFamAvoMatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Avô Materno
+                    <input type="checkbox" name="dislipFamAvóPatName" id="dislipFamAvoPatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Avô Paterno
                     <br />
-                    <input type="checkbox" name="dislipFamBisavóMatMatName" id="dislipFamBisavóMatMatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavó Mater-materna
-                    <input type="checkbox" name="dislipFamBisavóMatPatName" id="dislipFamBisavóMatPatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavó Mater-paterna
-                    <input type="checkbox" name="dislipFamBisavóPatMatName" id="dislipFamBisavóPatMatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavó Pater-materna
-                    <input type="checkbox" name="dislipFamBisavóPatPatName" id="dislipFamBisavóPatPatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavó Pater-paterna
+                    <input type="checkbox" name="dislipFamBisavóMatMatName" id="dislipFamBisavóMatMatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavó Mater-materna
+                    <input type="checkbox" name="dislipFamBisavóMatPatName" id="dislipFamBisavóMatPatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavó Mater-paterna
+                    <input type="checkbox" name="dislipFamBisavóPatMatName" id="dislipFamBisavóPatMatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavó Pater-materna
+                    <input type="checkbox" name="dislipFamBisavóPatPatName" id="dislipFamBisavóPatPatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavó Pater-paterna
                     <br />
-                    <input type="checkbox" name="dislipFamBisavoMatMatName" id="dislipFamBisavoMatMatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavô Mater-materno
-                    <input type="checkbox" name="dislipFamBisavoMatPatName" id="dislipFamBisavoMatPatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavô Mater-paterno
-                    <input type="checkbox" name="dislipFamBisavoPatMatName" id="dislipFamBisavoPatMatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavô Pater-materno
-                    <input type="checkbox" name="dislipFamBisavoPatPatName" id="dislipFamBisavoPatPatId" class="cpbOp opDislip opDislipFam opDislipGFam"> Bisavô Pater-paterno
+                    <input type="checkbox" name="dislipFamBisavoMatMatName" id="dislipFamBisavoMatMatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavô Mater-materno
+                    <input type="checkbox" name="dislipFamBisavoMatPatName" id="dislipFamBisavoMatPatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavô Mater-paterno
+                    <input type="checkbox" name="dislipFamBisavoPatMatName" id="dislipFamBisavoPatMatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavô Pater-materno
+                    <input type="checkbox" name="dislipFamBisavoPatPatName" id="dislipFamBisavoPatPatId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Bisavô Pater-paterno
                     <br />
-                    <input type="checkbox" name="dislipFamOtherName" id="dislipFamOtherId" class="cpbOp opDislip opDislipFam opDislipGFam"> Trisavós ou anteriores
+                    <input type="checkbox" name="dislipFamOtherName" id="dislipFamOtherId" class="cpbOp famOp opDislip opDislipFam opDislipGFam"> Trisavós ou anteriores
                     <br />     
                   </div>
   
@@ -793,29 +789,29 @@
                     <br />
                   </span>
                   <div class="contQuat divMain" id="divAddCardFam">
-                    <textarea name="cardFamGeralName" id="cardFamGeralId" class="taOp taCard" placeholder="Escreva aqui sobre a(s) Doença(s)"></textarea>
+                    <textarea name="cardFamGeralName" id="cardFamGeralId" class="taOp taCard" placeholder="Escreva aqui sobre a(s) Doença(s) Cardíaca(s)"></textarea>
                     <br />
                     <span class="spanSub spanSectAnt" id="spanCardFamG">Geradores Anteriores com Diagnóstico ou Suspeita:</span>
                     <br />
-                    <input type="checkbox" name="cardFamG1Name" id="cardFamMaeId" class="cpbOp opCard opCardFam opCardGFam"> Mãe
-                    <input type="checkbox" name="cardFamG1Name" id="cardFamPaitId" class="cpbOp opCard opCardFam opCardGFam"> Pai
+                    <input type="checkbox" name="cardFamG1Name" id="cardFamMaeId" class="cpbOp famOp opCard opCardFam opCardGFam"> Mãe
+                    <input type="checkbox" name="cardFamG1Name" id="cardFamPaitId" class="cpbOp famOp opCard opCardFam opCardGFam"> Pai
                     <br />
-                    <input type="checkbox" name="cardFamAvóMatName" id="cardFamAvóMatId" class="cpbOp opCard opCardFam opCardGFam"> Avó Materna
-                    <input type="checkbox" name="cardFamAvóPatName" id="cardFamAvóPatId" class="cpbOp opCard opCardFam opCardGFam"> Avó Paterna
-                    <input type="checkbox" name="cardFamAvoMatName" id="cardFamAvoMatId" class="cpbOp opCard opCardFam opCardGFam"> Avô Materno
-                    <input type="checkbox" name="cardFamAvóPatName" id="cardFamAvoPatId" class="cpbOp opCard opCardFam opCardGFam"> Avô Paterno
+                    <input type="checkbox" name="cardFamAvóMatName" id="cardFamAvóMatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Avó Materna
+                    <input type="checkbox" name="cardFamAvóPatName" id="cardFamAvóPatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Avó Paterna
+                    <input type="checkbox" name="cardFamAvoMatName" id="cardFamAvoMatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Avô Materno
+                    <input type="checkbox" name="cardFamAvóPatName" id="cardFamAvoPatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Avô Paterno
                     <br />
-                    <input type="checkbox" name="cardFamBisavóMatMatName" id="cardFamBisavóMatMatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavó Mater-materna
-                    <input type="checkbox" name="cardFamBisavóMatPatName" id="cardFamBisavóMatPatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavó Mater-paterna
-                    <input type="checkbox" name="cardFamBisavóPatMatName" id="cardFamBisavóPatMatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavó Pater-materna
-                    <input type="checkbox" name="cardFamBisavóPatPatName" id="cardFamBisavóPatPatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavó Pater-paterna
+                    <input type="checkbox" name="cardFamBisavóMatMatName" id="cardFamBisavóMatMatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavó Mater-materna
+                    <input type="checkbox" name="cardFamBisavóMatPatName" id="cardFamBisavóMatPatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavó Mater-paterna
+                    <input type="checkbox" name="cardFamBisavóPatMatName" id="cardFamBisavóPatMatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavó Pater-materna
+                    <input type="checkbox" name="cardFamBisavóPatPatName" id="cardFamBisavóPatPatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavó Pater-paterna
                     <br />
-                    <input type="checkbox" name="cardFamBisavoMatMatName" id="cardFamBisavoMatMatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavô Mater-materno
-                    <input type="checkbox" name="cardFamBisavoMatPatName" id="cardFamBisavoMatPatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavô Mater-paterno
-                    <input type="checkbox" name="cardFamBisavoPatMatName" id="cardFamBisavoPatMatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavô Pater-materno
-                    <input type="checkbox" name="cardFamBisavoPatPatName" id="cardFamBisavoPatPatId" class="cpbOp opCard opCardFam opCardGFam"> Bisavô Pater-paterno
+                    <input type="checkbox" name="cardFamBisavoMatMatName" id="cardFamBisavoMatMatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavô Mater-materno
+                    <input type="checkbox" name="cardFamBisavoMatPatName" id="cardFamBisavoMatPatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavô Mater-paterno
+                    <input type="checkbox" name="cardFamBisavoPatMatName" id="cardFamBisavoPatMatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavô Pater-materno
+                    <input type="checkbox" name="cardFamBisavoPatPatName" id="cardFamBisavoPatPatId" class="cpbOp famOp opCard opCardFam opCardGFam"> Bisavô Pater-paterno
                     <br />
-                    <input type="checkbox" name="cardFamOtherName" id="cardFamOtherId" class="cpbOp opCard opCardFam opCardGFam"> Trisavós ou anteriores
+                    <input type="checkbox" name="cardFamOtherName" id="cardFamOtherId" class="cpbOp famOp opCard opCardFam opCardGFam"> Trisavós ou anteriores
                     <br />   
                   </div>
   
@@ -825,29 +821,29 @@
                     <br />
                   </span>
                   <div class="contQuat divMain" id="divAddRespFam">
-                    <textarea name="RespFamGeralName" id="RespFamGeralId" class="taOp taResp" placeholder="Escreva aqui sobre a(s) Doença(s)"></textarea>
+                    <textarea name="RespFamGeralName" id="RespFamGeralId" class="taOp taResp" placeholder="Escreva aqui sobre a(s) Doença(s) Pulmonar(es)"></textarea>
                     <br />
                     <span class="spanSub spanSectAnt" id="spanRespFamG">Geradores Anteriores com Diagnóstico ou Suspeita:</span>
                     <br />
-                    <input type="checkbox" name="RespFamG1Name" id="RespFamMaeId" class="cpbOp opResp opRespFam opRespGFam"> Mãe
-                    <input type="checkbox" name="RespFamG1Name" id="RespFamPaitId" class="cpbOp opResp opRespFam opRespGFam"> Pai
+                    <input type="checkbox" name="RespFamG1Name" id="RespFamMaeId" class="cpbOp famOp opResp opRespFam opRespGFam"> Mãe
+                    <input type="checkbox" name="RespFamG1Name" id="RespFamPaitId" class="cpbOp famOp opResp opRespFam opRespGFam"> Pai
                     <br />
-                    <input type="checkbox" name="RespFamAvóMatName" id="RespFamAvóMatId" class="cpbOp opResp opRespFam opRespGFam"> Avó Materna
-                    <input type="checkbox" name="RespFamAvóPatName" id="RespFamAvóPatId" class="cpbOp opResp opRespFam opRespGFam"> Avó Paterna
-                    <input type="checkbox" name="RespFamAvoMatName" id="RespFamAvoMatId" class="cpbOp opResp opRespFam opRespGFam"> Avô Materno
-                    <input type="checkbox" name="RespFamAvóPatName" id="RespFamAvoPatId" class="cpbOp opResp opRespFam opRespGFam"> Avô Paterno
+                    <input type="checkbox" name="RespFamAvóMatName" id="RespFamAvóMatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Avó Materna
+                    <input type="checkbox" name="RespFamAvóPatName" id="RespFamAvóPatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Avó Paterna
+                    <input type="checkbox" name="RespFamAvoMatName" id="RespFamAvoMatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Avô Materno
+                    <input type="checkbox" name="RespFamAvóPatName" id="RespFamAvoPatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Avô Paterno
                     <br />
-                    <input type="checkbox" name="RespFamBisavóMatMatName" id="RespFamBisavóMatMatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavó Mater-materna
-                    <input type="checkbox" name="RespFamBisavóMatPatName" id="RespFamBisavóMatPatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavó Mater-paterna
-                    <input type="checkbox" name="RespFamBisavóPatMatName" id="RespFamBisavóPatMatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavó Pater-materna
-                    <input type="checkbox" name="RespFamBisavóPatPatName" id="RespFamBisavóPatPatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavó Pater-paterna
+                    <input type="checkbox" name="RespFamBisavóMatMatName" id="RespFamBisavóMatMatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavó Mater-materna
+                    <input type="checkbox" name="RespFamBisavóMatPatName" id="RespFamBisavóMatPatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavó Mater-paterna
+                    <input type="checkbox" name="RespFamBisavóPatMatName" id="RespFamBisavóPatMatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavó Pater-materna
+                    <input type="checkbox" name="RespFamBisavóPatPatName" id="RespFamBisavóPatPatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavó Pater-paterna
                     <br />
-                    <input type="checkbox" name="RespFamBisavoMatMatName" id="RespFamBisavoMatMatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavô Mater-materno
-                    <input type="checkbox" name="RespFamBisavoMatPatName" id="RespFamBisavoMatPatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavô Mater-paterno
-                    <input type="checkbox" name="RespFamBisavoPatMatName" id="RespFamBisavoPatMatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavô Pater-materno
-                    <input type="checkbox" name="RespFamBisavoPatPatName" id="RespFamBisavoPatPatId" class="cpbOp opResp opRespFam opRespGFam"> Bisavô Pater-paterno
+                    <input type="checkbox" name="RespFamBisavoMatMatName" id="RespFamBisavoMatMatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavô Mater-materno
+                    <input type="checkbox" name="RespFamBisavoMatPatName" id="RespFamBisavoMatPatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavô Mater-paterno
+                    <input type="checkbox" name="RespFamBisavoPatMatName" id="RespFamBisavoPatMatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavô Pater-materno
+                    <input type="checkbox" name="RespFamBisavoPatPatName" id="RespFamBisavoPatPatId" class="cpbOp famOp opResp opRespFam opRespGFam"> Bisavô Pater-paterno
                     <br />
-                    <input type="checkbox" name="RespFamOtherName" id="RespFamOtherId" class="cpbOp opResp opRespFam opRespGFam"> Trisavós ou anteriores
+                    <input type="checkbox" name="RespFamOtherName" id="RespFamOtherId" class="cpbOp famOp opResp opRespFam opRespGFam"> Trisavós ou anteriores
                     <br />    
                   </div>
 
@@ -857,29 +853,29 @@
                     <br />
                   </span>
                   <div class="contQuat divMain" id="divAddOncFam">
-                    <textarea name="OncFamGeralName" id="OncFamGeralId" class="taOp taOnc" placeholder="Escreva aqui sobre a(s) Doença(s)"></textarea>
+                    <textarea name="OncFamGeralName" id="OncFamGeralId" class="taOp taOnc" placeholder="Escreva aqui sobre a(s) Doença(s) Oncológica(s)"></textarea>
                     <br />
                     <span class="spanSub spanSectAnt" id="spanOncFamG">Geradores Anteriores com Diagnóstico ou Suspeita:</span>
                     <br />
-                    <input type="checkbox" name="OncFamG1Name" id="OncFamMaeId" class="cpbOp opOnc opOncFam opOncGFam"> Mãe
-                    <input type="checkbox" name="OncFamG1Name" id="OncFamPaitId" class="cpbOp opOnc opOncFam opOncGFam"> Pai
+                    <input type="checkbox" name="OncFamG1Name" id="OncFamMaeId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Mãe
+                    <input type="checkbox" name="OncFamG1Name" id="OncFamPaitId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Pai
                     <br />
-                    <input type="checkbox" name="OncFamAvóMatName" id="OncFamAvóMatId" class="cpbOp opOnc opOncFam opOncGFam"> Avó Materna
-                    <input type="checkbox" name="OncFamAvóPatName" id="OncFamAvóPatId" class="cpbOp opOnc opOncFam opOncGFam"> Avó Paterna
-                    <input type="checkbox" name="OncFamAvoMatName" id="OncFamAvoMatId" class="cpbOp opOnc opOncFam opOncGFam"> Avô Materno
-                    <input type="checkbox" name="OncFamAvóPatName" id="OncFamAvoPatId" class="cpbOp opOnc opOncFam opOncGFam"> Avô Paterno
+                    <input type="checkbox" name="OncFamAvóMatName" id="OncFamAvóMatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Avó Materna
+                    <input type="checkbox" name="OncFamAvóPatName" id="OncFamAvóPatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Avó Paterna
+                    <input type="checkbox" name="OncFamAvoMatName" id="OncFamAvoMatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Avô Materno
+                    <input type="checkbox" name="OncFamAvóPatName" id="OncFamAvoPatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Avô Paterno
                     <br />
-                    <input type="checkbox" name="OncFamBisavóMatMatName" id="OncFamBisavóMatMatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavó Mater-materna
-                    <input type="checkbox" name="OncFamBisavóMatPatName" id="OncFamBisavóMatPatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavó Mater-paterna
-                    <input type="checkbox" name="OncFamBisavóPatMatName" id="OncFamBisavóPatMatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavó Pater-materna
-                    <input type="checkbox" name="OncFamBisavóPatPatName" id="OncFamBisavóPatPatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavó Pater-paterna
+                    <input type="checkbox" name="OncFamBisavóMatMatName" id="OncFamBisavóMatMatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavó Mater-materna
+                    <input type="checkbox" name="OncFamBisavóMatPatName" id="OncFamBisavóMatPatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavó Mater-paterna
+                    <input type="checkbox" name="OncFamBisavóPatMatName" id="OncFamBisavóPatMatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavó Pater-materna
+                    <input type="checkbox" name="OncFamBisavóPatPatName" id="OncFamBisavóPatPatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavó Pater-paterna
                     <br />
-                    <input type="checkbox" name="OncFamBisavoMatMatName" id="OncFamBisavoMatMatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavô Mater-materno
-                    <input type="checkbox" name="OncFamBisavoMatPatName" id="OncFamBisavoMatPatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavô Mater-paterno
-                    <input type="checkbox" name="OncFamBisavoPatMatName" id="OncFamBisavoPatMatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavô Pater-materno
-                    <input type="checkbox" name="OncFamBisavoPatPatName" id="OncFamBisavoPatPatId" class="cpbOp opOnc opOncFam opOncGFam"> Bisavô Pater-paterno
+                    <input type="checkbox" name="OncFamBisavoMatMatName" id="OncFamBisavoMatMatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavô Mater-materno
+                    <input type="checkbox" name="OncFamBisavoMatPatName" id="OncFamBisavoMatPatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavô Mater-paterno
+                    <input type="checkbox" name="OncFamBisavoPatMatName" id="OncFamBisavoPatMatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavô Pater-materno
+                    <input type="checkbox" name="OncFamBisavoPatPatName" id="OncFamBisavoPatPatId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Bisavô Pater-paterno
                     <br />
-                    <input type="checkbox" name="OncFamOtherName" id="OncFamOtherId" class="cpbOp opOnc opOncFam opOncGFam"> Trisavós ou anteriores
+                    <input type="checkbox" name="OncFamOtherName" id="OncFamOtherId" class="cpbOp famOp opOnc opOncFam opOncGFam"> Trisavós ou anteriores
                     <br />
                   </div>
 
@@ -926,7 +922,7 @@
 
             <div class="contTerc divMain divFreq">
               <span class="contQuat sectFreqSpan">
-                <label for="escovNId" class="labDlist">Escovações por dia:</label>
+                <label for="escovNId" class="labDlist" id="labEscovN">Escovações por dia:</label>
                 <input type="number" list="escovN" name="escovNName" id="escovNId" class="freqInpList" autocapitalize="on"/>
                 <datalist id="escovN">
                   <option value="1"></option>
@@ -937,7 +933,7 @@
               </span>
 
               <span class="contQuat sectFreqSpan">
-                <label for="fioNId" class="labDlist">Uso de Fio Dental por dia:</label>
+                <label for="fioNId" class="labDlist" id="labFioN">Uso de Fio Dental por dia:</label>
                 <input type="number" list="fioN" name="fioNName" id="fioNId" class="freqInpList" autocapitalize="on"/>
                 <datalist id="fioN">
                   <option value="1"></option>
@@ -948,7 +944,7 @@
               </span>
 
               <span class="contQuat sectFreqSpan">
-                <label for="enxgNId" class="labDlist">Uso de Enxaguante Bucal por dia:</label>
+                <label for="enxgNId" class="labDlist" id="labEnxgN">Uso de Enxaguante Bucal por dia:</label>
                 <input type="number" list="enxgN" name="enxgNName" id="enxgNId" class="freqInpList" autocapitalize="on"/>
                 <datalist class="dlistFreq" id="enxgN">
                   <option class="optDlist optDlistEnxg" value="1"></option>
@@ -962,9 +958,9 @@
                 <span class="sectFreqSubSpan" id="pbAlmSpan">
                   Consumo de Corantes ou Alimentos muito doces:
                   <span class="sectFreqSubSpan" id="pbAlmSubSubSpan">
-                    <input type="radio" name="pbAlmName" id="pbAlmYes" class="freqRad freqAlmRad"/>
+                    <input type="radio" name="pbAlmName" id="pbAlmYes" class="freqRad freqAlmRad boolOp"/>
                     <label for="pbAlmYes" class="labRad inpFreqRot">Sim</label>
-                    <input type="radio" name="pbAlmName" id="pbAlmNo" class="freqRad freqAlmRad"/>
+                    <input type="radio" name="pbAlmName" id="pbAlmNo" class="freqRad freqAlmRad boolOp"/>
                     <label for="pbAlmNo" class="labRad inpFreqRot">Não</label>
                   </span>
                 </span>
@@ -981,7 +977,7 @@
           <section class="contSec sectionMain sectionConfirm" id="sectConfirmCheck">
             <blockquote class="contTerc declr" id="declrEnd">"DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA"
               <label for="confirmId" class="contQuat labConfirm"></label>
-              <input type="checkbox" name="confirmName" id="confirmId" class="contQuat" required />
+              <input type="checkbox" name="confirmName" id="confirmId" class="contQuat" required /> CONCORDO
             </blockquote>
             <div class="contTerc divMain" id="divConfirm">
               <span class="contQuat spanConfirm "id="spanConfirm1">
@@ -994,7 +990,7 @@
               </span>
   
               <div class="contQuat divSub divConfirm" id="divConfirm2">
-                <label for="confirmLocId" class="contQuint labConfirm">
+                <label for="confirmLocId" class="contQuint labConfirm" id="labConfirmLoc">
                   Local:
                   <input
                     type="text"

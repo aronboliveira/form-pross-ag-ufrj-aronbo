@@ -1622,3 +1622,253 @@ export function switchAutocorrect(click, deactAutocorrectBtn) {
       : "Ativar Autocorreção";
   }
 }
+
+export function changeTabDCutLayout(protocolo, tabDC) {
+  const bodyType = document.getElementById("textBodytype");
+  if (
+    protocolo &&
+    tabDC &&
+    bodyType &&
+    (bodyType instanceof HTMLSelectElement ||
+      bodyType instanceof HTMLInputElement)
+  ) {
+    const opsProtocolo = Array.from(protocolo.children);
+    const filteredOpsProtocolo = opsProtocolo.filter(
+      (childProtocolo) => childProtocolo instanceof HTMLOptionElement
+    );
+    if (filteredOpsProtocolo.length < opsProtocolo.length) {
+      console.warn(
+        `Algum elementos de Protocolo não foram reconhecidos como opções. Total de reconhecimentos: ${filteredOpsProtocolo.length}`
+      );
+    }
+    for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
+      const optionElement = filteredOpsProtocolo[iOp];
+      const optionElementMatch7 = protocolo.value
+        .match(/^pollock7$/i)
+        ?.toString();
+      const optionElementMatch3 = protocolo.value
+        .match(/^pollock3$/i)
+        ?.toString();
+      if (optionElementMatch3) {
+        console.log(protocolo.value);
+        const arrayTabIds = checkTabRowsIds(tabDC);
+        if (arrayTabIds && arrayTabIds.length !== tabDC.rows.length) {
+          const genderedIds = filterIdsByGender(arrayTabIds, bodyType.value);
+          if (bodyType.value === "masculino" || bodyType.value === "feminino") {
+            if (genderedIds && genderedIds.length === 3) {
+              let matchedIds = [];
+              for (let iG = 0; iG < genderedIds.length; iG++) {
+                for (let iR = 0; iR < arrayTabIds.length; iR++) {
+                  if (genderedIds[iG].toLowerCase() === arrayTabIds[iR]) {
+                    const slice1 = genderedIds[iG].charAt(0).toUpperCase();
+                    const slice2 = genderedIds[iG].slice(1);
+                    if (slice1 && slice2) {
+                      const capitalizedGenderedId = slice1 + slice2;
+                      matchedIds.push(`row${capitalizedGenderedId}`);
+                    }
+                  }
+                }
+              }
+              const medTrs = Array.from(
+                tabDC.querySelectorAll("tr.tabRowDCutMed")
+              );
+
+              for (let iTr = 0; iTr < medTrs.length; iTr++) {
+                medTrs[iTr].setAttribute("hidden", "");
+                const innerInp = medTrs[iTr].querySelector("input");
+                if (innerInp && innerInp.required) {
+                  innerInp.removeAttribute("required");
+                  if (medTrs[iTr].id?.slice(-4) !== "Coxa") {
+                    innerInp.value = "";
+                    console.log("input zerado");
+                  }
+                  console.log("required removido e zerado");
+                }
+              }
+              for (let iMat = 0; iMat < matchedIds.length; iMat++) {
+                const matchedTr = document.getElementById(matchedIds[iMat]);
+                if (matchedTr) {
+                  const isRowHidden = matchedTr.hidden;
+                  if (isRowHidden) {
+                    matchedTr.removeAttribute("hidden");
+                  }
+                  const innerInp = matchedTr.querySelector("input");
+                  if (innerInp) {
+                    innerInp.setAttribute("required", "");
+                    console.log("required adicionado");
+                  }
+                }
+              }
+            } else {
+              console.warn(
+                `Erro na validação de ids de row. Elemento ${JSON.stringify(
+                  genderedIds
+                )}; Número obtido ${
+                  genderedIds?.length ?? null
+                }; Número esperado: 3`
+              );
+            }
+          } else if (bodyType.value === "neutro") {
+            if (genderedIds && genderedIds.length === 5) {
+              let matchedIds = [];
+              for (let iG = 0; iG < genderedIds.length; iG++) {
+                for (let iR = 0; iR < arrayTabIds.length; iR++) {
+                  if (genderedIds[iG].toLowerCase() === arrayTabIds[iR]) {
+                    const slice1 = genderedIds[iG].charAt(0).toUpperCase();
+                    const slice2 = genderedIds[iG].slice(1);
+                    const capitalizedGenderedId = slice1 + slice2;
+                    matchedIds.push(`row${capitalizedGenderedId}`);
+                  }
+                }
+              }
+              const medTrs = Array.from(
+                tabDC.querySelectorAll("tr.tabRowDCutMed")
+              );
+              for (let iTr = 0; iTr < medTrs.length; iTr++) {
+                medTrs[iTr].setAttribute("hidden", "");
+                const innerInp = medTrs[iTr].querySelector("input");
+                if (innerInp) {
+                  if (medTrs[iTr].id?.slice(-4) !== "Coxa") {
+                    innerInp.value = "";
+                    console.log("input zerado");
+                  }
+                }
+              }
+              for (let iM = 0; iM < matchedIds.length; iM++) {
+                const matchedTr = document.getElementById(matchedIds[iM]);
+                if (matchedTr) {
+                  const isRowHidden = matchedTr.hidden;
+                  if (isRowHidden) {
+                    matchedTr.removeAttribute("hidden");
+                    const innerInp = matchedTr.querySelector("input");
+                    if (innerInp && matchedTr.id?.slice(-4) !== "Coxa") {
+                      innerInp.removeAttribute("required");
+                    }
+                  }
+                }
+              }
+            } else {
+              console.warn(
+                `Erro na validação de ids de row. Elemento ${JSON.stringify(
+                  genderedIds
+                )}; Número obtido ${
+                  genderedIds?.length ?? null
+                }; Número esperado: 3`
+              );
+            }
+          } else {
+            console.warn(
+              `Erro validando valor de bodyType. Valor: ${bodyType.value}`
+            );
+          }
+        } else {
+          console.warn(
+            `Erro na verificação do número de rows. Elemento ${JSON.stringify(
+              arrayTabIds
+            )}; Número obtido: ${
+              arrayTabIds?.length ?? null
+            }; Número esperado: ${tabDC.rows.length}`
+          );
+        }
+      } else if (optionElementMatch7) {
+        const medTrs = Array.from(tabDC.querySelectorAll("tr.tabRowDCutMed"));
+        for (let iTr = 0; iTr < medTrs.length; iTr++) {
+          const isRowHidden = medTrs[iTr].hidden;
+          if (isRowHidden) {
+            medTrs[iTr].removeAttribute("hidden");
+            const innerInp = medTrs[iTr].querySelector("input");
+            if (innerInp) {
+              innerInp.setAttribute("required", "");
+            }
+          }
+        }
+      } else {
+        console.warn(
+          `Erro na match de protocolo. Protocolo: ${protocolo.value}`
+        );
+      }
+    }
+  } else {
+    console.warn(
+      `Erro validando campo de tipo corporal: elemento ${bodyType}, instância ${
+        Object.prototype.toString.call(bodyType).slice(-8, 1) ?? null
+      }`
+    );
+  }
+}
+
+function checkTabRowsIds(tab) {
+  let arrayTabIds = [];
+  if (tab.id === "tabDCut") {
+    const tableRows = Array.from(tab.querySelectorAll("tr.tabRowDCutMed"));
+    for (let iR = 0; iR < tableRows.length; iR++) {
+      const rowId = tableRows[iR].id;
+      const rowIdMatch = rowId.match(/^row/)?.toString();
+      if (rowIdMatch) {
+        const slicedRowId = rowId.slice(3).toLowerCase();
+        arrayTabIds.push(slicedRowId);
+      } else {
+        console.warn(`Erro validando id da row. Id: ${rowId}`);
+      }
+    }
+  } else {
+    console.warn(`Erro validando id da Tabela de DCut. Id: ${tab.id}`);
+  }
+  return arrayTabIds;
+}
+
+function filterIdsByGender(arrayIds, bodyType) {
+  if (Array.isArray(arrayIds)) {
+    if (
+      arrayIds.every((prop) => typeof prop === "string") &&
+      typeof bodyType === "string"
+    ) {
+      let genderedIds = [];
+      switch (bodyType) {
+        case "masculino":
+          for (let iM = 0; iM < arrayIds.length; iM++) {
+            if (
+              arrayIds[iM] === "peit" ||
+              arrayIds[iM] === "abd" ||
+              arrayIds[iM] === "coxa"
+            ) {
+              genderedIds.push(arrayIds[iM]);
+            }
+          }
+          break;
+        case "feminino":
+          for (let iF = 0; iF < arrayIds.length; iF++) {
+            if (
+              arrayIds[iF] === "tricp" ||
+              arrayIds[iF] === "suprail" ||
+              arrayIds[iF] === "coxa"
+            ) {
+              genderedIds.push(arrayIds[iF]);
+            }
+          }
+          break;
+        case "neutro":
+          for (let iN = 0; iN < arrayIds.length; iN++) {
+            if (
+              arrayIds[iN] === "peit" ||
+              arrayIds[iN] === "abd" ||
+              arrayIds[iN] === "tricp" ||
+              arrayIds[iN] === "suprail" ||
+              arrayIds[iN] === "coxa"
+            )
+              genderedIds.push(arrayIds[iN]);
+          }
+          break;
+        default:
+          console.warn(
+            `Erro reocnhecendo value de bodyType. Value: ${bodyType}`
+          );
+      }
+      return genderedIds;
+    } else {
+      console.warn(`Erro validando elementos como strings`);
+    }
+  } else {
+    console.warn(`Erro validando array`);
+  }
+}

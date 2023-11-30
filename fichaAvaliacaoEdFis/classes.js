@@ -35,8 +35,24 @@ export class Person {
     console.log("Porcentagem de Gordura Coporal: " + PGC.toFixed(3));
     return PGC.toFixed(3);
   }
-  calcTMB(person) {}
-  calcGET(person) {}
+  checkTMBType(person) {
+    //checar IMC
+  }
+  calcTMBEutrof(person) {
+    //constantes variando homem/mulher
+  }
+  calcTMBObs(person) {
+    //constantes variando homem/mulher
+  }
+  calcTMBAtl(person) {
+    //constantes variando homem/mulher
+  }
+  checkAtLvl(person) {
+    //checar AtLvl
+  }
+  calcGET(person) {
+    //varia com retorno de atLvl
+  }
 }
 
 export class Man extends Person {
@@ -53,9 +69,6 @@ export class Man extends Person {
       0.0002574
     );
   }
-  calcPGCMasc(person) {
-    super.calcPGC(person);
-  }
 }
 
 export class Woman extends Person {
@@ -71,8 +84,5 @@ export class Woman extends Person {
       0.0000023,
       0.0001392
     );
-  }
-  calcPGCFem(person) {
-    super.calcPGC(person);
   }
 }

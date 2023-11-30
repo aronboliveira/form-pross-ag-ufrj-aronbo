@@ -294,7 +294,7 @@
             <hr />
 
             <label for="inpElimUrDiaMin" class="contTerc labAlimRot labUr labUrDia">
-              Urina quantas vezes por dia, no mínimo?
+              Quantas micções por dia, no mínimo?
               <input
                 type="number"
                 min="0"
@@ -307,7 +307,7 @@
             <br />
 
             <label for="inpElimUrDiaMax" class="contTerc labAlimRot labUr labUrDia">
-              Urina quantas vezes por dia, no máximo?
+              Quantas micções por dia, no máximo?
               <input
                 type="number"
                 min="1"
@@ -320,7 +320,7 @@
             <br />
 
             <label for="inpElimUrDiaMin" class="contTerc labAlimRot labUr labUrInterval">
-              Qual é o intervalo &#40em horas&#41 entre cada excreção de urina, no mínimo?
+              Qual é o intervalo &#40em horas&#41 entre cada micção, no mínimo?
               <input
                 type="number"
                 min="0"
@@ -333,7 +333,7 @@
             <br />
 
             <label for="inpElimUrDiaMax" class="contTerc labAlimRot labUr labUrInterval">
-              Qual é o intervalo &#40em horas&#41 entre cada excreção de urina, no máximo?
+              Qual é o intervalo &#40em horas&#41 entre cada micção, no máximo?
               <input
                 type="number"
                 min="0"
@@ -343,6 +343,19 @@
                 required
               />
             </label>
+            <br />
+
+            <span id="spanDiur" class="contTerc labAlimRot labUr labUrInterval">
+              Diurese:
+              <input
+                type="number"
+                min="0"
+                max="9999"
+                class="contQuat inpAlimRot inpUr float"
+                id="inpDiur"
+              />
+              <label for="inpDiur" id="labDiur" class="contQuat labAlimRot labUr labUrInterval">ml/dia</label>
+            </span>
             <br />
 
             <label for="inpElimUrCor" class="contTerc labAlimRot labUr">
@@ -924,7 +937,7 @@
                 <span class="contQuat spanMain spanMainTabProgCons" id="tabSpanDCut">Protocolo:
                   <select class="contQuint selectTabProgCons" id="tabSelectDCutId" name="tabSelectDCutName" required>
                     <option value="pollock3" class="contSext opTabProgCons opProtoc" id="opProtocJP3" selected>Jackson/Pollock 3</option>
-                    <option value="pollock3" class="contSext opTabProgCons opProtoc" id="opProtocJP7">Jackson/Pollock 7</option>
+                    <option value="pollock7" class="contSext opTabProgCons opProtoc" id="opProtocJP7">Jackson/Pollock 7</option>
                   </select>
                 </span>
                 </caption>
@@ -944,7 +957,7 @@
                 </thead>
                 <tbody class="contQuat tabTbodyProgCons" id="tabTbodyDCut" itemprop="blockDCut">
 
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut2" itemprop="rowDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowSubescap" hidden>
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut2" id="tabCelRowDCut2_1" itemprop="subescapularStr">Subescapular</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut2" id="tabCelRowDCut2_2" itemprop="subescapularNum">
                       <input type="number" class="contSet tabInpProgCons tabInpRowDCut2 float" id="tabInpRowDCut2_2" min="0" max="255" />
@@ -961,7 +974,7 @@
                     </td>
                   </tr>
 
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut3" itemprop="rowDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowAxilm" hidden>
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut3" id="tabCelRowDCut3_1" itemprop="axilarMediaStr">Axilar Média</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut3" id="tabCelRowDCut3_2" itemprop="axilarMediaNum">
                       <input type="number" class="contSet tabInpProgCons tabInpRowDCut3 float" id="tabInpRowDCut3_2" min="0" max="255" />
@@ -978,7 +991,7 @@
                     </td>
                   </tr>
 
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut4" itemprop="rowDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowCoxa">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_1" itemprop="coxaStr">Coxa</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_2" itemprop="coxaNum">
                       <input type="number" class="contSet tabInpProgCons tabInpRowDCut4 float" id="tabInpRowDCut4_2" min="0" max="255" required />
@@ -995,7 +1008,7 @@
                     </td>
                   </tr>
 
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut5" itemprop="rowDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowTricp" hidden>
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut5" id="tabCelRowDCut5_1" itemprop="triciptalStr">Tríciptal</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut5" id="tabCelRowDCut5_2" itemprop="triciptalNum">
                       <input type="number" class="contSet tabInpProgCons tabInpRowDCut5 float" id="tabInpRowDCut5_2" min="0" max="255" />
@@ -1011,7 +1024,7 @@
                     </td>
                   </tr>
 
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut6" itemprop="rowDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowSuprail" hidden>
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut6" id="tabCelRowDCut6_1" itemprop="suprailiacaStr">Suprailíaca</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut6" id="tabCelRowDCut6_2" itemprop="suprailiacaNum">
                       <input type="number" class="contSet tabInpProgCons tabInpRowDCut6 float" id="tabInpRowDCut6_2" min="0" max="255" />
@@ -1027,10 +1040,10 @@
                     </td>
                   </tr>
 
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut7" itemprop="rowDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowPeit">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_1" itemprop="peitoralStr">Peitoral</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_2" itemprop="peitoralNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut7 float" id="tabInpRowDCut7_2" min="0" max="255" />
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut7 float" id="tabInpRowDCut7_2" min="0" max="255" required />
                       <label for="tabInpRowDCut7_2" id="labInpRowDCut7_2" class="contSet tabLabProgCons tabLabRowDCut7" id="tabLabRowDCut7_2">mm</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_3" itemprop="peitoralNum">
@@ -1043,10 +1056,10 @@
                     </td>
                   </tr>
 
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut8" itemprop="rowDCut">
+                  <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowAbd">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_1" itemprop="abdominalStr">Abdominal</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_2" itemprop="abdominalNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut8 float" id="tabInpRowDCut8_2" min="0" max="255" />
+                      <input type="number" class="contSet tabInpProgCons tabInpRowDCut8 float" id="tabInpRowDCut8_2" min="0" max="255" required />
                       <label for="tabInpRowDCut8_2" id="labInpRowDCut8_2" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_2">mm</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_3" itemprop="abdominalNum">
@@ -1058,7 +1071,8 @@
                       <label for="tabInpRowDCut8_4" id="labInpRowDCut8_4" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_4">mm</label>
                     </td>
                   </tr>
-                  <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut9" itemprop="rowDCut">
+
+                  <tr class="contQuint tabRowProgCons tabRowDCutSum" id="rowSum">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_1" itemprop="somaStr">Soma</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
                       <input type="number" class="contSet tabInpProgCons tabInpRowDCut9 float" id="tabInpRowDCut9_2" min="0" max="255" required/>
@@ -1185,6 +1199,17 @@
                   <option value="feminino">Feminino | Feminilizado</option>
                   <option value="neutro">Neutro</option>
                 </select>                
+              </span>
+              <br />
+              <span>
+                Fator NAF aplicado:
+                <select id="nafType">
+                  <option value="sedentario">1.2</option>
+                  <option value="leve">1.4</option>
+                  <option value="moderado">1.6</option>
+                  <option value="intenso">1.9</option>
+                  <option value="muitoIntenso">2.2</option>
+                </select>
               </span>
             </div>
 

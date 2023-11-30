@@ -1,8 +1,545 @@
 import * as Model from "./model.js";
+import * as Classes from "./classes.js";
 
 const rgbaRegex = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
 let blockCount = 1;
 let isProgBarLoading = false;
+
+export function getJSONDesc(inputs: (Element | null)[]) {
+  let closestValidElements: string[] = [];
+  let closestBooleanElements: string[] = [];
+  let closestBooleanElementsIds: string[] = [];
+  let closestValidElementsIds: string[] = [];
+  let inpValues: string[] = [];
+  let inpIds: string[] = [];
+  let JSONStore: Classes.JSONStorager[] = [];
+  let JSONStoreDescriptors: string[] = [];
+  //loop para construção dos arrays iniciais
+  for (let i = 0; i < inputs.length; i++) {
+    //loop para múltiplas tentativas de localização do texto de interesse
+    let closestParent =
+      inputs[i]?.closest("span") || inputs[i]?.closest("label");
+    if (closestParent) {
+      let loopAcc = 0;
+      while (loopAcc < 10 && closestParent.textContent === "") {
+        //loop para escalada genealógica até encontrar parent de interesse ou desistir após 10 iterações
+        loopAcc++;
+        closestParent =
+          closestParent?.closest("span") || closestParent?.closest("label");
+        if (closestParent?.textContent !== "" || loopAcc > 10) {
+          break;
+        }
+      }
+      if (closestParent?.textContent !== "") {
+        if (
+          closestParent?.textContent === "Sim" || //entrada em loop para eliminar parents com text sim/não (não informativo) ou desistir após 10 iterações
+          closestParent?.textContent === "Não"
+        ) {
+          const booleanParentCopy = closestParent;
+          closestBooleanElements.push(
+            booleanParentCopy?.textContent?.trim().replaceAll("\n", "") ??
+              "null"
+          );
+          closestBooleanElementsIds.push(booleanParentCopy.id ?? "null");
+          while (
+            loopAcc < 10 &&
+            closestParent &&
+            (closestParent.textContent === "Sim" ||
+              closestParent.textContent === "Não")
+          ) {
+            loopAcc++;
+            closestParent =
+              closestParent?.closest("span") || closestParent?.closest("label");
+            if (
+              (closestParent &&
+                closestParent?.textContent !== "Sim" &&
+                closestParent?.textContent !== "Não" &&
+                closestParent?.textContent !== "") ||
+              loopAcc > 10
+            ) {
+              closestValidElements.push(
+                closestParent?.textContent?.trim().replaceAll("\n", "") ??
+                  "null"
+              );
+              closestValidElementsIds.push(closestParent?.id ?? "null");
+              inpIds.push(inputs[i]?.id ?? "null");
+              if (
+                inputs[i] instanceof HTMLInputElement &&
+                ((inputs[i] as HTMLInputElement)?.type === "radio" ||
+                  (inputs[i] as HTMLInputElement)?.type === "checkbox")
+              ) {
+                inpValues.push(
+                  (inputs[i] as HTMLInputElement)?.checked.toString() ?? "false"
+                );
+              } else {
+                inpValues.push(
+                  (inputs[i] as HTMLInputElement)?.value ?? "null"
+                );
+              }
+              break;
+            }
+          }
+        } else {
+          if (
+            inputs[i] instanceof HTMLInputElement &&
+            (inputs[i] as HTMLInputElement)?.type === "radio" &&
+            inputs[i]?.id !== ""
+          ) {
+            if (
+              inputs[i]?.nextElementSibling &&
+              inputs[i]?.nextElementSibling instanceof HTMLLabelElement &&
+              inputs[i]?.nextElementSibling?.classList.contains("boolOp")
+            ) {
+              if (inputs[i]?.id.match(/Yes/)) {
+                closestValidElements.push(
+                  inputs[i]?.id?.slice(-3)! +
+                    closestParent?.textContent?.trim().replaceAll("\n", "")! ??
+                    "null"
+                );
+              } else if (inputs[i]?.id.match(/No/)) {
+                closestValidElements.push(
+                  inputs[i]?.id?.slice(-2)! +
+                    closestParent?.textContent?.trim().replaceAll("\n", "")! ??
+                    "null"
+                );
+              } else {
+                console.warn("Caso inesperado de boolOp Radio + Label");
+              }
+            } else {
+              if (
+                (inputs[i] instanceof HTMLInputElement ||
+                  inputs[i] instanceof HTMLTextAreaElement) &&
+                (inputs[i] as HTMLInputElement | HTMLTextAreaElement)?.name ===
+                  "nivelFumo"
+              ) {
+                closestValidElements.push(
+                  inputs[i]?.id?.slice(0, 1).toUpperCase()! +
+                    inputs[i]?.id?.slice(1, 4) +
+                    "_" +
+                    inputs[i]?.id?.slice(4, 8) ?? "null"
+                );
+              }
+            }
+          } else {
+            if (
+              inputs[i]?.classList.contains("opFumSubs") &&
+              inputs[i]?.nextElementSibling &&
+              inputs[i]?.nextElementSibling?.textContent !== ""
+            ) {
+              closestValidElements.push(
+                inputs[i]?.nextElementSibling?.textContent +
+                  "_" +
+                  closestParent?.textContent?.trim().replaceAll("\n", "") ??
+                  "null"
+              );
+            } else {
+              if (inputs[i]?.classList.contains("inpAntMed")) {
+                closestValidElements.push(
+                  "Tratamento_Médico" + "_" + inputs[i]?.id.slice(-1) ?? "null"
+                );
+              } else {
+                if (inputs[i]?.id === "citeNameId") {
+                  closestValidElements.push("Assinatura_Usuário" ?? "null");
+                } else {
+                  if (inputs[i]?.id === "confirmLocId") {
+                    console.log("loc");
+                    console.log(closestParent);
+                    console.log(
+                      closestParent?.textContent?.trim().replaceAll("\n", "") //loc está sendo pareado com 1)
+                    );
+                    closestValidElements.push(
+                      closestParent?.textContent?.trim().replaceAll("\n", "") ??
+                        "null"
+                    );
+                  } else {
+                    closestValidElements.push(
+                      closestParent?.textContent?.trim().replaceAll("\n", "") ??
+                        "null"
+                    );
+                  }
+                }
+              }
+            }
+          }
+          inpIds.push(inputs[i]?.id ?? "null"); //obtenção de id de inputs
+          if (
+            (inputs[i] instanceof HTMLInputElement &&
+              (inputs[i] as HTMLInputElement)?.type === "radio") ||
+            (inputs[i] as HTMLInputElement)?.type === "checkbox"
+          ) {
+            inpValues.push(
+              (inputs[i] as HTMLInputElement)?.checked.toString() ?? "false"
+            );
+          } else {
+            if (inputs[i]?.id === "citeNameId") {
+              if (
+                inputs[i]?.textContent === "Insira Seu Nome Aqui" ||
+                inputs[i]?.textContent === "--Nome"
+              ) {
+                inpValues.push("null");
+              } else {
+                inpValues.push(inputs[i]?.textContent ?? "null");
+              }
+            } else {
+              inpValues.push((inputs[i] as HTMLInputElement)?.value ?? "null");
+            }
+          }
+          if (closestParent?.id !== "") {
+            //obtenção de ids dos 'parents'
+            //correção de id de interesse caso a do parent não esteja presente (atenção: desassocia id e text de interesse)
+            closestValidElementsIds.push(closestParent?.id ?? "null");
+          } else if (closestParent.id === "") {
+            const nextESibling = inputs[i]?.nextElementSibling;
+            if (
+              nextESibling &&
+              nextESibling instanceof HTMLLabelElement &&
+              nextESibling.textContent !== ""
+            ) {
+              closestValidElementsIds.push(nextESibling.id ?? "null");
+            } else {
+              const previousESibling = inputs[i]?.previousElementSibling;
+              if (
+                previousESibling &&
+                previousESibling instanceof HTMLLabelElement &&
+                previousESibling.textContent !== ""
+              ) {
+                closestValidElementsIds.push(previousESibling.id ?? "null");
+              } else if (
+                inputs[i] instanceof HTMLTextAreaElement &&
+                (inputs[i] as HTMLTextAreaElement)?.placeholder !== ""
+              ) {
+                closestValidElementsIds.push(inputs[i]?.id ?? "null");
+              } else {
+                console.warn(
+                  `Nenhuma id próxima válida retornada para o input ${inputs[i]?.id}`
+                );
+              }
+            }
+          }
+        }
+      } else if (closestParent?.textContent === "") {
+        console.warn(`Erro ao localizar textContent de parent`);
+      }
+    } else {
+      //se falha em parents, procura em siblings <label> ou em placeholders de textareas
+      const previousSibling = inputs[i]?.previousElementSibling;
+      if (
+        previousSibling instanceof HTMLLabelElement &&
+        previousSibling.textContent !== ""
+      ) {
+        closestValidElements.push(
+          previousSibling.textContent?.trim().replaceAll("\n", "") ?? "null"
+        );
+        closestValidElementsIds.push(previousSibling.id ?? "null");
+        inpIds.push(inputs[i]?.id ?? "null");
+        if (
+          inputs[i] instanceof HTMLInputElement &&
+          ((inputs[i] as HTMLInputElement)?.type === "radio" ||
+            (inputs[i] as HTMLInputElement)?.type === "checkbox")
+        ) {
+          inpValues.push(
+            (inputs[i] as HTMLInputElement)?.checked.toString() ?? "false"
+          );
+        } else {
+          inpValues.push((inputs[i] as HTMLInputElement)?.value ?? "null");
+        }
+      } else {
+        if (
+          inputs[i] instanceof HTMLTextAreaElement &&
+          (inputs[i] as HTMLTextAreaElement)?.placeholder
+        ) {
+          closestValidElements.push(
+            (inputs[i] as HTMLTextAreaElement)?.placeholder
+          );
+          closestValidElementsIds.push(inputs[i]?.id ?? "null");
+          inpIds.push(inputs[i]?.id ?? "null");
+          if (
+            inputs[i] instanceof HTMLInputElement &&
+            ((inputs[i] as HTMLInputElement)?.type === "radio" ||
+              (inputs[i] as HTMLInputElement)?.type === "checkbox")
+          ) {
+            inpValues.push(
+              (inputs[i] as HTMLInputElement)?.checked.toString() ?? "false"
+            );
+          } else {
+            inpValues.push((inputs[i] as HTMLInputElement)?.value ?? "null");
+          }
+        } else if (
+          inputs[i] instanceof HTMLInputElement &&
+          (inputs[i] as HTMLInputElement)?.type === "checkbox"
+        ) {
+          if (inputs[i]?.classList.contains("famOp")) {
+            const upperCaseMatch = inputs[i]?.id?.match(/Fam/g);
+            if (upperCaseMatch && inputs[i]?.id) {
+              const upperCaseIndex = inputs[i]?.id.indexOf("Fam");
+              const slicedId = inputs[i]?.id.slice(0, upperCaseIndex);
+              closestValidElements.push(
+                slicedId +
+                  "_" +
+                  inputs[i]?.nextSibling?.textContent?.replaceAll(
+                    /^[\s]+/g,
+                    ""
+                  ) ?? "null"
+              );
+            } else {
+              closestValidElements.push(
+                inputs[i]?.nextSibling?.textContent?.replaceAll(
+                  /^[\s]+/g,
+                  ""
+                ) ?? "null"
+              );
+            }
+          } else if (inputs[i]?.classList.contains("opHep")) {
+            closestValidElements.push(
+              "Hepatite_" +
+                inputs[i]?.nextSibling?.textContent?.replaceAll(
+                  /^[\s]+/g,
+                  ""
+                ) ?? "null"
+            );
+          } else {
+            closestValidElements.push(
+              inputs[i]?.nextSibling?.textContent?.replaceAll(/^[\s]+/g, "") ??
+                "null"
+            );
+          }
+          closestValidElementsIds.push(inputs[i]?.id ?? "null");
+          inpIds.push(inputs[i]?.id ?? "null");
+          inpValues.push(
+            (inputs[i] as HTMLInputElement)?.checked.toString() ?? "false"
+          );
+        } else {
+          if (inputs[i]?.classList.contains("opHAS")) {
+            closestValidElements.push(
+              inputs[i]?.nextSibling?.textContent?.trim() ?? "null"
+            );
+            closestValidElementsIds.push(inputs[i]?.id ?? "null");
+            inpIds.push(inputs[i]?.id ?? "null");
+            inpValues.push(
+              (inputs[i] as HTMLInputElement)?.checked.toString() ?? "false"
+            );
+          } else {
+            const nextESibling = inputs[i]?.nextElementSibling;
+            if (
+              nextESibling instanceof HTMLLabelElement &&
+              nextESibling.textContent !== ""
+            ) {
+              closestValidElements.push(
+                nextESibling.textContent?.trim().replaceAll("\n", "") ?? "null"
+              );
+              closestValidElementsIds.push(nextESibling.id ?? "null");
+              inpIds.push(inputs[i]?.id ?? "null");
+              if (
+                inputs[i] instanceof HTMLInputElement &&
+                ((inputs[i] as HTMLInputElement)?.type === "radio" ||
+                  (inputs[i] as HTMLInputElement)?.type === "checkbox")
+              ) {
+                inpValues.push(
+                  (inputs[i] as HTMLInputElement)?.checked.toString() ?? "false"
+                );
+              } else {
+                inpValues.push(
+                  (inputs[i] as HTMLInputElement)?.value ?? "null"
+                );
+              }
+            } else {
+              console.warn(
+                `Erro validando parents, labels, placeholders e textContent. Id do Input: ${
+                  inputs[i]?.id ?? null
+                }; textContent ${inputs[i]?.textContent ?? null}; placeholder ${
+                  (inputs[i] as HTMLInputElement | HTMLTextAreaElement)
+                    ?.placeholder ?? null
+                }; Última Instância de Parent avaliada ${Object.prototype.toString
+                  .call(closestParent)
+                  .slice(
+                    8,
+                    -1
+                  )}; Instância de Sibling Labels ${Object.prototype.toString
+                  .call(previousSibling)
+                  .slice(8, -1)} && ${Object.prototype.toString
+                  .call(nextESibling)
+                  .slice(8, -1)}`
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //loop para ajuste dos elementos dos arrays e construção dos storager + store
+  for (let j = 0; j < closestValidElements.length; j++) {
+    const multipleSpaceMatches = closestValidElements[j]?.match(/\s\s/) ?? null;
+    if (
+      closestValidElements[j] &&
+      multipleSpaceMatches &&
+      multipleSpaceMatches.length > 0
+    ) {
+      let iMatches: number[] = [];
+      multipleSpaceMatches.forEach((multipleSpaceMatch) => {
+        const multipleSpaceIndex =
+          closestValidElements[j]?.indexOf(multipleSpaceMatch) ?? 0;
+        iMatches.push(multipleSpaceIndex);
+      });
+      for (let k = 0; k < iMatches.length; k++) {
+        closestValidElements[j] =
+          closestValidElements[j]?.slice(0, iMatches[k]).trim() ?? null;
+      }
+    }
+    if (typeof inpValues[j] === "string") {
+      if (inpValues[j] === "") {
+        inpValues[j] = inpValues[j].replace("", "null") ?? "null";
+      }
+    } else {
+      inpValues[j] = inpValues[j]?.toString() ?? "null";
+    }
+    const nJSONStorager = new Classes.JSONStorager(
+      closestValidElementsIds[j],
+      closestValidElements[j],
+      inpIds[j],
+      inpValues[j]
+    );
+    if (nJSONStorager) {
+      JSONStore.push(nJSONStorager);
+      const descriptor = nJSONStorager.showAllInfo; //TODO EXPOSIÇÃO DE DADOS SOMENTE PARA FINALIDADES DE TESTE, POIS PROPRIEDADES PRIVADAS NÃO SÃO ENUMERÁVEIS
+      if (descriptor) {
+        JSONStoreDescriptors.push(descriptor.toString());
+      } else {
+        console.warn(
+          `Erro validando descriptor para instância ${j} de JSONStorager`
+        );
+      }
+    } else {
+      console.warn(`Erro validando instância ${j} de JSONStorager`);
+    }
+  }
+
+  //filtro e validação da store
+  if (JSONStoreDescriptors.length === JSONStore.length) {
+    const filter1JSONStore = JSONStore.filter(
+      (JSONEl) => typeof JSONEl === "object"
+    );
+    if (filter1JSONStore.length === JSONStore.length) {
+      JSONStore = filter1JSONStore;
+      const filter2JSONStore = JSONStore.filter(
+        (JSONEl) => JSONEl instanceof Classes.JSONStorager
+      );
+      if (filter2JSONStore.length === JSONStore.length) {
+        JSONStore = filter2JSONStore;
+        let JSONStoreStringified: string[] = [];
+        JSONStore.forEach((formEl) => {
+          const elValues = formEl.showAllInfo;
+          const elValuesStringified = JSON.stringify(elValues); //TODO DADOS EXPOSTO SOMENTE PARA FINS DE TESTE
+          JSONStoreStringified.push(elValuesStringified);
+        });
+        if (JSONStore && JSONStoreStringified) {
+          return [JSONStore, JSONStoreStringified];
+        } else {
+          return [null, null];
+        }
+      } else {
+        console.warn(
+          `Erro validando classes de elementos no JSONStore. Número de instâncias obtidas: ${filter2JSONStore.length}; Número esperado: ${JSONStore.length}`
+        );
+      }
+    } else {
+      console.warn(
+        `Erro validando tipos de elementos no JSONStore. Número de objetos obtidos: ${filter1JSONStore.length}; Número esperado: ${JSONStore.length}`
+      );
+    }
+  } else {
+    console.warn(
+      `Length de JSON Store Descriptors inválida. Length obtida: ${JSONStoreDescriptors.length}; Length esperada: ${JSONStore.length}`
+    );
+  }
+}
+
+export function createJSONAnchor(
+  JSONBtn: HTMLButtonElement,
+  formDescriptor: string[]
+) {
+  const formattedFormDescriptor = formatJSONFile(formDescriptor);
+  const JSONBlob = new Blob([formattedFormDescriptor[1]], {
+    type: "application/json",
+  });
+  const JSONLink = document.createElement("a");
+  JSONLink.id = "anchorJSON";
+  JSONLink.className = JSONBtn.className;
+  JSONLink.textContent = "Baixar JSON";
+  JSONLink.href = URL.createObjectURL(JSONBlob);
+  JSONLink.download = "formData.json";
+  JSONBtn.replaceWith(JSONLink);
+  return JSONLink;
+}
+
+function formatJSONFile(formDescriptor: string[]) {
+  let formattedFormDescriptorLabels = `{\n`;
+  let formattedFormDescriptorIds = `{\n`;
+  let labAcc = 2;
+  for (let i = 0; i < formDescriptor.length; i++) {
+    let separationMatches = formDescriptor[i].match(/",/g);
+    if (separationMatches) {
+      const firstSepIndex = formDescriptor[i].indexOf(",");
+      const secondSepIndex = formDescriptor[i].indexOf(
+        ",",
+        formDescriptor[i].indexOf(",") + 1
+      );
+      const lastSepIndex = formDescriptor[i].lastIndexOf(separationMatches[0]);
+      let lab = formDescriptor[i]
+        .slice(firstSepIndex + 1, secondSepIndex)
+        .replaceAll(" ", "_");
+      while (lab.match(/:/g)) {
+        lab = lab.replace(":", "");
+        if (!lab.match(/:"/g)) {
+          break;
+        }
+      }
+      if (!lab.endsWith('"')) {
+        lab = lab + '"';
+      }
+      let inpId = formDescriptor[i].slice(secondSepIndex + 1, lastSepIndex + 1);
+      while (inpId.match(/,/g)) {
+        const commaIndex = inpId.indexOf(",");
+        inpId = inpId.slice(commaIndex + 1);
+        if (!inpId.match(/,/g)) {
+          break;
+        }
+      }
+      const value = formDescriptor[i].slice(lastSepIndex + 2, -1);
+      formattedFormDescriptorLabels += `\t${labAcc}. ${lab}: ${value}, \n`;
+      formattedFormDescriptorIds += `\t${inpId}: ${value}, \n`;
+      labAcc++;
+    }
+  }
+  const formattedFormDescriptor = (formattedFormDescriptorIds + `}`).replace(
+    ", \n}",
+    " \n}"
+  );
+  const formattedLabels = (formattedFormDescriptorLabels + `}`).replace(
+    ", \n}",
+    " \n}"
+  );
+  console.log(formattedLabels);
+  return [formattedLabels, formattedFormDescriptor];
+}
+
+export function regenerateJSONBtn(
+  JSONLink: HTMLAnchorElement,
+  formDescriptor: string[]
+) {
+  console.log("event ouvido");
+  const newJSONBtn = document.createElement("button");
+  newJSONBtn.id = "btnJSON";
+  newJSONBtn.className = JSONLink.className;
+  newJSONBtn.textContent = "Regenerar JSON";
+  JSONLink.replaceWith(newJSONBtn);
+  setTimeout(() => {
+    newJSONBtn.addEventListener("click", () =>
+      createJSONAnchor(newJSONBtn, formDescriptor)
+    );
+  }, 1000);
+  // return newJSONBtn;
+}
 
 export function opRadioHandler(keydown: Event) {
   const radioPairs = document.querySelectorAll(
@@ -114,12 +651,8 @@ export function deactTextInput() {
   });
 }
 
-export function doubleClickHandler(this: HTMLInputElement) {
-  if (this.checked) {
-    this.checked = false;
-  } else {
-    this.checked = true;
-  }
+export function doubleClickHandler(input: HTMLInputElement) {
+  input.checked = input.checked ? false : true;
   cpbInpHandler();
   deactTextInput();
 }
@@ -147,95 +680,177 @@ export function touchStartHandler(this: HTMLInputElement, keydown: Event) {
 }
 
 export function searchCEP(cepElement: HTMLInputElement) {
-  const initTime = Date.now();
+  let reqAcc = 2;
+  let initTime = Date.now();
   let cepValue = cepElement.value;
-  let progMaxInt: number;
-  let progValueInt: number;
-  if (
-    cepElement &&
-    cepElement instanceof HTMLInputElement &&
-    !isProgBarLoading
-  ) {
-    const progressBar = document.createElement("progress");
-    cepElement.parentElement?.insertBefore(
-      progressBar,
-      cepElement.nextElementSibling?.nextElementSibling ?? null
-    );
-    if (progressBar && cepElement.nextElementSibling?.nextElementSibling) {
-      isProgBarLoading = true;
-      progressBar.id = "loadBarCepVars";
-      progressBar.max = 100;
-      progMaxInt = progressBar.max;
-      progressBar.value = 0;
-      progValueInt = progressBar.value;
-      progressBar.style.setProperty("background-color", "blue");
-      progressBar.style.setProperty("color", "white");
-    }
-
+  if (cepElement && cepElement instanceof HTMLInputElement) {
+    const progInts = displayCEPLoadBar(cepElement) ?? [0, 100, null];
+    const progMax = progInts[0];
+    const progValue = progInts[1];
+    const progBar = progInts[2];
     const cepHifenOutValue = cepValue?.replaceAll("-", "");
-    const urlBAPI = `https://brasilapi.com.br/api/cep/v2/${cepHifenOutValue}`;
-    const xmlReq = new XMLHttpRequest();
-    if (urlBAPI) {
-      let roundedElapsed: number;
-      xmlReq.open("GET", urlBAPI);
-      xmlReq.send();
-      xmlReq.onload = () => {
-        try {
-          if (xmlReq.status === 200) {
-            let parsedAddress = JSON.parse(xmlReq.response);
-            if (parsedAddress) {
-              const uf = document.getElementById("UFId");
-              const city = document.getElementById("cityId");
-              const neighborhood = document.getElementById("neighbourhoodId");
-              const street = document.getElementById("streetId");
-
-              if (uf instanceof HTMLInputElement) {
-                uf.value = parsedAddress.state;
-              }
-              if (city instanceof HTMLInputElement) {
-                city.value = parsedAddress.city;
-              }
-              if (neighborhood instanceof HTMLInputElement) {
-                neighborhood.value = parsedAddress.neighborhood;
-              }
-              if (street instanceof HTMLInputElement) {
-                street.value = parsedAddress.street;
-              }
-
-              const finishTime = Date.now();
-              const elapsedTime = finishTime - initTime;
-              const elapsedNDec = elapsedTime.toString().length - 1;
-              let addedZerosMult = "1";
-              for (let iD = 0; iD < elapsedNDec; iD++) {
-                addedZerosMult += "0";
-              }
-              let indNDec = 1 * parseInt(addedZerosMult);
-              roundedElapsed = Math.round(elapsedTime / indNDec) * indNDec;
-            }
-          } else if (xmlReq.status === 404) {
-            throw new Error("404");
-          } else {
-            throw new Error("Não reconhecido");
+    const urlBAPI1 = `https://brasilapi.com.br/api/cep/v2/${cepHifenOutValue}`;
+    const xmlReq1 = new XMLHttpRequest();
+    if (urlBAPI1) {
+      xmlReq1.open("GET", urlBAPI1);
+      xmlReq1.send();
+      xmlReq1.onload = () => {
+        const xmlReturn1 = loadCEP(xmlReq1, reqAcc);
+        if (xmlReturn1 === 200) {
+          console.log(`Primeira solicitação XML/HTTP feita com sucesso.`);
+          if (progBar && progMax) {
+            uploadCEPLoadBar(
+              cepElement,
+              initTime,
+              progMax as number,
+              progValue as number,
+              progBar as HTMLProgressElement
+            );
           }
-        } catch (loadError: any) {
-          console.error("Status de Erro: ", loadError.message);
+        } else {
+          console.warn(
+            `Falha na primeira XML/HTTP Request. Iniciando segunda solicitação.`
+          );
+          reqAcc--;
+          initTime = Date.now();
+          const urlBAPI2 = `https://brasilapi.com.br/api/cep/v1/${cepHifenOutValue}`;
+          const xmlReq2 = new XMLHttpRequest();
+          if (urlBAPI2) {
+            xmlReq2.open("GET", urlBAPI2);
+            xmlReq2.send();
+            xmlReq2.onload = () => {
+              const xmlReturn2 = loadCEP(xmlReq2, reqAcc);
+              if (xmlReturn2 === 200) {
+                console.log(`Segunda solicitação XML/HTTP feita com sucesso.`);
+                if (progBar && progMax) {
+                  uploadCEPLoadBar(
+                    cepElement,
+                    initTime,
+                    progMax as number,
+                    progValue as number,
+                    progBar as HTMLProgressElement
+                  );
+                }
+              } else {
+                console.error(
+                  `Falha na segunda XML/HTTP Request. Procedimento cancelado. Insira Manualmente.`
+                );
+                if (progBar && progMax) {
+                  uploadCEPLoadBar(
+                    cepElement,
+                    initTime,
+                    progMax as number,
+                    progValue as number,
+                    progBar as HTMLProgressElement
+                  );
+                }
+              }
+            };
+          } else {
+            console.error(`Erro concantenando segunda URL com CEP.`);
+          }
         }
-        if (progValueInt !== progMaxInt) {
-          let loadingEvent = setInterval(() => {
-            progValueInt += 5;
-            progressBar.value = progValueInt;
-            if (progValueInt === progMaxInt) {
-              clearInterval(loadingEvent);
-            }
-          }, roundedElapsed / 20);
-        }
-        setTimeout(() => {
-          cepElement.parentElement?.removeChild(progressBar);
-          isProgBarLoading = false;
-        }, roundedElapsed);
       };
+    } else {
+      console.error(`Erro concatenando primeira URL com CEP.`);
     }
+  } else {
+    console.error(
+      `Erro verificando input de CEP. Elemento: ${cepElement}; Instância ${Object.prototype.toString
+        .call(cepElement)
+        .slice(8, -1)}; Valor do elemento obtido: ${cepValue}`
+    );
   }
+}
+
+function loadCEP(xmlReq: XMLHttpRequest, reqAcc: number) {
+  let status;
+  try {
+    if (xmlReq.status === 200) {
+      let parsedAddress = JSON.parse(xmlReq.response);
+      if (parsedAddress) {
+        const uf = document.getElementById("UFId");
+        const city = document.getElementById("cityId");
+        const neighborhood = document.getElementById("neighbourhoodId");
+        const street = document.getElementById("streetId");
+
+        if (uf instanceof HTMLInputElement) {
+          uf.value = parsedAddress.state;
+        }
+        if (city instanceof HTMLInputElement) {
+          city.value = parsedAddress.city;
+        }
+        if (neighborhood instanceof HTMLInputElement) {
+          neighborhood.value = parsedAddress.neighborhood;
+        }
+        if (street instanceof HTMLInputElement) {
+          street.value = parsedAddress.street;
+        }
+        status = 200;
+      }
+    } else if (xmlReq.status === 404) {
+      throw new Error("404");
+    } else {
+      throw new Error("Não reconhecido");
+    }
+  } catch (loadError: any) {
+    console.warn(`Status de Erro para CEPV${reqAcc}: `, loadError.message);
+    status = 404;
+  }
+  return status;
+}
+
+function displayCEPLoadBar(cepElement: HTMLInputElement) {
+  let progMaxInt;
+  let progValueInt;
+  const progressBar = document.createElement("progress");
+  cepElement.parentElement?.insertBefore(
+    progressBar,
+    cepElement.nextElementSibling?.nextElementSibling ?? null
+  );
+  if (progressBar && cepElement.nextElementSibling?.nextElementSibling) {
+    isProgBarLoading = true;
+    progressBar.id = "loadBarCepVars";
+    progressBar.max = 100;
+    progMaxInt = progressBar.max;
+    progressBar.value = 0;
+    progValueInt = progressBar.value;
+    progressBar.style.setProperty("background-color", "blue");
+    progressBar.style.setProperty("color", "white");
+    return [progMaxInt, progValueInt, progressBar];
+  }
+}
+
+function uploadCEPLoadBar(
+  cepElement: HTMLInputElement,
+  initTime: number,
+  progMaxInt: number,
+  progValueInt: number,
+  progressBar: HTMLProgressElement
+) {
+  let roundedElapsed;
+  const finishTime = Date.now();
+  const elapsedTime = finishTime - initTime;
+  const elapsedNDec = elapsedTime.toString().length - 1;
+  let addedZerosMult = "1";
+  for (let iD = 0; iD < elapsedNDec; iD++) {
+    addedZerosMult += "0";
+  }
+  let indNDec = 1 * parseInt(addedZerosMult);
+  roundedElapsed = Math.round(elapsedTime / indNDec) * indNDec;
+  if (progValueInt !== progMaxInt) {
+    let loadingEvent = setInterval(() => {
+      progValueInt += 5;
+      progressBar.value = progValueInt;
+      if (progValueInt === progMaxInt) {
+        clearInterval(loadingEvent);
+      }
+    }, roundedElapsed / 20);
+  }
+  setTimeout(() => {
+    cepElement.parentElement?.removeChild(progressBar);
+    isProgBarLoading = false;
+  }, roundedElapsed);
 }
 
 export function enableCEPBtn(cepLength: number, cepBtn: HTMLButtonElement) {
@@ -378,9 +993,19 @@ export function changeToAstDigit(
   const useAstDigtRegexObj = new RegExp(useAstDigitRegex);
   const useAstTextRegex = /Retornar à Assinatura Escrita/;
   const useAstTextRegexObj = new RegExp(useAstTextRegex);
+  let labCont: HTMLCollectionOf<Element> | Element[] | undefined =
+    toFileInpBtn.parentElement?.getElementsByClassName("labAst");
+  if (
+    labCont &&
+    !labCont[0] &&
+    (toFileInpBtn.parentElement?.tagName === "LABEL" ||
+      toFileInpBtn.parentElement?.tagName === "SPAN")
+  ) {
+    labCont = Array.of(toFileInpBtn.parentElement);
+  }
 
   let astCount = 0;
-  if (click.target === toFileInpBtn) {
+  if (labCont && click.target === toFileInpBtn) {
     if (
       toFileInpBtn.textContent &&
       useAstDigtRegexObj.test(toFileInpBtn.textContent)
@@ -400,8 +1025,23 @@ export function changeToAstDigit(
         }
         if (inpAst.parentElement) {
           inpAst.parentElement.replaceChild(fileInp, inpAst);
-          toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
-          toFileInpBtn.previousElementSibling?.setAttribute("hidden", "");
+          const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
+          const idInpMatch = fileInp.id.match(/Ast/)?.toString();
+          if (idLabMatch && idInpMatch) {
+            const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
+            const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
+            const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
+            const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
+            labCont[0].id = sliceOneLabId + sliceTwoInpId;
+            toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
+          } else {
+            console.warn("Erro no match de ids do input");
+          }
+          if (
+            toFileInpBtn.previousElementSibling instanceof HTMLButtonElement
+          ) {
+            toFileInpBtn.previousElementSibling?.setAttribute("hidden", "");
+          }
 
           if (fileInp) {
             fileInp.addEventListener("change", (chose) => {
@@ -413,8 +1053,6 @@ export function changeToAstDigit(
                   fileInp.files.length > 0
                 ) {
                   const imgFile = fileInp.files[0];
-                  console.log(imgFile);
-                  console.log(imgFile.type);
                   if (imgFile && imgFile.type.startsWith("image")) {
                     // console.log("img reconhecida");
                     const fileReader = new FileReader();
@@ -426,21 +1064,52 @@ export function changeToAstDigit(
                       astCount++;
                       const imgUrl = load.target?.result; //checa a url do file que será carregado
                       const imgAstDigt = document.createElement("img"); //cria container
-                      imgAstDigt.className = "imgAstDigit";
-                      imgAstDigt.id = `imgAstDigit${astCount}`;
+                      fileInp.id = inpAst.id;
+                      fileInp.className = inpAst.className;
                       imgAstDigt.innerHTML = "";
                       if (typeof imgUrl === "string") {
                         imgAstDigt.src = imgUrl; //associação entre container e file carregado
                         // console.log("string validada");
                       }
+                      imgAstDigt.id = fileInp.id;
+                      imgAstDigt.className = fileInp.className;
                       imgAstDigt.setAttribute("alt", "Assinatura Digital");
                       imgAstDigt.setAttribute("decoding", "async");
                       imgAstDigt.setAttribute("loading", "eager");
                       imgAstDigt.setAttribute("crossorigin", "anonymous");
                       imgAstDigt.style.setProperty("max-width", "300px");
                       imgAstDigt.style.setProperty("max-height", "200px");
-                      if (fileInp.parentElement) {
+                      if (
+                        fileInp.parentElement &&
+                        labCont &&
+                        labCont.length > 0
+                      ) {
                         fileInp.parentElement.replaceChild(imgAstDigt, fileInp);
+                        const idLabMatch = labCont[0].id
+                          .match(/Ast/)
+                          ?.toString();
+                        const idInpMatch = imgAstDigt.id
+                          .match(/Ast/)
+                          ?.toString();
+                        if (idLabMatch && idInpMatch) {
+                          const idLabMatchIndex =
+                            labCont[0].id.indexOf(idLabMatch);
+                          const idInpMatchIndex =
+                            imgAstDigt.id.indexOf(idInpMatch);
+                          const sliceOneLabId = labCont[0].id.slice(
+                            0,
+                            idLabMatchIndex
+                          );
+                          const sliceTwoInpId =
+                            imgAstDigt.id.slice(idInpMatchIndex);
+                          labCont[0].id = sliceOneLabId + sliceTwoInpId;
+                          console.log(labCont[0].id);
+                        } else {
+                          console.warn("Erro no match de ids do input");
+                        }
+                      } else {
+                        console.warn(`Erro na validação de labCont: elemento ${labCont}
+                        e/ou parent: elemento ${fileInp.parentElement}`);
                       }
 
                       // imgAstDigt.style.width = imgAstDigt.parentElement.style.width;
@@ -471,23 +1140,37 @@ export function changeToAstDigit(
       toFileInpBtn.textContent &&
       useAstTextRegexObj.test(toFileInpBtn.textContent)
     ) {
-      const inpAst = searchPreviousSiblings(toFileInpBtn, "inpAst");
+      const inpAst =
+        searchPreviousSiblings(toFileInpBtn, "inpAst") ||
+        searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
       if (
         inpAst instanceof HTMLImageElement ||
         inpAst instanceof HTMLInputElement
       ) {
-        console.log("replace direcionado 1");
         const fileInp = document.createElement("input");
         fileInp.type = "text";
-        fileInp.name = "confirmAstName";
-        fileInp.id = "inpAstConfirmId";
-        fileInp.className = "contQuint inpAst";
+        fileInp.name = inpAst.name;
+        fileInp.id = inpAst.id;
+        fileInp.className = inpAst.className;
         fileInp.setAttribute("required", "");
-        console.log("atributos aplicados");
         if (inpAst.parentElement) {
           inpAst.parentElement.replaceChild(fileInp, inpAst);
-          toFileInpBtn.textContent = "Usar Assinatura Digital";
-          toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+          const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
+          const idInpMatch = fileInp.id.match(/Ast/)?.toString();
+          if (idLabMatch && idInpMatch) {
+            const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
+            const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
+            const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
+            const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
+            labCont[0].id = sliceOneLabId + sliceTwoInpId;
+            toFileInpBtn.textContent = "Usar Assinatura Digital";
+            toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+            fileInp.addEventListener("input", () =>
+              Model.autoCapitalizeInputs(fileInp)
+            );
+          } else {
+            console.warn("Erro no match de ids dos inputs");
+          }
         }
       }
     }
@@ -516,7 +1199,6 @@ export function resetarFormulario(
       Model.removeFirstClick(editableCite);
     }
 
-    console.log("tofileinp " + toFileInpBtns[0].id + " " + toFileInpBtns[1].id);
     toFileInpBtns.forEach((toFileInpBtn) => {
       if (toFileInpBtn.textContent === "Retornar à Assinatura Escrita") {
         const inpAst =
@@ -534,7 +1216,7 @@ export function resetarFormulario(
           fileInp.className = inpAst.className;
           fileInp.setAttribute("required", "");
           if (inpAst.parentElement) {
-            let labCont: HTMLCollectionOf<Element> | Element[] | never[] =
+            let labCont: HTMLCollectionOf<Element> | HTMLElement[] | never[] =
               toFileInpBtn.parentElement?.getElementsByClassName("labAst") ??
               [];
             if (
@@ -542,7 +1224,7 @@ export function resetarFormulario(
               (toFileInpBtn.parentElement?.tagName === "LABEL" ||
                 toFileInpBtn.parentElement?.tagName === "SPAN")
             ) {
-              labCont = Array.of(toFileInpBtn.parentElement);
+              labCont = Array.of(toFileInpBtn.parentElement as HTMLElement);
             }
             inpAst.parentElement.replaceChild(fileInp, inpAst);
             const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
@@ -553,9 +1235,13 @@ export function resetarFormulario(
               const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
               const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
               labCont[0].id = sliceOneLabId + sliceTwoInpId;
-              console.log(labCont[0].id);
+              fileInp.addEventListener("input", () =>
+                Model.autoCapitalizeInputs(fileInp)
+              );
               toFileInpBtn.textContent = "Usar Assinatura Digital";
               toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+            } else {
+              console.warn("Erro no match de ids do input");
             }
           } else {
             console.warn(`Erro localizando Parent Element de inpAst`);

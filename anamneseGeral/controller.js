@@ -1,11 +1,17 @@
 import * as Handlers from "./handlers.js";
 import * as Model from "./model.js";
+import * as Classes from "./classes.js";
 
 const textInputs = document.querySelectorAll('input[type="text"]');
 const textareas = document.querySelectorAll("textarea");
 const textConts = [...textareas, ...textInputs];
 const numInps = document.querySelectorAll('input[type="number"]');
 const radioButtons = document.querySelectorAll('input[type="radio"]');
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const gen = document.getElementById("genId");
+const genBirthRel = document.getElementById("genBirthRelId");
+const genTrans = document.getElementById("genTransId");
+const genFisAlin = document.getElementById("genFisAlinId");
 const antFamChecks = document.querySelectorAll("input[id^='antFam']");
 const antMedContainer = document.getElementById("antMedContainer");
 const telInputs = document.querySelectorAll('input[type="text"][id^="tel"]');
@@ -21,6 +27,66 @@ const deactAutocorrectBtns = document.querySelectorAll(
 const dateBtns = document.querySelectorAll('button[id$="DatBtn"]');
 const resetFormBtn = document.getElementById("resetFormBtn");
 const subButton = document.getElementById("submitFormButId");
+const allInputs = Array.from([
+  ...textConts,
+  editableCite,
+  ...numInps,
+  ...radioButtons,
+  ...checkboxes,
+]).flat(1);
+let JSONBtn = document.getElementById("btnJSON");
+
+let JSONLink;
+let shouldRegenerateBtn = false;
+
+if (allInputs.length > 0) {
+  if (JSONBtn) {
+    let formDescription = [];
+    JSONBtn.addEventListener("click", () => {
+      formDescription = Handlers.getJSONDesc(allInputs);
+      if (formDescription && formDescription[0] && formDescription[1]) {
+        JSONLink = Handlers.createJSONAnchor(JSONBtn, formDescription[1]);
+        if (JSONLink) {
+          console.log("jsonlink");
+          JSONLink.addEventListener("click", () => {
+            Handlers.regenerateJSONBtn(JSONLink, formDescription[1]);
+          });
+        }
+      } else {
+        console.warn(`Erro obtendo formDescription`);
+      }
+    });
+  } else {
+    console.warn(
+      `Erro validando JSONBtn. Elementos: ${JSONBtn?.id} && ${allInputs.length}`
+    );
+  }
+}
+
+// const handleMutation = (mutationsList, observer) => {
+//   for (const mutation of mutationsList) {
+//     if (mutation.type === "childList") {
+//       // Verifica se o JSONBtn foi removido e o JSONLink foi adicionado
+//       const JSONBtnRemoved = mutation.removedNodes[0] === JSONBtn;
+//       const JSONLinkAdded = Array.from(mutation.addedNodes).some(
+//         (node) => node === JSONLink
+//       );
+
+//       if (JSONBtnRemoved && JSONLinkAdded) {
+//         // Lógica a ser executada quando a troca ocorrer
+//         console.log("JSONBtn foi removido, e JSONLink foi adicionado.");
+//         // Adicione aqui qualquer lógica ou evento adicional que você deseja executar
+//       }
+//     }
+//   }
+// };
+
+// // Função que será chamada quando houver uma mutação no DOM
+// // Cria um novo observador de mutação com a função de callback
+// const observer = new MutationObserver(handleMutation);
+
+// // Configura o observador para observar mudanças no nó pai (por exemplo, o body)
+// observer.observe(document.body, { childList: true, subtree: true });
 
 textConts.forEach(function (textCont) {
   const isTelInput = textCont.classList.contains("inpTel");
@@ -46,6 +112,116 @@ numInps.forEach(function (numInp) {
   });
 });
 
+function checkAllGenConts(gen, genBirthRel, genTrans, genFisAlin) {
+  let isGenValid = false;
+  let isGenBirthRelValid = false;
+  let isGenTransContValid = false;
+  let isGenFisAlinValid = false;
+  try {
+    if (gen && gen instanceof HTMLSelectElement) {
+      isGenValid = true;
+    } else {
+      throw new Error(
+        `Erro validando gen: elemento ${gen}, instância ${
+          gen instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGen) {
+    console.error(errorGen.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  try {
+    if (genBirthRel && genBirthRel instanceof HTMLSelectElement) {
+      isGenBirthRelValid = true;
+    } else {
+      throw new Error(
+        `Erro validando gen: elemento ${genBirthRel}, instância ${
+          genBirthRel instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGenBirthRel) {
+    console.error(errorGenBirthRel.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  try {
+    if (genTrans && genTrans instanceof HTMLSelectElement) {
+      isGenTransContValid = true;
+    } else {
+      throw new Error(
+        `Erro validando genTrans: elemento ${genTrans}, instância ${
+          genTrans instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGenTrans) {
+    console.error(errorGenTrans.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  try {
+    if (genFisAlin && genFisAlin instanceof HTMLSelectElement) {
+      isGenFisAlinValid = true;
+    } else {
+      throw new Error(
+        `Erro validando genFisAlin: elemento ${genFisAlin}, instância ${
+          genFisAlin instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGenFisAlin) {
+    console.error(errorGenFisAlin.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  if (
+    isGenValid &&
+    isGenBirthRelValid &&
+    isGenTransContValid &&
+    isGenFisAlinValid
+  ) {
+    return true;
+  } else {
+    console.error("Erro verificando booleanos de containers de gênero");
+    return false;
+  }
+}
+
+let areAllGenContChecked = checkAllGenConts(
+  gen,
+  genBirthRel,
+  genTrans,
+  genFisAlin
+);
+
+let genValue = gen?.value;
+if (areAllGenContChecked && typeof genValue === "string") {
+  gen.addEventListener("change", () => {
+    genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
+  });
+  genBirthRel.addEventListener("change", () => {
+    genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
+  });
+  genTrans.addEventListener("change", () => {
+    genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
+  });
+  genFisAlin.addEventListener("change", () => {
+    genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
+  });
+} else {
+  console.error(
+    `Erro na aplicação de listeners para containers de gen: containers de gen válidos ${areAllGenContChecked}
+    } / genValue tipo ${typeof genValue}`
+  );
+}
+
 telInputs.forEach((telInput) => {
   telInput.addEventListener("input", (inputTel) => {
     if (inputTel.target && inputTel.target instanceof HTMLInputElement) {
@@ -69,16 +245,16 @@ radioButtons.forEach((radio) => {
   });
   radio.addEventListener("change", Handlers.cpbInpHandler);
   radio.addEventListener("keydown", Handlers.cpbInpHandler);
-  radio.addEventListener("dblclick", () =>
-    Handlers.doubleClickHandler.bind(radio)
-  );
+  radio.addEventListener("dblclick", () => Handlers.doubleClickHandler(radio));
   radio.addEventListener("touchstart", Handlers.touchStartHandler);
   radio.addEventListener("change", Handlers.deactTextInput);
 });
 
 antFamChecks.forEach((antFamCheck) => {
   antFamCheck.addEventListener("change", Handlers.cpbInpHandler);
-  antFamCheck.addEventListener("dblclick", Handlers.doubleClickHandler);
+  antFamCheck.addEventListener("dblclick", () =>
+    Handlers.doubleClickHandler(antFamCheck)
+  );
 });
 
 if (antMedContainer) {

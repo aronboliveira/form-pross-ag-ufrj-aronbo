@@ -43,7 +43,6 @@ export function numberLimit(inputElement: HTMLInputElement) {
   }
 }
 
-//TODO ERROS PRESENTES NESSA FUNÇÃO FORAM CORRIGIDOS COM BASE NA SEGUINTE, E ENTÃO APLICADOS SOMENTE AO .JS
 export function autoCapitalizeInputs(
   textElement: HTMLInputElement | HTMLTextAreaElement
 ) {
@@ -1501,12 +1500,117 @@ export function switchAutocorrect(
   }
 }
 
-export function showGenFisAlin() {
-  const genFisAlin = document.getElementById("genFisAlinId");
+export function fluxGen(
+  gen: HTMLSelectElement,
+  genIniValue: string,
+  genBirthRel: HTMLSelectElement,
+  genTrans: HTMLSelectElement,
+  genFisAlin: HTMLSelectElement
+) {
+  let genValue = null;
+  if (gen.value === "masculino" || gen.value === "feminino") {
+    if (genBirthRel.value === "cis") {
+      genValue = genIniValue;
+      hideGenFisAlin(genFisAlin);
+      hideStgTransHorm(genTrans);
+      return genValue;
+    } else if (genBirthRel.value === "trans") {
+      showStgTransHorm(genTrans);
+      if (genTrans.value === "avancado") {
+        genValue = genIniValue;
+        hideGenFisAlin(genFisAlin);
+        return genValue;
+      } else if (
+        genTrans.value === "undefined" ||
+        genTrans.value === "no" ||
+        genTrans.value === "inicial" ||
+        genTrans.value === "intermediario"
+      ) {
+        showGenFisAlin(genFisAlin);
+        if (genFisAlin.value === "masculinizado") {
+          genValue = "masculino";
+          return genValue;
+        } else if (genFisAlin.value === "feminilizado") {
+          genValue = "feminino";
+          return genValue;
+        } else if (genFisAlin.value === "neutro") {
+          genValue = "neutro";
+          return genValue;
+        }
+      }
+    } else if (
+      genBirthRel.value === "outros" ||
+      genBirthRel.value === "undefined"
+    ) {
+      showGenFisAlin(genFisAlin);
+      if (genFisAlin.value === "masculinizado") {
+        genValue = "masculino";
+        return genValue;
+      } else if (genFisAlin.value === "feminilizado") {
+        genValue = "feminino";
+        return genValue;
+      } else if (genFisAlin.value === "neutro") {
+        genValue = "neutro";
+        return genValue;
+      }
+    }
+  } else if (
+    gen.value === "naoBinario" ||
+    gen.value === "outros" ||
+    gen.value === "undefined"
+  ) {
+    if (genBirthRel.value === "trans") {
+      showStgTransHorm(genTrans);
+    } else {
+      hideStgTransHorm(genTrans);
+    }
+    showGenFisAlin(genFisAlin);
+    if (genFisAlin.value === "masculinizado") {
+      genValue = "masculino";
+      return genValue;
+    } else if (genFisAlin.value === "feminilizado") {
+      genValue = "feminino";
+      return genValue;
+    } else if (genFisAlin.value === "neutro") {
+      genValue = "neutro";
+      return genValue;
+    }
+  }
+}
+
+function showGenFisAlin(genFisAlin: HTMLSelectElement): boolean | void {
   if (genFisAlin) {
     genFisAlin.closest(".spanFsAnamG")?.removeAttribute("hidden");
+    return true;
   } else {
     console.warn("Erro na abertura de genFisAlin");
+  }
+}
+
+function hideGenFisAlin(genFisAlin: HTMLSelectElement): boolean | void {
+  if (genFisAlin) {
+    genFisAlin.closest(".spanFsAnamG")?.setAttribute("hidden", "");
+    return false;
+  } else {
+    console.warn("Erro no fechamento de genFisAlin");
+  }
+}
+
+function showStgTransHorm(genTrans: HTMLSelectElement): boolean | void {
+  if (genTrans) {
+    genTrans.closest(".spanFsAnamG")?.removeAttribute("hidden");
+    return true;
+  } else {
+    console.warn("Erro na abertura de genTrans");
+  }
+}
+
+function hideStgTransHorm(genTrans: HTMLSelectElement): boolean | void {
+  if (genTrans) {
+    genTrans.closest(".spanFsAnamG")?.setAttribute("hidden", "");
+    return false;
+  } else {
+    console.warn("Erro no fechamento de genTrans");
   }
 }
 

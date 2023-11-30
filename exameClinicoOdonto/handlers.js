@@ -73,17 +73,13 @@ export function opRadioHandler(keydown) {
   }
 }
 
-export function doubleClickHandler() {
-  this.checked = this.checked === true ? false : true;
+export function doubleClickHandler(input) {
+  input.checked = input.checked === true ? false : true;
 }
 
 export function showInspSpanSub(changeRadio, inspRadio) {
-  console.log("click ouvido!");
   if (changeRadio.target === inspRadio) {
-    console.log("target aceito");
-    console.log("classes " + inspRadio.classList);
     if (inspRadio.classList.contains("radYes")) {
-      console.log("classe yes aceita");
       let isParentValid =
         inspRadio.parentElement?.classList.contains("inspSpanMain");
       if (isParentValid) {
@@ -98,7 +94,6 @@ export function showInspSpanSub(changeRadio, inspRadio) {
         }
       }
     } else if (inspRadio.classList.contains("radNo")) {
-      console.log("classe no aceita");
       let isParentValid =
         inspRadio.parentElement?.classList.contains("inspSpanMain");
       if (isParentValid) {
@@ -275,6 +270,40 @@ export function dragEndChilds(contInQuadrs) {
   // console.log("o drag das childs foi definido como false");
 }
 
+export function resetLabels(quadrBtn) {
+  const parentDiv = quadrBtn?.closest(".quadrMainDiv");
+  console.log(parentDiv);
+  if (parentDiv) {
+    const innerDivInps = parentDiv.querySelectorAll("input[id^=inpD]");
+    if (innerDivInps) {
+      if (innerDivInps.length < 8) {
+        console.warn(
+          `Erro validando inputs internos ao quadrante. Número total de inputs: ${innerDivInps.length}`
+        );
+      }
+      innerDivInps.forEach((innerDivInp) => {
+        innerDivInp.value = "Hígido";
+      });
+    }
+  } else {
+    console.warning(`Erro localizando parent div`);
+  }
+}
+
+export function clearQuadrInps(quadrInp) {
+  if (quadrInp instanceof HTMLInputElement) {
+    const dlOptions = quadrInp.nextElementSibling.children;
+    let dlOptionsValues = [];
+    for (let i = 0; i < dlOptions.length; i++) {
+      dlOptionsValues.push(dlOptions[i].value);
+    }
+    if (dlOptionsValues.includes(quadrInp.value)) {
+      quadrInp.value = "";
+      quadrInp.placeholder = "Apagado";
+    }
+  }
+}
+
 let blockCount = 1;
 export function addSubDivTrat(click) {
   if (
@@ -359,7 +388,6 @@ export function addSubDivTrat(click) {
 }
 
 export function useCurrentDate(activation, dateBtn) {
-  console.log("botão clicado");
   const dataAtual = new Date();
   const ano = dataAtual.getFullYear();
   const mes = (dataAtual.getMonth() + 1)
@@ -417,21 +445,23 @@ export function changeToAstDigit(click, toFileInpBtn) {
         }
         if (inpAst.parentElement) {
           inpAst.parentElement.replaceChild(fileInp, inpAst);
-          const idLabMatchIndex = labCont[0].id.indexOf(
-            labCont[0].id.match(/Ast/)
-          );
-          const idInpMatchIndex = fileInp.id.indexOf(fileInp.id.match(/Ast/));
-          const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
-          const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
-          labCont[0].id = sliceOneLabId + sliceTwoInpId;
-          console.log(labCont[0].id);
-          toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
-          if (
-            toFileInpBtn.previousElementSibling instanceof HTMLButtonElement
-          ) {
-            toFileInpBtn.previousElementSibling?.setAttribute("hidden", "");
+          const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
+          const idInpMatch = fileInp.id.match(/Ast/)?.toString();
+          const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
+          const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
+          if (idLabMatchIndex && idInpMatchIndex) {
+            const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
+            const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
+            labCont[0].id = sliceOneLabId + sliceTwoInpId;
+            toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
+            if (
+              toFileInpBtn.previousElementSibling instanceof HTMLButtonElement
+            ) {
+              toFileInpBtn.previousElementSibling?.setAttribute("hidden", "");
+            }
+          } else {
+            console.warn("Erro no match de ids do input");
           }
-
           if (fileInp) {
             fileInp.addEventListener("change", (chose) => {
               // console.log("evento ouvido");
@@ -468,22 +498,36 @@ export function changeToAstDigit(click, toFileInpBtn) {
                       imgAstDigt.setAttribute("crossorigin", "anonymous");
                       imgAstDigt.style.setProperty("max-width", "300px");
                       imgAstDigt.style.setProperty("max-height", "200px");
-                      if (fileInp.parentElement) {
+                      if (
+                        fileInp.parentElement &&
+                        labCont &&
+                        labCont.length > 0
+                      ) {
                         fileInp.parentElement.replaceChild(imgAstDigt, fileInp);
-                        const idLabMatchIndex = labCont[0].id.indexOf(
-                          labCont[0].id.match(/Ast/)
-                        );
-                        const idInpMatchIndex = imgAstDigt.id.indexOf(
-                          imgAstDigt.id.match(/Ast/)
-                        );
-                        const sliceOneLabId = labCont[0].id.slice(
-                          0,
-                          idLabMatchIndex
-                        );
-                        const sliceTwoInpId =
-                          imgAstDigt.id.slice(idInpMatchIndex);
-                        labCont[0].id = sliceOneLabId + sliceTwoInpId;
-                        console.log(labCont[0].id);
+                        const idLabMatch = labCont[0].id
+                          .match(/Ast/)
+                          ?.toString();
+                        const idInpMatch = imgAstDigt.id
+                          .match(/Ast/)
+                          ?.toString();
+                        if (idLabMatch && idInpMatch) {
+                          const idLabMatchIndex =
+                            labCont[0].id.indexOf(idLabMatch);
+                          const idInpMatchIndex =
+                            imgAstDigt.id.indexOf(idInpMatch);
+                          const sliceOneLabId = labCont[0].id.slice(
+                            0,
+                            idLabMatchIndex
+                          );
+                          const sliceTwoInpId =
+                            imgAstDigt.id.slice(idInpMatchIndex);
+                          labCont[0].id = sliceOneLabId + sliceTwoInpId;
+                        } else {
+                          console.warn("Erro no match de ids do input");
+                        }
+                      } else {
+                        console.warn(`Erro na validação de labCont: elemento ${labCont}
+                        e/ou parent: elemento ${fileInp.parentElement}`);
                       }
 
                       // imgAstDigt.style.width = imgAstDigt.parentElement.style.width;
@@ -529,16 +573,22 @@ export function changeToAstDigit(click, toFileInpBtn) {
         fileInp.setAttribute("required", "");
         if (inpAst.parentElement) {
           inpAst.parentElement.replaceChild(fileInp, inpAst);
-          const idLabMatchIndex = labCont[0].id.indexOf(
-            labCont[0].id.match(/Ast/)
-          );
-          const idInpMatchIndex = fileInp.id.indexOf(fileInp.id.match(/Ast/));
-          const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
-          const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
-          labCont[0].id = sliceOneLabId + sliceTwoInpId;
-          console.log(labCont[0].id);
-          toFileInpBtn.textContent = "Usar Assinatura Digital";
-          toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+          const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
+          const idInpMatch = fileInp.id.match(/Ast/)?.toString();
+          if (idLabMatch && idInpMatch) {
+            const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
+            const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
+            const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
+            const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
+            labCont[0].id = sliceOneLabId + sliceTwoInpId;
+            toFileInpBtn.textContent = "Usar Assinatura Digital";
+            toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+            fileInp.addEventListener("input", () =>
+              Model.autoCapitalizeInputs(fileInp)
+            );
+          } else {
+            console.warn("Erro no match de ids do Input");
+          }
         }
       }
     }
@@ -564,7 +614,6 @@ export function resetarFormulario(click, toFileInpBtns) {
       Model.removeFirstClick(editableCite);
     }
 
-    console.log("tofileinp " + toFileInpBtns[0].id + " " + toFileInpBtns[1].id);
     toFileInpBtns.forEach((toFileInpBtn) => {
       if (toFileInpBtn.textContent === "Retornar à Assinatura Escrita") {
         const inpAst =
@@ -601,9 +650,13 @@ export function resetarFormulario(click, toFileInpBtns) {
               const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
               const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
               labCont[0].id = sliceOneLabId + sliceTwoInpId;
-              console.log(labCont[0].id);
+              fileInp.addEventListener("input", () =>
+                Model.autoCapitalizeInputs(fileInp)
+              );
               toFileInpBtn.textContent = "Usar Assinatura Digital";
               toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+            } else {
+              console.warn("Erro no match de ids do input");
             }
           } else {
             console.warn(`Erro localizando Parent Element de inpAst`);

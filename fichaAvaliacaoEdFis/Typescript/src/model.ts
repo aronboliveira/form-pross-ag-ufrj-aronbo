@@ -142,7 +142,6 @@ export function numberLimit(inputElement: HTMLInputElement): void {
   }
 }
 
-//TODO ERROS PRESENTES NESSA FUNÇÃO FORAM CORRIGIDOS COM BASE NA SEGUINTE, E ENTÃO APLICADOS SOMENTE AO .JS
 export function autoCapitalizeInputs(
   textElement: HTMLInputElement | HTMLTextAreaElement
 ): void {
@@ -155,7 +154,9 @@ export function autoCapitalizeInputs(
     let letterMatchesIniD = text.match(/\sd/g);
     const notMatchesAfterDRegex =
       /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]?\s/g;
-    let letterNotMatchesAfterD = text.match(notMatchesAfterDRegex);
+    let letterNotMatchesAfterD: RegExpMatchArray | string[] | null = text.match(
+      notMatchesAfterDRegex
+    );
     const afterDRegexOp1 =
       /\sd[^aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g;
     const afterDRegexOp2 =
@@ -238,8 +239,8 @@ export function autoCapitalizeInputs(
             range.setStart(textElement, 0);
             range.setEnd(textElement, 1);
             range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
+            selection?.removeAllRanges();
+            selection?.addRange(range);
           }
         }
       }
@@ -252,7 +253,7 @@ export function autoCapitalizeInputs(
 
         function undoWrongChars() {
           if (wrongCharsMatchesOp1 || wrongCharsMatchesOp2) {
-            let wrongCharsMatches = [];
+            let wrongCharsMatches: string[] = [];
 
             if (wrongCharsMatchesOp1) {
               wrongCharsMatches =
@@ -282,8 +283,8 @@ export function autoCapitalizeInputs(
                 correctCursorNextWords(isUndoUppercase);
                 range.selectNodeContents(textElement);
                 range.collapse(false);
-                selection.removeAllRanges();
-                selection.addRange(range);
+                selection?.removeAllRanges();
+                selection?.addRange(range);
               });
             }
           }
@@ -292,8 +293,8 @@ export function autoCapitalizeInputs(
         undoWrongChars();
 
         function undoMultipleUppercases() {
-          let unproperUppercases = [];
-          let unproperDUppercases = [];
+          let unproperUppercases: string[] = [];
+          let unproperDUppercases: string[] = [];
 
           if (multipleUppercasesMatches) {
             unproperUppercases = unproperUppercases.concat(
@@ -427,8 +428,8 @@ export function autoCapitalizeInputs(
               range.setStart(textElement, 0);
               range.setEnd(textElement, 1);
               range.collapse(true);
-              selection.removeAllRanges();
-              selection.addRange(range);
+              selection?.removeAllRanges();
+              selection?.addRange(range);
             }
           });
 
@@ -460,12 +461,12 @@ export function autoCapitalizeInputs(
               loweredRepetitions.length,
               loweredRepetitions
             );
-            let upperlowercombD = text.match(
+            let upperlowercombD: RegExpMatchArray | string | null = text.match(
               /D[a-záàâäãéèêëíìîïóòôöõúùûü][sS]?[\s]/
             );
             if (upperlowercombD) {
               if (upperlowercombD.length === 4) {
-                let loweredS = upperlowercombD.replace(/S/, "s");
+                let loweredS = upperlowercombD.toString().replace(/S/, "s");
                 loweredRepetitions += loweredS;
               }
             }
@@ -481,8 +482,8 @@ export function autoCapitalizeInputs(
               range.setStart(textElement, 0);
               range.setEnd(textElement, 1);
               range.collapse(true);
-              selection.removeAllRanges();
-              selection.addRange(range);
+              selection?.removeAllRanges();
+              selection?.addRange(range);
             }
           });
         }
@@ -520,7 +521,9 @@ export function autoCapitalizeInputs(
           forceUpperCase();
         }
 
-        function wrongStartCorrection(wrongStartMatch) {
+        function wrongStartCorrection(
+          wrongStartMatch: RegExpMatchArray | string | null
+        ) {
           // console.log("chegou na checagem de wrong start");
           if (wrongStartMatch) {
             let wrongStartLength = wrongStartMatch
@@ -532,7 +535,7 @@ export function autoCapitalizeInputs(
           }
         }
 
-        function adjustNewWord(newWordMatches) {
+        function adjustNewWord(newWordMatches: string[]) {
           // console.log("chegou no adjust");
           newWordMatches.forEach(() => {
             capitalizeNextWords();
@@ -580,7 +583,7 @@ export function autoCapitalizeInputs(
 
         function capitalizeNextWordsD() {
           // console.log("foi chamado no capitalize D");
-          let letterMatchesAfterD = [];
+          let letterMatchesAfterD: string[] = [];
 
           if (
             !letterNotMatchesAfterD &&
@@ -692,23 +695,24 @@ export function autoCapitalizeInputs(
           }
         }
 
-        function correctCursorNextWords(isUndoUppercase) {
+        function correctCursorNextWords(isUndoUppercase: boolean) {
           let isFixAfterDCursorExec = false;
           if (isFixAfterDCursorExec) {
             return;
           }
           let selectionPosition = window
             .getSelection()
-            .getRangeAt(0).startOffset;
+            ?.getRangeAt(0).startOffset;
           if (selectionPosition === 0) {
             wrongStartCorrection(wrongStartMatch);
             textElement.addEventListener("keyup", (fixmove) => {
               if (
-                fixmove.keyCode === 32 ||
-                fixmove.keyCode === 8 ||
-                (fixmove.keyCode >= 37 && fixmove.keyCode <= 40) ||
-                (fixmove.keyCode >= 65 && fixmove.keyCode <= 90) ||
-                (fixmove.keyCode >= 97 && fixmove.keyCode <= 122) ||
+                (fixmove instanceof KeyboardEvent &&
+                  (fixmove.keyCode === 32 ||
+                    fixmove.keyCode === 8 ||
+                    (fixmove.keyCode >= 37 && fixmove.keyCode <= 40) ||
+                    (fixmove.keyCode >= 65 && fixmove.keyCode <= 90) ||
+                    (fixmove.keyCode >= 97 && fixmove.keyCode <= 122))) ||
                 isUndoUppercase
               ) {
                 if (!isFixAfterDCursorExec) {
@@ -721,22 +725,22 @@ export function autoCapitalizeInputs(
           }
         }
 
-        function moveCursorToTheEnd(textElement) {
+        function moveCursorToTheEnd(textElement: HTMLElement) {
           // console.log("chegou no moveCursor");
           if (window.getSelection && !isCursorAutoMoved) {
             let range = document.createRange();
             range.selectNodeContents(textElement);
             range.collapse(false);
             let sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
+            sel?.removeAllRanges();
+            sel?.addRange(range);
             isCursorAutoMoved = true;
           }
         }
 
         function forceUpperCase() {
-          let wordMatch = [];
-          let DMatch = [];
+          let wordMatch: string[] = [];
+          let DMatch: string[] = [];
 
           if (letterMatchesAfterDOp1) {
             wordMatch = wordMatch.concat(letterMatchesAfterDOp1);
@@ -1183,7 +1187,9 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
       forceUpperCase();
     }
 
-    function wrongStartCorrection(wrongStartMatch: string[] | null): void {
+    function wrongStartCorrection(
+      wrongStartMatch: RegExpMatchArray | string[] | null
+    ): void {
       // console.log("chegou na checagem de wrong start");
       if (wrongStartMatch && citeText) {
         let wrongStartLength: number = wrongStartMatch
@@ -1569,12 +1575,7 @@ export function removeFirstClick(editableCite: Element): void {
   let isCursorCheckExec = true;
   let cursorPosition = 0;
   setInterval(() => {
-    cursorPosition = Controller.cursorCheckTimer(
-      cursorPosition,
-      isCursorCheckExec,
-      editableCite
-    );
-    // console.log("posição real " + cursorPosition);
+    cursorPosition = Controller.cursorCheckTimer(cursorPosition) ?? 0;
   }, 3000);
 }
 
@@ -1587,5 +1588,252 @@ export function switchAutocorrect(
     deactAutocorrectBtn.textContent = isAutocorrectOn
       ? "Desativar Autocorreção"
       : "Ativar Autocorreção";
+  }
+}
+
+export function changeTabDCutLayout(
+  protocolo: HTMLSelectElement,
+  tabDC: HTMLTableElement
+) {
+  const bodyType = document.getElementById("textBodytype");
+  if (
+    protocolo &&
+    tabDC &&
+    bodyType &&
+    (bodyType instanceof HTMLSelectElement ||
+      bodyType instanceof HTMLInputElement)
+  ) {
+    const opsProtocolo = Array.from(protocolo.children);
+    const filteredOpsProtocolo = opsProtocolo.filter(
+      (childProtocolo) => childProtocolo instanceof HTMLOptionElement
+    );
+    if (filteredOpsProtocolo.length < opsProtocolo.length) {
+      console.warn(
+        `Algum elementos de Protocolo não foram reconhecidos como opções. Total de reconhecimentos: ${filteredOpsProtocolo.length}`
+      );
+    }
+    for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
+      const optionElement = filteredOpsProtocolo[iOp];
+      const optionElementMatch7 = protocolo.value
+        .match(/^pollock7$/i)
+        ?.toString();
+      const optionElementMatch3 = protocolo.value
+        .match(/^pollock3$/i)
+        ?.toString();
+      if (optionElementMatch3) {
+        console.log(protocolo.value);
+        const arrayTabIds = checkTabRowsIds(tabDC);
+        if (arrayTabIds && arrayTabIds.length !== tabDC.rows.length) {
+          const genderedIds = filterIdsByGender(arrayTabIds, bodyType.value);
+          if (bodyType.value === "masculino" || bodyType.value === "feminino") {
+            if (genderedIds && genderedIds.length === 3) {
+              let matchedIds = [];
+              for (let iG = 0; iG < genderedIds.length; iG++) {
+                for (let iR = 0; iR < arrayTabIds.length; iR++) {
+                  if (genderedIds[iG].toLowerCase() === arrayTabIds[iR]) {
+                    const slice1 = genderedIds[iG].charAt(0).toUpperCase();
+                    const slice2 = genderedIds[iG].slice(1);
+                    if (slice1 && slice2) {
+                      const capitalizedGenderedId = slice1 + slice2;
+                      matchedIds.push(`row${capitalizedGenderedId}`);
+                    }
+                  }
+                }
+              }
+              const medTrs = Array.from(
+                tabDC.querySelectorAll("tr.tabRowDCutMed")
+              );
+              for (let iTr = 0; iTr < medTrs.length; iTr++) {
+                medTrs[iTr].setAttribute("hidden", "");
+                const innerInp = medTrs[iTr].querySelector("input");
+                if (innerInp && innerInp.required) {
+                  innerInp.removeAttribute("required");
+                  console.log("required removido");
+                }
+              }
+              for (let iMat = 0; iMat < matchedIds.length; iMat++) {
+                const matchedTr = document.getElementById(matchedIds[iMat]);
+                if (matchedTr) {
+                  const isRowHidden = matchedTr.hidden;
+                  if (isRowHidden) {
+                    matchedTr.removeAttribute("hidden");
+                  }
+                  const innerInp = matchedTr.querySelector("input");
+                  if (innerInp) {
+                    innerInp.setAttribute("required", "");
+                    console.log("required adicionado");
+                  }
+                }
+              }
+            } else {
+              console.warn(
+                `Erro na validação de ids de row. Elemento ${JSON.stringify(
+                  genderedIds
+                )}; Número obtido ${
+                  genderedIds?.length ?? null
+                }; Número esperado: 3`
+              );
+            }
+          } else if (bodyType.value === "neutro") {
+            if (genderedIds && genderedIds.length === 5) {
+              let matchedIds = [];
+              for (let iG = 0; iG < genderedIds.length; iG++) {
+                for (let iR = 0; iR < arrayTabIds.length; iR++) {
+                  if (genderedIds[iG].toLowerCase() === arrayTabIds[iR]) {
+                    const slice1 = genderedIds[iG].charAt(0).toUpperCase();
+                    const slice2 = genderedIds[iG].slice(1);
+                    const capitalizedGenderedId = slice1 + slice2;
+                    matchedIds.push(`row${capitalizedGenderedId}`);
+                  }
+                }
+              }
+              const medTrs = Array.from(
+                tabDC.querySelectorAll("tr.tabRowDCutMed")
+              );
+              for (let iTr = 0; iTr < medTrs.length; iTr++) {
+                medTrs[iTr].setAttribute("hidden", "");
+                const innerInp = medTrs[iTr].querySelector("input");
+                if (innerInp) {
+                  innerInp.value = "0";
+                }
+              }
+              for (let iM = 0; iM < matchedIds.length; iM++) {
+                const matchedTr = document.getElementById(matchedIds[iM]);
+                if (matchedTr) {
+                  const isRowHidden = matchedTr.hidden;
+                  if (isRowHidden) {
+                    matchedTr.removeAttribute("hidden");
+                    const innerInp = matchedTr.querySelector("input");
+                    if (innerInp && matchedTr.id?.slice(-4) !== "Coxa") {
+                      innerInp.removeAttribute("required");
+                    }
+                  }
+                }
+              }
+            } else {
+              console.warn(
+                `Erro na validação de ids de row. Elemento ${JSON.stringify(
+                  genderedIds
+                )}; Número obtido ${
+                  genderedIds?.length ?? null
+                }; Número esperado: 3`
+              );
+            }
+          } else {
+            console.warn(
+              `Erro validando valor de bodyType. Valor: ${bodyType.value}`
+            );
+          }
+        } else {
+          console.warn(
+            `Erro na verificação do número de rows. Elemento ${JSON.stringify(
+              arrayTabIds
+            )}; Número obtido: ${
+              arrayTabIds?.length ?? null
+            }; Número esperado: ${tabDC.rows.length}`
+          );
+        }
+      } else if (optionElementMatch7) {
+        const medTrs = Array.from(
+          tabDC.querySelectorAll("tr.tabRowDCutMed")
+        ) as HTMLTableRowElement[];
+        for (let iTr = 0; iTr < medTrs.length; iTr++) {
+          const isRowHidden = medTrs[iTr].hidden;
+          if (isRowHidden) {
+            medTrs[iTr].removeAttribute("hidden");
+            const innerInp = medTrs[iTr].querySelector("input");
+            if (innerInp) {
+              innerInp.setAttribute("required", "");
+            }
+          }
+        }
+      } else {
+        console.warn(
+          `Erro na match de protocolo. Protocolo: ${protocolo.value}`
+        );
+      }
+    }
+  } else {
+    console.warn(
+      `Erro validando campo de tipo corporal: elemento ${bodyType}, instância ${
+        Object.prototype.toString.call(bodyType).slice(-8, 1) ?? null
+      }`
+    );
+  }
+}
+
+function checkTabRowsIds(tab: HTMLTableElement) {
+  let arrayTabIds = [];
+  if (tab.id === "tabDCut") {
+    const tableRows = Array.from(tab.querySelectorAll("tr.tabRowDCutMed"));
+    for (let iR = 0; iR < tableRows.length; iR++) {
+      const rowId = tableRows[iR].id;
+      const rowIdMatch = rowId.match(/^row/)?.toString();
+      if (rowIdMatch) {
+        const slicedRowId = rowId.slice(3).toLowerCase();
+        arrayTabIds.push(slicedRowId);
+      } else {
+        console.warn(`Erro validando id da row. Id: ${rowId}`);
+      }
+    }
+  } else {
+    console.warn(`Erro validando id da Tabela de DCut. Id: ${tab.id}`);
+  }
+  return arrayTabIds;
+}
+
+function filterIdsByGender(arrayIds: string[], bodyType: string) {
+  if (Array.isArray(arrayIds)) {
+    if (
+      arrayIds.every((prop) => typeof prop === "string") &&
+      typeof bodyType === "string"
+    ) {
+      let genderedIds = [];
+      switch (bodyType) {
+        case "masculino":
+          for (let iM = 0; iM < arrayIds.length; iM++) {
+            if (
+              arrayIds[iM] === "peit" ||
+              arrayIds[iM] === "abd" ||
+              arrayIds[iM] === "coxa"
+            ) {
+              genderedIds.push(arrayIds[iM]);
+            }
+          }
+          break;
+        case "feminino":
+          for (let iF = 0; iF < arrayIds.length; iF++) {
+            if (
+              arrayIds[iF] === "tricp" ||
+              arrayIds[iF] === "suprail" ||
+              arrayIds[iF] === "coxa"
+            ) {
+              genderedIds.push(arrayIds[iF]);
+            }
+          }
+          break;
+        case "neutro":
+          for (let iN = 0; iN < arrayIds.length; iN++) {
+            if (
+              arrayIds[iN] === "peit" ||
+              arrayIds[iN] === "abd" ||
+              arrayIds[iN] === "tricp" ||
+              arrayIds[iN] === "suprail" ||
+              arrayIds[iN] === "coxa"
+            )
+              genderedIds.push(arrayIds[iN]);
+          }
+          break;
+        default:
+          console.warn(
+            `Erro reocnhecendo value de bodyType. Value: ${bodyType}`
+          );
+      }
+      return genderedIds;
+    } else {
+      console.warn(`Erro validando elementos como strings`);
+    }
+  } else {
+    console.warn(`Erro validando array`);
   }
 }

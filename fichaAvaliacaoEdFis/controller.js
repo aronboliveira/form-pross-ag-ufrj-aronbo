@@ -29,6 +29,20 @@ const deactAutocorrectBtns = document.querySelectorAll(
 const dateBtns = document.querySelectorAll('button[id$="DatBtn"]');
 const resetFormBtn = document.getElementById("resetFormBtn");
 const subButton = document.getElementById("submitFormButId");
+// const allInputs = Array.from([
+//   ...textConts,
+//   editableCite,
+//   ...numInps,
+//   ...radioButtons,
+//   ...checkboxes,
+// ]).flat(1);
+// const btnJson = document.getElementById("btnJSON");
+
+// if (btnJson) {
+//   btnJson.addEventListener("click", () => console.log(allInputs));
+// } else {
+//   console.warn(`Erro validando btnJson`);
+// }
 
 textConts.forEach(function (textCont) {
   textCont.addEventListener("input", function (input) {
@@ -163,25 +177,20 @@ if (
   textBodytype instanceof HTMLSelectElement &&
   typeof genValue === "string"
 ) {
-  console.log("gen value inicial " + genValue);
   gen.addEventListener("change", () => {
     genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
-    console.log("gen value " + genValue);
     textBodytype.value = genValue;
   });
   genBirthRel.addEventListener("change", () => {
     genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
-    console.log("gen value " + genValue);
     textBodytype.value = genValue;
   });
   genTrans.addEventListener("change", () => {
     genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
-    console.log("gen value " + genValue);
     textBodytype.value = genValue;
   });
   genFisAlin.addEventListener("change", () => {
     genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
-    console.log("gen value " + genValue);
     textBodytype.value = genValue;
   });
 } else {
@@ -272,13 +281,14 @@ export function cursorCheckTimer(cursorPosition) {
 }
 
 //TODO CONSERTAR FUNÇÕES APÓS DECISÕES DE REUNIÃO SOBRE PROTOCOLO E TRANS
-if (tabDC) {
+if (tabDC && tabDC instanceof HTMLTableElement) {
   const rowsDC = tabDC.getElementsByClassName("tabRowDCut");
   const rowsDCArray = Array.from(rowsDC).filter(
     (rowDC) => rowDC instanceof HTMLTableRowElement
   );
   const sumDCBtns = tabDC.querySelectorAll('button[id^="sumDCBtn"]');
   const sumDCInps = tabDC.querySelectorAll('input[id^="tabInpRowDCut9"]');
+  const protocolo = document.getElementById("tabSelectDCutId");
 
   sumDCBtns.forEach((sumDCBtn) => {
     sumDCBtn?.addEventListener("click", () => {
@@ -286,6 +296,28 @@ if (tabDC) {
     });
   });
 
+  if (protocolo && protocolo instanceof HTMLSelectElement) {
+    protocolo.addEventListener("change", () =>
+      Model.changeTabDCutLayout(protocolo, tabDC)
+    );
+    if (textBodytype && textBodytype instanceof HTMLSelectElement) {
+      textBodytype.addEventListener("change", () =>
+        Model.changeTabDCutLayout(protocolo, tabDC)
+      );
+    } else {
+      console.warn(
+        `Erro validando campo de Bodytype. Elemento: ${protocolo}, instância: ${Object.prototype.toString
+          .call(textBodytype)
+          .slice(8, -1)}`
+      );
+    }
+  } else {
+    console.warn(
+      `Erro validando campo de Protocolo. Elemento: ${protocolo}, instância: ${Object.prototype.toString
+        .call(protocolo)
+        .slice(8, -1)}`
+    );
+  }
   if (tabMedAnt && tabIndPerc) {
     const weightCells = tabMedAnt.querySelectorAll(
       'input[id^="tabInpRowMedAnt2"]'
@@ -308,9 +340,24 @@ if (tabDC) {
         );
       });
     });
+  } else {
+    console.warn(
+      `Erro validando Tabelas. Tabela de Medidas Antropométricas: elemento ${tabMedAnt}, instância: ${Object.prototype.toString
+        .call(tabMedAnt)
+        .slice(
+          8,
+          -1
+        )}; Tabela de Índices: elemento ${tabIndPerc}, instância ${Object.prototype.toString
+        .call(tabIndPerc)
+        .slice(8, -1)}`
+    );
   }
 } else {
-  console.warn("Erro validando Tabela de Dobras Cutâneas");
+  console.warn(
+    `Erro validando Tabela de Dobras Cutâneas: elemento ${tabDC}, instância ${Object.prototype.toString
+      .call(tabDC)
+      .slice(8, -1)}`
+  );
 }
 
 //TODO AGUARDAR REUNIÃO
