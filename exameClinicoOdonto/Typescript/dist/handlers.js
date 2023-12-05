@@ -1,30 +1,4 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.subForm = exports.resetarFormulario = exports.changeToAstDigit = exports.useCurrentDate = exports.addSubDivTrat = exports.dragEndChilds = exports.dragEnd = exports.dragDrop = exports.dragLeave = exports.dragOver = exports.dragEnter = exports.dragStartChilds = exports.dragStart = exports.dragHover = exports.addTextToObs = exports.showInspDialogs = exports.showInspSpanSub = exports.doubleClickHandler = exports.opRadioHandler = void 0;
-const Model = __importStar(require("./model.js"));
+import * as Model from "./model.js";
 let movingSrcItem = null;
 let targItem = null;
 const contInQuadrs = document.querySelectorAll(".contInQuadrs");
@@ -52,7 +26,7 @@ let isDialogCalled = false;
 //   }
 //   opRadioHandler(keydown);
 // }
-function opRadioHandler(keydown) {
+export function opRadioHandler(keydown) {
     const radioPairs = document.querySelectorAll('input[id$="Yes"], input[id$="No"]' //acessando como par
     );
     for (let i = 0; i < radioPairs.length; i += 2 //pulando de par em par
@@ -87,16 +61,11 @@ function opRadioHandler(keydown) {
         }
     }
 }
-exports.opRadioHandler = opRadioHandler;
-function doubleClickHandler() {
-    this.checked = this.checked === true ? false : true;
+export function doubleClickHandler(input) {
+    input.checked = input.checked === true ? false : true;
 }
-exports.doubleClickHandler = doubleClickHandler;
-function showInspSpanSub(changeRadio, inspRadio) {
-    console.log("click ouvido!");
+export function showInspSpanSub(changeRadio, inspRadio) {
     if (changeRadio.target === inspRadio) {
-        console.log("target aceito");
-        console.log("classes " + inspRadio.classList);
         if (inspRadio.classList.contains("radYes")) {
             console.log("classe yes aceita");
             let isParentValid = inspRadio.parentElement?.classList.contains("inspSpanMain");
@@ -113,7 +82,6 @@ function showInspSpanSub(changeRadio, inspRadio) {
             }
         }
         else if (inspRadio.classList.contains("radNo")) {
-            console.log("classe no aceita");
             let isParentValid = inspRadio.parentElement?.classList.contains("inspSpanMain");
             if (isParentValid) {
                 let validSibling = searchNextSiblings(inspRadio, "inspSpanSub");
@@ -124,7 +92,6 @@ function showInspSpanSub(changeRadio, inspRadio) {
         }
     }
 }
-exports.showInspSpanSub = showInspSpanSub;
 function searchNextSiblings(currentElement, searchedSiblingClass) {
     while (currentElement.nextElementSibling) {
         currentElement = currentElement.nextElementSibling;
@@ -299,7 +266,7 @@ function searchPreviousSiblings(currentElement, searchedSiblingClass) {
 //     container.removeEventListener("mousemove", applyResizingCursor);
 //   }
 // }
-function showInspDialogs(click, inspDialogBtn) {
+export function showInspDialogs(click, inspDialogBtn) {
     if (click.target === inspDialogBtn) {
         let calledDialog = inspDialogBtn.nextElementSibling;
         if (calledDialog && calledDialog instanceof HTMLDialogElement) {
@@ -316,8 +283,7 @@ function showInspDialogs(click, inspDialogBtn) {
         }
     }
 }
-exports.showInspDialogs = showInspDialogs;
-function addTextToObs(click, inspLIBtn) {
+export function addTextToObs(click, inspLIBtn) {
     if (click.target === inspLIBtn) {
         let validTextParent = inspLIBtn.parentElement?.innerText;
         let fixedTextParent = validTextParent?.slice(0, -9);
@@ -337,8 +303,7 @@ function addTextToObs(click, inspLIBtn) {
         }
     }
 }
-exports.addTextToObs = addTextToObs;
-function dragHover(quadrDent) {
+export function dragHover(quadrDent) {
     if (quadrDent instanceof HTMLElement) {
         const originalCursor = quadrDent.style.cursor;
         setTimeout(() => {
@@ -352,8 +317,7 @@ function dragHover(quadrDent) {
         }, 2000);
     }
 }
-exports.dragHover = dragHover;
-function dragStart(move) {
+export function dragStart(move) {
     movingSrcItem = move.target;
     if (movingSrcItem && movingSrcItem instanceof HTMLElement) {
         move?.dataTransfer?.setData("text/plain", ""); //define a data inicial no container mobilizado
@@ -363,26 +327,21 @@ function dragStart(move) {
         console.warn(`Erro reconhecendo Drag Start: target ${movingSrcItem}, classe ${movingSrcItem}`);
     }
 }
-exports.dragStart = dragStart;
-function dragStartChilds(contInQuadrs) {
+export function dragStartChilds(contInQuadrs) {
     contInQuadrs.forEach((contInQuadr) => {
         contInQuadr.setAttribute("draggable", "true");
     });
 }
-exports.dragStartChilds = dragStartChilds;
-function dragEnter(move) {
+export function dragEnter(move) {
     move.preventDefault();
 }
-exports.dragEnter = dragEnter;
-function dragOver(move) {
+export function dragOver(move) {
     move.preventDefault();
 }
-exports.dragOver = dragOver;
-function dragLeave(move) {
+export function dragLeave(move) {
     move.preventDefault();
 }
-exports.dragLeave = dragLeave;
-function dragDrop(drop) {
+export function dragDrop(drop) {
     targItem = drop.target;
     if (movingSrcItem instanceof HTMLElement &&
         targItem &&
@@ -399,20 +358,17 @@ function dragDrop(drop) {
     }
     dragEnd();
 }
-exports.dragDrop = dragDrop;
-function dragEnd() {
+export function dragEnd() {
     movingSrcItem = null;
     dragEndChilds(contInQuadrs);
 }
-exports.dragEnd = dragEnd;
-function dragEndChilds(contInQuadrs) {
+export function dragEndChilds(contInQuadrs) {
     contInQuadrs.forEach((contInQuadr) => {
         contInQuadr.setAttribute("draggable", "false");
     });
 }
-exports.dragEndChilds = dragEndChilds;
 let blockCount = 1;
-function addSubDivTrat(click) {
+export function addSubDivTrat(click) {
     if (click.target &&
         click.target instanceof HTMLElement &&
         click.target.tagName === "BUTTON") {
@@ -484,8 +440,7 @@ function addSubDivTrat(click) {
         }
     }
 }
-exports.addSubDivTrat = addSubDivTrat;
-function useCurrentDate(activation, dateBtn) {
+export function useCurrentDate(activation, dateBtn) {
     console.log("botão clicado");
     const dataAtual = new Date();
     const ano = dataAtual.getFullYear();
@@ -505,8 +460,7 @@ function useCurrentDate(activation, dateBtn) {
         dateBtn.previousElementSibling.value = ano + "-" + mes + "-" + dia;
     }
 }
-exports.useCurrentDate = useCurrentDate;
-function changeToAstDigit(click, toFileInpBtn) {
+export function changeToAstDigit(click, toFileInpBtn) {
     const useAstDigitRegex = /Usar Assinatura Digital/;
     const useAstDigtRegexObj = new RegExp(useAstDigitRegex);
     const useAstTextRegex = /Retornar à Assinatura Escrita/;
@@ -671,8 +625,7 @@ function changeToAstDigit(click, toFileInpBtn) {
         }
     }
 }
-exports.changeToAstDigit = changeToAstDigit;
-function resetarFormulario(click, toFileInpBtns) {
+export function resetarFormulario(click, toFileInpBtns) {
     if (click.target instanceof HTMLElement &&
         click.target.tagName === "BUTTON") {
         const formulario = document.getElementById("formOdont");
@@ -743,8 +696,6 @@ function resetarFormulario(click, toFileInpBtns) {
             .slice(8, -1)}`);
     }
 }
-exports.resetarFormulario = resetarFormulario;
-function subForm() {
+export function subForm() {
     window.alert("Sistema ainda não pronto\n...mas você teria enviado clicando aqui! :)");
 }
-exports.subForm = subForm;

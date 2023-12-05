@@ -1,4 +1,3 @@
-"use strict";
 var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
     if (kind === "m") throw new TypeError("Private method is not writable");
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
@@ -10,43 +9,34 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _JSONStorager_labId, _JSONStorager_labText, _JSONStorager_inpId, _JSONStorager_inpValue;
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.JSONStorager = void 0;
-class JSONStorager {
-    constructor(labId, labText, inpId, inpValue) {
-        this.labId = labId;
-        _JSONStorager_labId.set(this, void 0);
-        _JSONStorager_labText.set(this, void 0);
-        _JSONStorager_inpId.set(this, void 0);
-        _JSONStorager_inpValue.set(this, void 0);
-        __classPrivateFieldSet(this, _JSONStorager_labId, labId, "f");
-        __classPrivateFieldSet(this, _JSONStorager_labText, labText, "f");
-        __classPrivateFieldSet(this, _JSONStorager_inpId, inpId, "f");
-        __classPrivateFieldSet(this, _JSONStorager_inpValue, inpValue, "f");
+var _JSONStorager_id, _JSONStorager_value, _JSONTitleStorager_title;
+export class JSONStorager {
+    constructor(id, value) {
+        _JSONStorager_id.set(this, void 0);
+        _JSONStorager_value.set(this, void 0);
+        __classPrivateFieldSet(this, _JSONStorager_id, id, "f");
+        __classPrivateFieldSet(this, _JSONStorager_value, value, "f");
         Object.freeze(this);
     }
-    get showLabId() {
-        return __classPrivateFieldGet(this, _JSONStorager_labId, "f");
-    }
-    get showLabText() {
-        return __classPrivateFieldGet(this, _JSONStorager_labText, "f");
-    }
-    get showLabInfo() {
-        return [__classPrivateFieldGet(this, _JSONStorager_labId, "f"), __classPrivateFieldGet(this, _JSONStorager_labText, "f")];
-    }
     get showInpId() {
-        return __classPrivateFieldGet(this, _JSONStorager_inpId, "f");
+        return __classPrivateFieldGet(this, _JSONStorager_id, "f");
     }
     get showInpValue() {
-        return __classPrivateFieldGet(this, _JSONStorager_inpValue, "f");
-    }
-    get showInpInfo() {
-        return [__classPrivateFieldGet(this, _JSONStorager_inpId, "f"), __classPrivateFieldGet(this, _JSONStorager_inpValue, "f")];
+        return __classPrivateFieldGet(this, _JSONStorager_value, "f");
     }
     get showAllInfo() {
-        return [__classPrivateFieldGet(this, _JSONStorager_labId, "f"), __classPrivateFieldGet(this, _JSONStorager_labText, "f"), __classPrivateFieldGet(this, _JSONStorager_inpId, "f"), __classPrivateFieldGet(this, _JSONStorager_inpValue, "f")];
+        return [__classPrivateFieldGet(this, _JSONStorager_id, "f"), __classPrivateFieldGet(this, _JSONStorager_value, "f")];
     }
 }
-exports.JSONStorager = JSONStorager;
-_JSONStorager_labId = new WeakMap(), _JSONStorager_labText = new WeakMap(), _JSONStorager_inpId = new WeakMap(), _JSONStorager_inpValue = new WeakMap();
+_JSONStorager_id = new WeakMap(), _JSONStorager_value = new WeakMap();
+export class JSONTitleStorager {
+    constructor(title) {
+        _JSONTitleStorager_title.set(this, void 0);
+        __classPrivateFieldSet(this, _JSONTitleStorager_title, title, "f");
+        Object.freeze(this);
+    }
+    get showInpTitle() {
+        return __classPrivateFieldGet(this, _JSONTitleStorager_title, "f");
+    }
+}
+_JSONTitleStorager_title = new WeakMap();

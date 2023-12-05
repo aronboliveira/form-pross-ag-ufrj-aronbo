@@ -1,34 +1,29 @@
 export class JSONStorager {
-  #labId;
-  #labText;
-  #inpId;
-  #inpValue;
-  constructor(labId, labText, inpId, inpValue) {
-    this.#labId = labId;
-    this.#labText = labText;
-    this.#inpId = inpId;
-    this.#inpValue = inpValue;
+  #id;
+  #value;
+  constructor(id, value) {
+    this.#id = id;
+    this.#value = value;
     Object.freeze(this);
   }
-  get showLabId() {
-    return this.#labId;
-  }
-  get showLabText() {
-    return this.#labText;
-  }
-  get showLabInfo() {
-    return [this.#labId, this.#labText];
-  }
   get showInpId() {
-    return this.#inpId;
+    return this.#id;
   }
   get showInpValue() {
-    return this.#inpValue;
-  }
-  get showInpInfo() {
-    return [this.#inpId, this.#inpValue];
+    return this.#value;
   }
   get showAllInfo() {
-    return [this.#labId, this.#labText, this.#inpId, this.#inpValue];
+    return [this.#id, this.#value];
+  }
+}
+
+export class JSONTitleStorager {
+  #title;
+  constructor(title) {
+    this.#title = title;
+    Object.freeze(this);
+  }
+  get showInpTitle() {
+    return this.#title;
   }
 }

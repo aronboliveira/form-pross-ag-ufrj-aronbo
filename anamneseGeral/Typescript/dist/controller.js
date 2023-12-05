@@ -1,36 +1,12 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.cursorCheckTimer = void 0;
-const Handlers = __importStar(require("./handlers.js"));
-const Model = __importStar(require("./model.js"));
+import * as Handlers from "./handlers.js";
+import * as Model from "./model.js";
+const inputs = document.querySelectorAll("input");
 const textInputs = document.querySelectorAll('input[type="text"]');
 const textareas = document.querySelectorAll("textarea");
 const textConts = [...textareas, ...textInputs];
 const numInps = document.querySelectorAll('input[type="number"]');
 const radioButtons = document.querySelectorAll('input[type="radio"]');
+const selects = document.querySelectorAll("select");
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 const gen = document.getElementById("genId");
 const genBirthRel = document.getElementById("genBirthRelId");
@@ -51,11 +27,10 @@ const dateBtns = document.querySelectorAll('button[id$="DatBtn"]');
 const resetFormBtn = document.getElementById("resetFormBtn");
 const subButton = document.getElementById("submitFormButId");
 const allInputs = Array.from([
-    ...textConts,
+    ...inputs,
+    ...textareas,
+    ...selects,
     editableCite,
-    ...numInps,
-    ...radioButtons,
-    ...checkboxes,
 ]).flat(1);
 const JSONBtn = document.getElementById("btnJSON");
 if (JSONBtn && allInputs.length > 0) {
@@ -271,7 +246,7 @@ if (subButton) {
 if (resetFormBtn) {
     resetFormBtn.addEventListener("click", (click) => Handlers.resetarFormulario(click, astDigtBtns));
 }
-function cursorCheckTimer(cursorPosition) {
+export function cursorCheckTimer(cursorPosition) {
     let selection = window.getSelection();
     if (selection && selection.focusNode !== null) {
         cursorPosition = selection.getRangeAt(0)?.startOffset;
@@ -280,4 +255,3 @@ function cursorCheckTimer(cursorPosition) {
         }, 3000);
     }
 }
-exports.cursorCheckTimer = cursorCheckTimer;

@@ -2,11 +2,13 @@ import * as Handlers from "./handlers.js";
 import * as Model from "./model.js";
 import * as Classes from "./classes.js";
 
+const inputs = document.querySelectorAll("input");
 const textInputs = document.querySelectorAll('input[type="text"]');
 const textareas = document.querySelectorAll("textarea");
 const textConts = [...textareas, ...textInputs];
 const numInps = document.querySelectorAll('input[type="number"]');
 const radioButtons = document.querySelectorAll('input[type="radio"]');
+const selects = document.querySelectorAll("select");
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 const gen = document.getElementById("genId");
 const genBirthRel = document.getElementById("genBirthRelId");
@@ -31,11 +33,10 @@ const dateBtns = document.querySelectorAll('button[id$="DatBtn"]');
 const resetFormBtn = document.getElementById("resetFormBtn");
 const subButton = document.getElementById("submitFormButId");
 const allInputs = Array.from([
-  ...textConts,
+  ...inputs,
+  ...textareas,
+  ...selects,
   editableCite,
-  ...numInps,
-  ...radioButtons,
-  ...checkboxes,
 ]).flat(1);
 const JSONBtn = document.getElementById("btnJSON");
 

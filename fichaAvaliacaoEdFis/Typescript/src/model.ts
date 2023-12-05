@@ -1,8 +1,96 @@
 import * as Controller from "./controller.js";
+import { UndefinedPerson, Man, Woman, Neutro } from "./classes.js";
 
 const autoCapitalizeFirstLetterRegex = /\b\w/;
 let repAcumulator = 0;
 let isAutocorrectOn = true;
+
+export function checkAllGenConts(
+  gen: HTMLSelectElement,
+  genBirthRel: HTMLSelectElement,
+  genTrans: HTMLSelectElement,
+  genFisAlin: HTMLSelectElement
+) {
+  let isGenValid = false;
+  let isGenBirthRelValid = false;
+  let isGenTransContValid = false;
+  let isGenFisAlinValid = false;
+  try {
+    if (gen && gen instanceof HTMLSelectElement) {
+      isGenValid = true;
+    } else {
+      throw new Error(
+        `Erro validando gen: elemento ${gen}, instância ${
+          (gen as any) instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGen: any) {
+    console.error(errorGen.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  try {
+    if (genBirthRel && genBirthRel instanceof HTMLSelectElement) {
+      isGenBirthRelValid = true;
+    } else {
+      throw new Error(
+        `Erro validando gen: elemento ${genBirthRel}, instância ${
+          (genBirthRel as any) instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGenBirthRel: any) {
+    console.error(errorGenBirthRel.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  try {
+    if (genTrans && genTrans instanceof HTMLSelectElement) {
+      isGenTransContValid = true;
+    } else {
+      throw new Error(
+        `Erro validando genTrans: elemento ${genTrans}, instância ${
+          (genTrans as any) instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGenTrans: any) {
+    console.error(errorGenTrans.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  try {
+    if (genFisAlin && genFisAlin instanceof HTMLSelectElement) {
+      isGenFisAlinValid = true;
+    } else {
+      throw new Error(
+        `Erro validando genFisAlin: elemento ${genFisAlin}, instância ${
+          (genFisAlin as any) instanceof HTMLSelectElement
+        }`
+      );
+    }
+  } catch (errorGenFisAlin: any) {
+    console.error(errorGenFisAlin.message);
+  } finally {
+    //algum efeito visual
+  }
+
+  if (
+    isGenValid &&
+    isGenBirthRelValid &&
+    isGenTransContValid &&
+    isGenFisAlinValid
+  ) {
+    return true;
+  } else {
+    console.error("Erro verificando booleanos de containers de gênero");
+    return false;
+  }
+}
 
 export function fluxGen(
   gen: HTMLSelectElement,
@@ -118,12 +206,120 @@ function hideStgTransHorm(genTrans: HTMLSelectElement): boolean | void {
   }
 }
 
+export function checkInnerColGroups(
+  parentElement: HTMLElement
+): [number, boolean] {
+  let areAllCoolGroupsSimilar = false;
+  let validColGroupsChildCount = [];
+
+  if (parentElement instanceof HTMLElement) {
+    const colGroups = Array.from(parentElement.querySelectorAll("colgroup"));
+    const areColGroupValids = colGroups.every(
+      (colGroup) => colGroup instanceof HTMLTableColElement
+    );
+
+    //popula arrays de colgroups com base em filtragem de instância
+    if (colGroups instanceof HTMLTableColElement && colGroups.length > 0) {
+      for (let i = 0; i < colGroups.length; i++) {
+        let colGrpChilds = colGroups[i].children;
+        let cols = Array.from(colGrpChilds);
+        if (cols.every((col) => col instanceof HTMLTableColElement)) {
+          validColGroupsChildCount.push(colGroups[i].childElementCount);
+        } else {
+          let colsInstances = [];
+          for (let j = 0; j < cols.length; j++) {
+            const childInstance = `${
+              Object.prototype.toString.call(cols[j]).slice(8, -1) ?? "null"
+            }`;
+            colsInstances.push(childInstance);
+            if (childInstance !== `HTMLTableColElement`) {
+              console.error(`Erro validando colGroup${i}.
+              Instância da child inválida: ${childInstance};
+              Posição da child inválida: ${j}`);
+            }
+          }
+          const validCols = cols.filter(
+            (col) => col instanceof HTMLTableColElement
+          );
+          validColGroupsChildCount.push(validCols.length);
+        }
+      }
+    } else {
+      console.error(`Erro validando colGroups.
+      areColGroupValids: ${areColGroupValids ?? false};
+      Instância obtida: ${
+        Object.prototype.toString.call(colGroups).slice(8, -1) ?? "null"
+      };
+      Length obtida: ${colGroups.length ?? 0}`);
+    }
+
+    //filtra array de colgroups válida com base em colunas de tamanho similar
+    let pairedColGroupsValid = [];
+    for (let m = 0; m < validColGroupsChildCount.length; m++) {
+      if (m === 0) {
+        continue;
+      } else {
+        if ((validColGroupsChildCount[m] = validColGroupsChildCount[m - 1])) {
+          pairedColGroupsValid.push(true);
+        } else {
+          console.warn(`Erro validando par de Col Groups.
+          Par invalidado: ${validColGroupsChildCount[m] ?? "null"} com ${
+            validColGroupsChildCount[m - 1] ?? "null"
+          }`);
+          pairedColGroupsValid.push(false);
+        }
+      }
+    }
+
+    //verifica se todos os pares são válidos para, em caso negativo, fornecer warn
+    if (
+      pairedColGroupsValid.every((pairedColGroup) => pairedColGroup === true)
+    ) {
+      areAllCoolGroupsSimilar = true;
+    } else {
+      console.warn(`Grupos de Colunas não são similares no número de children`);
+      areAllCoolGroupsSimilar = false;
+    }
+  }
+  return [validColGroupsChildCount?.length ?? 0, areAllCoolGroupsSimilar];
+}
+
+export function generatePersonInstance(
+  person: Man | Woman | Neutro | UndefinedPerson
+) {
+  if (typeof person.gen === "string" && person.gen !== "") {
+    if (person.gen === "masculino") {
+      person = new Man(person.gen, 30, 70, 170, 60, person.atvLvl); //TODO VALORES HARDCODED PARA FINS DE TESTE
+      return person;
+      // person = new Man(age, weight, height, sumDCut);
+    } else if (person.gen === "feminino") {
+      person = new Woman(person.gen, 30, 70, 170, 60, person.atvLvl); //TODO CHECAR SE ALTURA É DE FATO EM CMS COM ALINE
+      return person;
+      // person = new Woman(age, weight, height, sumDCut);
+    } else if (person.gen === "neutro") {
+      person = new Neutro(person.gen, 30, 70, 170, 60, person.atvLvl);
+      return person;
+      // person = new Woman(age, weight, height, sumDCut);
+    } else {
+      console.error(`Erro verificando value definido para Gênero.
+      Valor obtido: ${person?.gen ?? "null"}`);
+    }
+  } else {
+    console.error(`Erro validando tipo de .gen na geração de objeto Person
+    Instância obtida: ${typeof person.gen || "null"}}`);
+  }
+  return person;
+}
+
+//TODO AJUSTAR LIMITE LEVANDO EM CONTA NEGAÇÃO DE \d.
 export function numberLimit(inputElement: HTMLInputElement): void {
   let numberValue = inputElement.value;
   let numberValueInt = parseInt(numberValue);
   const isAtivFis = inputElement.classList.contains("inpAtivFis");
   const isAlimRot = inputElement.classList.contains("inpAlimRot");
   const isFloat = inputElement.classList.contains("float");
+  const isThreeCharLong = inputElement.classList.contains("threeCharLongNum");
+  const isSixCharLong = inputElement.classList.contains("sixCharLongNum");
   if ((isAtivFis || isAlimRot) && !isFloat) {
     const maxLength = 2;
     const maxInput = inputElement.id.endsWith("Max");
@@ -139,6 +335,19 @@ export function numberLimit(inputElement: HTMLInputElement): void {
       numberValue = numberValue.slice(0, maxLength);
     }
     inputElement.value = numberValue;
+  }
+  if (isThreeCharLong) {
+    const maxLength = 3;
+    if (numberValue.length > maxLength) {
+      numberValue = numberValue.slice(0, maxLength);
+    }
+    inputElement.value = numberValue;
+  }
+  if (isSixCharLong) {
+    const maxLength = 6;
+    if (numberValue.length > maxLength) {
+      numberValue = numberValue.slice(0, maxLength);
+    }
   }
 }
 

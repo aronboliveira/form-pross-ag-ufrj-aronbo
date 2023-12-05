@@ -1,36 +1,10 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.orderLabels = exports.resetAvDentValue = exports.removeFirstClick = exports.switchAutocorrect = exports.autoCapitalizeCite = exports.autoCapitalizeInputs = void 0;
-const Controller = __importStar(require("./controller.js"));
+import * as Controller from "./controller.js";
 const subDivsQuadrs = document.querySelectorAll(".quadrSubDiv");
 const autoCapitalizeFirstLetterRegex = /\b\w/;
 let isValuePreDef = false;
 let repAcumulator = 0;
 let isAutocorrectOn = true;
-function autoCapitalizeInputs(textElement) {
+export function autoCapitalizeInputs(textElement) {
     let text = textElement.value;
     if (isAutocorrectOn && text) {
         let newWordMatches = text.match(/\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g);
@@ -570,8 +544,7 @@ function autoCapitalizeInputs(textElement) {
         }
     }
 }
-exports.autoCapitalizeInputs = autoCapitalizeInputs;
-function autoCapitalizeCite(editableCite) {
+export function autoCapitalizeCite(editableCite) {
     let citeText = editableCite.textContent;
     if (isAutocorrectOn && citeText) {
         let newWordMatches = citeText.match(/\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g);
@@ -1130,8 +1103,7 @@ function autoCapitalizeCite(editableCite) {
         }
     }
 }
-exports.autoCapitalizeCite = autoCapitalizeCite;
-function switchAutocorrect(click, deactAutocorrectBtn) {
+export function switchAutocorrect(click, deactAutocorrectBtn) {
     if (click.target === deactAutocorrectBtn) {
         isAutocorrectOn = !isAutocorrectOn; //simplificação de if-else; if-if não funciona aqui
         deactAutocorrectBtn.textContent = isAutocorrectOn
@@ -1139,8 +1111,7 @@ function switchAutocorrect(click, deactAutocorrectBtn) {
             : "Ativar Autocorreção";
     }
 }
-exports.switchAutocorrect = switchAutocorrect;
-function removeFirstClick(editableCite) {
+export function removeFirstClick(editableCite) {
     editableCite.textContent === "Insira Seu Nome Aqui"
         ? (editableCite.textContent = "")
         : null;
@@ -1150,8 +1121,7 @@ function removeFirstClick(editableCite) {
         cursorPosition = Controller.cursorCheckTimer(cursorPosition) ?? 0;
     }, 3000);
 }
-exports.removeFirstClick = removeFirstClick;
-function resetAvDentValue(selectInp) {
+export function resetAvDentValue(selectInp) {
     let targInp = selectInp.target;
     if (targInp instanceof HTMLInputElement ||
         targInp instanceof HTMLTextAreaElement) {
@@ -1187,8 +1157,7 @@ function resetAvDentValue(selectInp) {
         }
     }
 }
-exports.resetAvDentValue = resetAvDentValue;
-function orderLabels() {
+export function orderLabels() {
     subDivsQuadrs.forEach((subDiv) => {
         let labsNList = subDiv.querySelectorAll(".labelAvDent");
         if (labsNList.length > 0) {
@@ -1203,4 +1172,3 @@ function orderLabels() {
         }
     });
 }
-exports.orderLabels = orderLabels;

@@ -1,34 +1,8 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.addDblQuotes = exports.formatCEP = exports.addEmailExtension = exports.formatTel = exports.fluxGen = exports.switchAutocorrect = exports.removeFirstClick = exports.autoCapitalizeCite = exports.autoCapitalizeInputs = exports.numberLimit = void 0;
-const Controller = __importStar(require("./controller.js"));
+import * as Controller from "./controller.js";
 const autoCapitalizeFirstLetterRegex = /\b\w/;
 let repAcumulator = 0;
 let isAutocorrectOn = true;
-function numberLimit(inputElement) {
+export function numberLimit(inputElement) {
     let numberValue = inputElement.value;
     let numberValueInt = parseInt(numberValue);
     const isAtivFis = inputElement.classList.contains("inpAtivFis");
@@ -61,8 +35,7 @@ function numberLimit(inputElement) {
         }
     }
 }
-exports.numberLimit = numberLimit;
-function autoCapitalizeInputs(textElement) {
+export function autoCapitalizeInputs(textElement) {
     let text = textElement.value;
     if (isAutocorrectOn && text) {
         let newWordMatches = text.match(/\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g);
@@ -602,8 +575,7 @@ function autoCapitalizeInputs(textElement) {
         }
     }
 }
-exports.autoCapitalizeInputs = autoCapitalizeInputs;
-function autoCapitalizeCite(editableCite) {
+export function autoCapitalizeCite(editableCite) {
     let citeText = editableCite.textContent;
     if (isAutocorrectOn && citeText) {
         let newWordMatches = citeText.match(/\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g);
@@ -1162,8 +1134,7 @@ function autoCapitalizeCite(editableCite) {
         }
     }
 }
-exports.autoCapitalizeCite = autoCapitalizeCite;
-function removeFirstClick(editableCite) {
+export function removeFirstClick(editableCite) {
     editableCite.textContent === "Insira Seu Nome Aqui"
         ? (editableCite.textContent = "")
         : null;
@@ -1172,8 +1143,7 @@ function removeFirstClick(editableCite) {
         cursorPosition = Controller.cursorCheckTimer(cursorPosition) ?? 0;
     }, 3000);
 }
-exports.removeFirstClick = removeFirstClick;
-function switchAutocorrect(click, deactAutocorrectBtn) {
+export function switchAutocorrect(click, deactAutocorrectBtn) {
     if (click.target === deactAutocorrectBtn) {
         isAutocorrectOn = !isAutocorrectOn; //simplificação de if-else; if-if não funciona aqui
         deactAutocorrectBtn.textContent = isAutocorrectOn
@@ -1181,8 +1151,7 @@ function switchAutocorrect(click, deactAutocorrectBtn) {
             : "Ativar Autocorreção";
     }
 }
-exports.switchAutocorrect = switchAutocorrect;
-function fluxGen(gen, genIniValue, genBirthRel, genTrans, genFisAlin) {
+export function fluxGen(gen, genIniValue, genBirthRel, genTrans, genFisAlin) {
     let genValue = null;
     if (gen.value === "masculino" || gen.value === "feminino") {
         if (genBirthRel.value === "cis") {
@@ -1258,7 +1227,6 @@ function fluxGen(gen, genIniValue, genBirthRel, genTrans, genFisAlin) {
         }
     }
 }
-exports.fluxGen = fluxGen;
 function showGenFisAlin(genFisAlin) {
     if (genFisAlin) {
         genFisAlin.closest(".spanFsAnamG")?.removeAttribute("hidden");
@@ -1295,7 +1263,7 @@ function hideStgTransHorm(genTrans) {
         console.warn("Erro no fechamento de genTrans");
     }
 }
-function formatTel(inputTelElement) {
+export function formatTel(inputTelElement) {
     const telText = inputTelElement.value;
     const regex = /\d+/g;
     const formattedTel = telText.replace(/[^0-9]/g, "");
@@ -1315,8 +1283,7 @@ function formatTel(inputTelElement) {
     });
     inputTelElement.value = numOnly;
 }
-exports.formatTel = formatTel;
-function addEmailExtension(container) {
+export function addEmailExtension(container) {
     if (container instanceof HTMLInputElement || HTMLTextAreaElement) {
         if (container.value === "") {
             container.value = "@.";
@@ -1328,8 +1295,7 @@ function addEmailExtension(container) {
         }
     }
 }
-exports.addEmailExtension = addEmailExtension;
-function formatCEP(inputCEPElement) {
+export function formatCEP(inputCEPElement) {
     let CEPText = inputCEPElement.value;
     const noHifenCEPRegex = /[0-9]{5,}[^-][0-9]{1,3}/;
     inputCEPElement.value.replaceAll(/[^0-9]/g, "");
@@ -1338,8 +1304,7 @@ function formatCEP(inputCEPElement) {
         inputCEPElement.value = hifenText;
     }
 }
-exports.formatCEP = formatCEP;
-function addDblQuotes(container) {
+export function addDblQuotes(container) {
     if (container instanceof HTMLInputElement || HTMLTextAreaElement) {
         if (container.value === "") {
             container.value = '""';
@@ -1351,4 +1316,3 @@ function addDblQuotes(container) {
         }
     }
 }
-exports.addDblQuotes = addDblQuotes;

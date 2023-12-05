@@ -2,11 +2,13 @@ import * as Handlers from "./handlers.js";
 import * as Model from "./model.js";
 import * as Classes from "./classes.js";
 
+const inputs = document.querySelectorAll("input");
 const textInputs = document.querySelectorAll('input[type="text"]');
 const textareas = document.querySelectorAll("textarea");
 const textConts = [...textareas, ...textInputs];
 const numInps = document.querySelectorAll('input[type="number"]');
 const radioButtons = document.querySelectorAll('input[type="radio"]');
+const selects = document.querySelectorAll("select");
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 const gen = document.getElementById("genId");
 const genBirthRel = document.getElementById("genBirthRelId");
@@ -28,11 +30,10 @@ const dateBtns = document.querySelectorAll('button[id$="DatBtn"]');
 const resetFormBtn = document.getElementById("resetFormBtn");
 const subButton = document.getElementById("submitFormButId");
 const allInputs = Array.from([
-  ...textConts,
+  ...inputs,
+  ...textareas,
+  ...selects,
   editableCite,
-  ...numInps,
-  ...radioButtons,
-  ...checkboxes,
 ]).flat(1);
 let JSONBtn = document.getElementById("btnJSON");
 
@@ -44,10 +45,13 @@ if (allInputs.length > 0) {
     let formDescription = [];
     JSONBtn.addEventListener("click", () => {
       formDescription = Handlers.getJSONDesc(allInputs);
-      if (formDescription && formDescription[0] && formDescription[1]) {
-        JSONLink = Handlers.createJSONAnchor(JSONBtn, formDescription[1]);
+      if (formDescription && formDescription.length === 4) {
+        JSONLink = Handlers.createJSONAnchor(
+          JSONBtn,
+          formDescription[1],
+          formDescription[3]
+        );
         if (JSONLink) {
-          console.log("jsonlink");
           JSONLink.addEventListener("click", () => {
             Handlers.regenerateJSONBtn(JSONLink, formDescription[1]);
           });

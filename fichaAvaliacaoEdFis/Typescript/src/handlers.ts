@@ -1,9 +1,37 @@
 import * as Model from "./model.js";
+import { UndefinedPerson, Man, Woman, Neutro } from "./classes.js";
 
 let rowCountAtivFisRot = 3;
 let rowCountAtivFisProp = 3;
 let rowCountComorb = 3;
 const rgbaRegex = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
+
+export function updateSimpleProperty(
+  element: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+) {
+  if (element instanceof HTMLInputElement) {
+    if (element.type === "radio" || element.type === "checkbox") {
+      return element.checked.toString();
+    } else if (element.type === "number") {
+      return parseFloat(element.value.replaceAll(/[^0-9.,+-]/g, ""));
+    } else if (element.type === "text" || element.type === "date") {
+      return element.value;
+    } else {
+      console.warn(`Erro validando type de Input para atualização de propriedade de person.
+      Tipo obtido: ${element?.type ?? "null"}`);
+    }
+  } else if (
+    element instanceof HTMLSelectElement ||
+    element instanceof HTMLTextAreaElement
+  ) {
+    return element.value;
+  } else {
+    console.warn(`Erro validando Element para atualização de propriedade de person.
+    Instância obitda: ${
+      Object.prototype.toString.call(element).slice(8, -1) ?? "null"
+    }`);
+  }
+}
 
 export function opRadioHandler(keydown: KeyboardEvent) {
   const radioPairs: NodeListOf<Element> = document.querySelectorAll(
@@ -300,6 +328,334 @@ function searchPreviousSiblings(
     }
   }
   return currentElement;
+}
+
+export function switchRequiredCols(elements: HTMLElement[]) {
+  if (elements.length > 0 && elements[1] instanceof HTMLSelectElement) {
+    const consTablesFs = elements[0];
+    const numConsElement = elements[1];
+    const tabSVi = elements[2];
+    const tabMedAnt = elements[3];
+    const tabDC = elements[4];
+    const tabIndPerc = elements[5];
+    let numCons = parseInt(numConsElement?.value || "1");
+    console.log("numcons " + numCons);
+
+    //adiciona listener para responder à mudança no valor de consulta
+    let returnedNum = parseInt(
+      (updateSimpleProperty(numConsElement) as string) ?? "0",
+      10
+    );
+    if (
+      typeof returnedNum === "number" &&
+      returnedNum > 0 &&
+      returnedNum <= 3
+    ) {
+      numCons = returnedNum;
+      console.log("numcons " + numCons);
+      //inicia construção de matriz para reset de required na tabela
+      const totalTables = consTablesFs?.querySelectorAll("table");
+      const totalRows = consTablesFs?.querySelectorAll("tr");
+      console.log(totalRows);
+      let nTotalRows = 0;
+      if (totalRows && totalRows.length > 0) {
+        nTotalRows = totalRows.length - totalTables.length;
+      } else {
+        console.error(`Erro consultando NodeList de elementos <col>.
+        Elemento obtido: ${totalRows ?? "null"};
+        Length obtida: ${totalRows?.length ?? 0}`);
+      }
+
+      const totalCols = consTablesFs?.querySelectorAll("col");
+      let nTotalCols = 0;
+      if (totalCols && totalCols.length > 0) {
+        nTotalCols = totalCols.length - totalTables.length;
+      } else {
+        console.error(`Erro consultando NodeList de elementos <col>.
+        Elemento obtido: ${totalCols ?? "null"};
+        Length obtida: ${totalCols?.length ?? 0}`);
+      }
+
+      let nTotalMatrixValidAxes = 0;
+      if (
+        nTotalRows !== 0 &&
+        !Number.isNaN(nTotalRows) &&
+        nTotalCols !== 0 &&
+        !Number.isNaN(nTotalCols)
+      ) {
+        nTotalMatrixValidAxes = (nTotalRows - 1) * (nTotalCols - 1);
+      } else {
+        console.error(`Erro na construção da Matriz para eixos de preenchimento.
+        Número de Linhas obtidas: ${nTotalRows ?? 0};
+        Número de Colunas obtidas: ${nTotalCols ?? 0}.`);
+      }
+
+      //captura elementos de input para reset baseado nas matrizes inpsCells e nTotalMatrixValidAxes
+      const inpsCellsSVi = tabSVi.querySelectorAll(".tabInpProgSVi");
+      const inpsCellsMedAnt = tabMedAnt.querySelectorAll(".tabInpProgMedAnt");
+      const inpsCellsDC = tabDC.querySelectorAll(".tabInpProgCons");
+      const inpsCellsIndPerc = tabIndPerc.querySelectorAll(".inpInd");
+      const inpsCells = [
+        ...inpsCellsSVi,
+        ...inpsCellsMedAnt,
+        ...inpsCellsDC,
+        ...inpsCellsIndPerc,
+      ];
+
+      //reseta o atributo required das cells para novas atribuições de required
+      if (inpsCells.length > 0 && inpsCells.length === nTotalMatrixValidAxes) {
+        inpsCells.forEach((inpCel) => {
+          if (inpCel instanceof HTMLInputElement) {
+            inpCel.required = false;
+          } else {
+            console.warn(`Erro validando instância de Input em Célula.
+            Instância obtida: ${
+              Object.prototype.toString.call(inpCel).slice(8, -1) ?? "null"
+            }.`);
+          }
+        });
+      } else {
+        console.error(`Erro na determinação de .length do array de Input em Células.
+        Número obtido: ${inpsCells.length ?? 0};
+        Equivale ao número desejado para a matriz de Eixos de Preenchimento: ${
+          inpsCells.length === nTotalMatrixValidAxes ?? false
+        };
+        Número aceito: ${nTotalMatrixValidAxes / totalTables.length};
+        Número de Inputs para Sinais Vitais obtido: ${
+          inpsCellsSVi?.length ?? 0
+        };
+        Número de Inputs para Medidas Antropométricas obtido: ${
+          inpsCellsMedAnt?.length ?? 0
+        };
+        Número de Inputs para Dobras Cutâneas obtido: ${
+          inpsCellsDC?.length ?? 0
+        };
+        Número de Inputs para Índices e Percentuais obtido: ${
+          inpsCellsIndPerc?.length ?? 0
+        }.`);
+      }
+
+      //determinação das novas cells required
+      let validInpsNodeLists = [false, false, false, false];
+
+      //formação das matrizes para validar os números de inputs obtidos para cada tabela
+      const nRowsSVi = tabSVi.querySelectorAll("tr");
+      const nColsSVi = tabSVi.querySelectorAll("col");
+      let matrixValidAxesSVi = 0;
+      if (nRowsSVi.length > 0 && nColsSVi.length > 0) {
+        matrixValidAxesSVi = (nRowsSVi.length - 1) * (nColsSVi.length - 1);
+      } else {
+        console.error(`Erro validando Número de Linhas na Tabela de Sinais Vitais.
+        Número de Linhas obtidas: ${nRowsSVi?.length ?? 0};
+        Número de Colunas obtidas: ${nColsSVi?.length ?? 0}.`);
+      }
+
+      const nRowsMedAnt = tabMedAnt.querySelectorAll("tr");
+      const nColsMedAnt = tabMedAnt.querySelectorAll("col");
+      let matrixValidAxesMedAnt = 0;
+      if (nRowsMedAnt.length > 0 && nColsMedAnt.length > 0) {
+        matrixValidAxesMedAnt =
+          (nRowsMedAnt.length - 1) * (nColsMedAnt.length - 1);
+      } else {
+        console.error(`Erro validando Número de Linhas na Tabela de Sinais Vitais.
+        Número de Linhas obtidas: ${nRowsMedAnt?.length ?? 0};
+        Número de Colunas obtidas: ${nColsMedAnt?.length ?? 0}.`);
+      }
+
+      const nRowsDC = tabDC.querySelectorAll("tr");
+      const nColsDC = tabDC.querySelectorAll("col");
+      let matrixValidAxesDC = 0;
+      if (nRowsDC.length > 0 && nColsDC.length > 0) {
+        matrixValidAxesDC = (nRowsDC.length - 1) * (nColsDC.length - 1);
+      } else {
+        console.error(`Erro validando Número de Linhas na Tabela de Sinais Vitais.
+        Número de Linhas obtidas: ${nRowsDC?.length ?? 0};
+        Número de Colunas obtidas: ${nColsDC?.length ?? 0}.`);
+      }
+
+      const nRowsIndPerc = tabIndPerc.querySelectorAll("tr");
+      const nColsIndPerc = tabIndPerc.querySelectorAll("col");
+      let matrixValidAxesIndPerc = 0;
+      if (nRowsIndPerc.length > 0 && nColsIndPerc.length > 0) {
+        matrixValidAxesIndPerc =
+          (nRowsIndPerc.length - 1) * (nColsIndPerc.length - 1);
+      } else {
+        console.error(`Erro validando Número de Linhas na Tabela de Sinais Vitais.
+        Número de Linhas obtidas: ${nRowsIndPerc?.length ?? 0};
+        Número de Colunas obtidas: ${nColsIndPerc?.length ?? 0}.`);
+      }
+
+      //validação das NodeLists de Inputs nas células
+      if (
+        Array.from(inpsCellsSVi).every(
+          (inpCell) => inpCell instanceof HTMLInputElement
+        ) &&
+        inpsCellsSVi.length > 0 &&
+        inpsCellsSVi.length === matrixValidAxesSVi
+      ) {
+        validInpsNodeLists[0] = true;
+      } else {
+        console.warn(`Erro capturando inputs de Sinais Vitais com querry.
+          Array obtido: ${JSON.stringify(inpsCellsSVi) ?? "null"};
+          Todos os elementos como HTMLInputs: ${
+            Array.from(inpsCellsSVi).every(
+              (inpCell) => inpCell instanceof HTMLInputElement
+            ) ?? false
+          };
+          Length esperada: ${matrixValidAxesSVi ?? 0}.`);
+      }
+
+      if (
+        Array.from(inpsCellsMedAnt).every(
+          (inpCell) => inpCell instanceof HTMLInputElement
+        ) &&
+        inpsCellsMedAnt.length > 0 &&
+        inpsCellsMedAnt.length === matrixValidAxesMedAnt
+      ) {
+        validInpsNodeLists[1] = true;
+      } else {
+        console.warn(`Erro capturando inputs de Medidas Antropométricas com querry.
+          Array obtido: ${JSON.stringify(inpsCellsMedAnt) ?? "null"};
+          Todos os elementos como HTMLInputs: ${
+            Array.from(inpsCellsMedAnt).every(
+              (inpCell) => inpCell instanceof HTMLInputElement
+            ) ?? false
+          };
+          Length esperada: ${matrixValidAxesMedAnt ?? 0}`);
+      }
+
+      if (
+        Array.from(inpsCellsDC).every(
+          (inpCell) => inpCell instanceof HTMLInputElement
+        ) &&
+        inpsCellsDC.length > 0 &&
+        inpsCellsDC.length === matrixValidAxesDC
+      ) {
+        validInpsNodeLists[2] = true;
+      } else {
+        console.warn(`Erro capturado inputs de Dobras Cutâneas com querry.
+          Array obtido: ${JSON.stringify(inpsCellsDC) ?? "null"};
+          Todos os elementos como HTMLInputs: ${
+            Array.from(inpsCellsDC).every(
+              (inpCell) => inpCell instanceof HTMLInputElement
+            ) ?? false
+          };
+          Length esperada: ${matrixValidAxesDC ?? 0}`);
+      }
+
+      if (
+        Array.from(inpsCellsIndPerc).every(
+          (inpCell) => inpCell instanceof HTMLInputElement
+        ) &&
+        inpsCellsIndPerc.length > 0 &&
+        inpsCellsIndPerc.length === matrixValidAxesIndPerc
+      ) {
+        validInpsNodeLists[3] = true;
+      } else {
+        console.warn(`Erro capturando inputs de Índices e Percentuais com querry.
+          Array obtido: ${JSON.stringify(inpsCellsIndPerc) ?? "null"};
+          Todos os elementos como HTMLInputs: ${
+            Array.from(inpsCellsIndPerc).every(
+              (inpCell) => inpCell instanceof HTMLInputElement
+            ) ?? false
+          };
+          Length esperada: ${matrixValidAxesIndPerc ?? 0}`);
+      }
+
+      let consRequiredCellsSVi = [];
+      let consRequiredCellsMedAnt = [];
+      let consRequiredCellsDC = [];
+      let consRequiredCellsIndPerc = [];
+      //validação de NodeLists para inputs nas tabelas
+      if (
+        validInpsNodeLists.every(
+          (inpsNodeListValidation) => inpsNodeListValidation === true
+        )
+      ) {
+        /* percorre a tabela usando o número de consulta como números de ciclos
+        ou seja, length dos arrays formados pelas querries === length do número de consulta === número de colunas
+        + são extraídas as células de interesse, com base na .id relativa à coluna, e então populam requiredCels */
+        for (let iC = 0; iC < numCons; iC++) {
+          const filterPattern = new RegExp(`_${iC + 2}`);
+          const filterInpCellSVi = Array.from(inpsCellsSVi).filter(
+            (inpCellSVi) => filterPattern.test(inpCellSVi.id)
+          );
+          if (filterInpCellSVi.length > 0) {
+            consRequiredCellsSVi.push(filterInpCellSVi);
+          } else {
+            console.warn(
+              `Erro na filtragem de .id dos elementos da Tabela de Sinais Vitais, coluna ${iC}.`
+            );
+          }
+          const filterInpCellMedAnt = Array.from(inpsCellsMedAnt).filter(
+            (inpCellMedAnt) => filterPattern.test(inpCellMedAnt.id)
+          );
+          if (filterInpCellMedAnt.length > 0) {
+            consRequiredCellsMedAnt.push(filterInpCellMedAnt);
+          } else {
+            console.warn(
+              `Erro na filtragem de .id dos elementos da Tabela de Medidas Antropomórfias, coluna ${iC}.`
+            );
+          }
+          const filterInpCellDC = Array.from(inpsCellsDC).filter((inpCellDC) =>
+            filterPattern.test(inpCellDC.id)
+          );
+          if (filterInpCellDC.length > 0) {
+            consRequiredCellsDC.push(filterInpCellDC);
+          } else {
+            console.warn(
+              `Erro na filtragem de .id dos elementos da Tabela de Dobras Cutâneas, coluna ${iC}.`
+            );
+          }
+          const filterInpCellIndPerc = Array.from(inpsCellsIndPerc).filter(
+            (inpCellIndPerc) =>
+              filterPattern.test((inpCellIndPerc as HTMLInputElement).name)
+          );
+          if (filterInpCellIndPerc.length > 0) {
+            consRequiredCellsIndPerc.push(filterInpCellIndPerc);
+          } else {
+            console.warn(
+              `Erro na filtragem de .id dos elementos da Tabela de Índices e Percentuais, coluna ${iC}.`
+            );
+          }
+        }
+      } else {
+        console.error(`Erro na validação de NodeLists de Inputs nas Tabelas.
+        Array de Validação para NodeLists obtido: ${
+          JSON.stringify(validInpsNodeLists) ?? "undefined"
+        }`);
+      }
+
+      let requiredCells = [
+        ...consRequiredCellsSVi,
+        ...consRequiredCellsMedAnt,
+        ...consRequiredCellsDC,
+        ...consRequiredCellsIndPerc,
+      ];
+
+      const flatRequiredCells = requiredCells.flat(1);
+      if (
+        flatRequiredCells.length > 0 &&
+        flatRequiredCells.length === nTotalRows * numCons
+      ) {
+        for (let iR = 0; iR < flatRequiredCells.length; iR++) {
+          (flatRequiredCells[iR] as HTMLInputElement).required = true;
+        }
+      } else {
+        console.warn(`Erro validando flatRequiredCells.
+      Length obtida: ${flatRequiredCells?.length ?? 0}`);
+      }
+    } else {
+      console.error(`Erro atualizando Número de Consulta.
+          Número obtido: ${returnedNum ?? 0}`);
+    }
+  } else {
+    console.error(`Erro obtendo HTMLElements a partir de operador rest.
+    Length obtida: ${elements?.length ?? 0};
+    Instância obtida para elements[1]: ${
+      Object.prototype.toString.call(elements[1]).slice(8, -1) ?? "null"
+    }`);
+  }
 }
 
 export function createArraysRels(
@@ -636,82 +992,127 @@ export function changeToAstDigit(
 
 export function resetarFormulario(
   click: Event,
-  toFileInpBtns: NodeListOf<HTMLButtonElement>
+  toFileInpBtns: NodeListOf<HTMLButtonElement>,
+  editableCite: Element,
+  genTrans: HTMLSelectElement,
+  genFisAlin: HTMLSelectElement
 ) {
   if (
     click.target instanceof HTMLElement &&
     click.target.tagName === "BUTTON"
   ) {
     const formulario = document.getElementById("formEdFis");
-    const editableCite = document.querySelector('cite[contenteditable="true"]');
 
     if (formulario && formulario instanceof HTMLFormElement) {
       formulario.reset();
     } else {
-      console.warn("Erro validando formulário");
+      console.warn(`Erro validando formulário em reset.
+      Instância obtida: ${
+        Object.prototype.toString.call(formulario).slice(8, -1) ?? "null"
+      }`);
     }
 
-    if (editableCite) {
+    if (editableCite && editableCite instanceof HTMLElement) {
       editableCite.textContent = `--Nome`;
       Model.removeFirstClick(editableCite);
+    } else {
+      console.warn(`Erro obtendo Cite Editável em reset.
+      Elemento obtido: ${editableCite ?? "null"};
+      Instância: ${Object.prototype.toString.call(editableCite).slice(8, -1)}`);
     }
 
-    toFileInpBtns.forEach((toFileInpBtn) => {
-      if (toFileInpBtn.textContent === "Retornar à Assinatura Escrita") {
-        const inpAst =
-          searchPreviousSiblings(toFileInpBtn, "inpAst") ||
-          searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
+    if (toFileInpBtns.length > 0) {
+      toFileInpBtns.forEach((toFileInpBtn) => {
         if (
-          inpAst &&
-          (inpAst instanceof HTMLInputElement ||
-            inpAst instanceof HTMLImageElement)
+          toFileInpBtn instanceof HTMLButtonElement &&
+          toFileInpBtn.textContent === "Retornar à Assinatura Escrita"
         ) {
-          const fileInp = document.createElement("input");
-          fileInp.type = "text";
-          fileInp.name = inpAst.name;
-          fileInp.id = inpAst.id;
-          fileInp.className = inpAst.className;
-          fileInp.setAttribute("required", "");
-          if (inpAst.parentElement) {
-            let labCont: HTMLCollectionOf<Element> | HTMLElement[] | never[] =
-              toFileInpBtn.parentElement?.getElementsByClassName("labAst") ??
-              [];
-            if (
-              (!labCont[0] || labCont[0].id === "") &&
-              (toFileInpBtn.parentElement?.tagName === "LABEL" ||
-                toFileInpBtn.parentElement?.tagName === "SPAN")
-            ) {
-              labCont = Array.of(toFileInpBtn.parentElement as HTMLElement);
-            }
-            inpAst.parentElement.replaceChild(fileInp, inpAst);
-            const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
-            const idInpMatch = fileInp.id.match(/Ast/)?.toString();
-            if (idLabMatch && idInpMatch) {
-              const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
-              const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
-              const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
-              const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
-              labCont[0].id = sliceOneLabId + sliceTwoInpId;
-              fileInp.addEventListener("input", () =>
-                Model.autoCapitalizeInputs(fileInp)
-              );
-              toFileInpBtn.textContent = "Usar Assinatura Digital";
-              toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+          const inpAst =
+            searchPreviousSiblings(toFileInpBtn, "inpAst") ||
+            searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
+          if (
+            inpAst &&
+            (inpAst instanceof HTMLInputElement ||
+              inpAst instanceof HTMLImageElement)
+          ) {
+            const fileInp = document.createElement("input");
+            fileInp.type = "text";
+            fileInp.name = inpAst.name;
+            fileInp.id = inpAst.id;
+            fileInp.className = inpAst.className;
+            fileInp.setAttribute("required", "");
+            if (inpAst.parentElement) {
+              let labCont: HTMLCollectionOf<Element> | HTMLElement[] | never[] =
+                toFileInpBtn.parentElement?.getElementsByClassName("labAst") ??
+                [];
+              if (
+                (!labCont[0] || labCont[0].id === "") &&
+                (toFileInpBtn.parentElement?.tagName === "LABEL" ||
+                  toFileInpBtn.parentElement?.tagName === "SPAN")
+              ) {
+                labCont = Array.of(toFileInpBtn.parentElement as HTMLElement);
+              }
+              inpAst.parentElement.replaceChild(fileInp, inpAst);
+              const idLabMatch = labCont[0].id.match(/Ast/)?.toString();
+              const idInpMatch = fileInp.id.match(/Ast/)?.toString();
+              if (idLabMatch && idInpMatch) {
+                const idLabMatchIndex = labCont[0].id.indexOf(idLabMatch);
+                const idInpMatchIndex = fileInp.id.indexOf(idInpMatch);
+                const sliceOneLabId = labCont[0].id.slice(0, idLabMatchIndex);
+                const sliceTwoInpId = fileInp.id.slice(idInpMatchIndex);
+                labCont[0].id = sliceOneLabId + sliceTwoInpId;
+                fileInp.addEventListener("input", () =>
+                  Model.autoCapitalizeInputs(fileInp)
+                );
+                toFileInpBtn.textContent = "Usar Assinatura Digital";
+                toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+              } else {
+                console.warn("Erro no match de ids do input");
+              }
             } else {
-              console.warn("Erro no match de ids do input");
+              console.warn(`Erro localizando Parent Element de inpAst`);
             }
           } else {
-            console.warn(`Erro localizando Parent Element de inpAst`);
+            console.warn(
+              `Erro reconhecendo Previous Element Sibling: inpAst ${Object.prototype.toString
+                .call(inpAst)
+                .slice(8, -1)}`
+            );
           }
         } else {
-          console.warn(
-            `Erro reconhecendo Previous Element Sibling: inpAst ${Object.prototype.toString
-              .call(inpAst)
-              .slice(8, -1)}`
-          );
+          console.warn(`Erro validando Botão de Assinatura Digital.
+          Instância obtida: ${
+            Object.prototype.toString.call(toFileInpBtn).slice(8, -1) ?? "null"
+          };
+          .textContent obtido: ${toFileInpBtn?.textContent ?? "null"}`);
         }
+      });
+    } else {
+      console.warn(`Erro obtendo .length da NodeList de Botões para Assinatura Digital.
+      Length obtida: ${toFileInpBtns?.length ?? 0}`);
+    }
+
+    if (genTrans && genTrans instanceof HTMLSelectElement) {
+      if (!genTrans.hidden) {
+        genTrans.hidden = true;
       }
-    });
+    } else {
+      console.warn(`Erro obtendo elemento genTrans em reset.
+      Instância obtida: ${
+        Object.prototype.toString.call(genTrans).slice(8, -1) ?? "null"
+      }`);
+    }
+
+    if (genFisAlin && genFisAlin instanceof HTMLSelectElement) {
+      if (!genFisAlin.hidden) {
+        genFisAlin.hidden = true;
+      }
+    } else {
+      console.warn(`Erro obtendo elemento genFisAlin em reset.
+      Instância obtida: ${
+        Object.prototype.toString.call(genFisAlin).slice(8, -1) ?? "null"
+      }`);
+    }
   } else {
     console.error(
       `Erro validando target: instância de ${Object.prototype.toString

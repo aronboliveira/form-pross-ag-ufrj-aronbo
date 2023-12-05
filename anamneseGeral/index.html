@@ -265,7 +265,7 @@
 
             <span class="contQuat spanFsAnamG" id="spanFsAnamG13">
               <label for="genId" class="labelIdentif">Gênero:
-                <select name="genName" id="genId" required>
+                <select name="genName" id="genId" class="inpIdentif" required>
                   <option class="optIdentif optGen" value="masculino" selected>Masculino | Homem binário</option>
                   <option class="optIdentif optGen" value="feminino">Feminino | Mulher binária</option>
                   <option class="optIdentif optGen" value="naoBinario">Não-Binário</option>
@@ -278,7 +278,7 @@
 
             <span class="contQuat spanFsAnamG" id="spanFsAnamG14">
               <label for="genBirthRelId" class="labelIdentif">Identidade em relação ao gênero designado na nascença:
-                <select name="genBirthRelName" id="genBirthRelId" required>
+                <select name="genBirthRelName" id="genBirthRelId" class="inpIdentif" required>
                   <option class="optIdentif optgenBirthRel" value="cis" selected>Cisgênero | Cissexual</option>
                   <option class="optIdentif optgenBirthRel" value="trans">Transgênero | Transsexual</option>
                   <option class="optIdentif optgenBirthRel" value="outros">Outros</option>
@@ -290,7 +290,7 @@
 
             <span class="contQuat spanFsAnamG" id="spanFsAnamG15" hidden>
               <label for="genTransId" class="labelIdentif">Estágio da Transição Hormonal:
-                <select name="genTransName" id="genTransId">
+                <select name="genTransName" id="genTransId" class="inpIdentif" >
                   <option class="optIdentif optgenTrans" value="undefined">Indefinido</option>
                   <option class="optIdentif optgenTrans" value="no">Não está em transição</option>
                   <option class="optIdentif optgenTrans" value="inicial">Inicial</option>
@@ -301,7 +301,7 @@
               <br />
             </span>
 
-            <span class="contQuat spanFsAnamG" id="spanFsAnamG16" hidden>
+            <span class="contQuat spanFsAnamG" id="spanFsAnamG16" class="inpIdentif" hidden>
               <label for="genFisAlinId" class="labelIdentif">Alinhamento de características físicas predominante:
                 <select name="genFisAlinName" id="genFisAlinId">
                   <option class="optIdentif optgenFisAlin" value="masculinizado">Masculinizado</option>
@@ -400,9 +400,9 @@
               <label for="hivCargId" class="LbCpbOp" id="labHivCarg">cópias/ml</label>
               <br />
               <span class="spanSub spanSubFsAnamGRad spanDivAddHiv spanDivAddDatHiv" id="spanDatDiagHiv">Data do Diagnóstico:</span>
-              <input type="date" name="hepBName" id="hepBId" class="cpbOp indivOp opHiv" >
+              <input type="date" name="hivDateDiagName" id="hivDateDiagId" class="cpbOp indivOp opHiv" >
               <span class="spanSub spanSubFsAnamGRad spanDivAddHiv spanDivAddDatHiv" id="spanExamHiv">Data do Último Exame:</span>
-              <input type="date" name="hepBName" id="hepBId" class="cpbOp indivOp opHiv" >
+              <input type="date" name="hivDateExamName" id="hivDateExamId" class="cpbOp indivOp opHiv" >
             </div>
             <br />
   

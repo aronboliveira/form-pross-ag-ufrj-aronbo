@@ -3,48 +3,168 @@ import * as Classes from "./classes.js";
 
 const rgbaRegex = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
 let blockCount = 1;
-let isProgBarLoading = false;
 
-// if (
-//   inputs[i].type === "radio" &&
-//   inputs[i].id !== "" &&
-//   inputs[i].nextElementSibling &&
-//   inputs[i].nextElementSibling instanceof HTMLLabelElement &&
-//   inputs[i].nextElementSibling.classList.contains("boolOp")
-// ) {
-//   if (inputs[i].id.match(/Yes/)) {
-//     closestValidElementsIds.push(
-//       (closestParent?.id ?? "null") + inputs[i].id.slice(-3)
-//     );
-//     console.log("radio parent yes");
-//   } else if (inputs[i].id.match(/No/)) {
-//     closestValidElementsIds.push(
-//       (closestParent?.id ?? "null") + inputs[i].id.slice(-2)
-//     );
-//     console.log("radio parent no");
-//   } else {
-//     closestValidElementsIds.push(closestParent?.id ?? "null");
-//   }
-// } else {
-// }
+const enumIdsTitles = {
+  0: "dateHeader",
+  1: "firstNameId",
+  2: "additionalNameId",
+  3: "familyNameId",
+  4: "socialNameId",
+  5: "telAreaCodeId",
+  6: "telId",
+  7: "telCountryCodeId",
+  8: "tel2AreaCodeId",
+  9: "tel2Id",
+  10: "tel2CountryCodeId",
+  11: "email1Id",
+  12: "email2Id",
+  13: "countryId",
+  14: "mundId",
+  15: "cepId",
+  16: "UFId",
+  17: "cityId",
+  18: "neighbourhoodId",
+  19: "streetId",
+  20: "streetNumId",
+  21: "streetNumNullId",
+  22: "compNumIdId",
+  23: "compNumNullId",
+  24: "dateBDayId",
+  25: "dateAgeId",
+  26: "genId",
+  27: "genBirthRelId",
+  28: "genTransId",
+  29: "genFisAlinId",
+};
 
-// console.log("radio parent");
-// console.log("id " + inputs[i].id);
+const mapIdsTitles = {
+  firstNameId: "Primeiro_Nome",
+  additionalNameId: "Sobrenome_do_Meio",
+  familyNameId: "Último_Sobrenome",
+  socialNameId: "Nome_Social",
+  telAreaCodeId: "DDD",
+  telId: "Telefone",
+  telCountryCodeId: "Se_estrangeiro,_código_do_País",
+  tel2AreaCodeId: "DDD_Do_Telefone_Secundário",
+  tel2Id: "Telefone_Secundário",
+  tel2CountryCodeId: "Se_estrangeiro(secundário),_código_do_País",
+  email1Id: "Email",
+  email2Id: "Email_Secundário",
+  dateAgeId: "Idade",
+  genid: "Gênero",
+  genBirthRelId: "Identidade_em_relação_ao_gênero_designado_na_nascença",
+  genTransId: "Estágio_da_Transição_Hormonal",
+  genFisAlinId: "Alinhamento_de_características_físicas_predominante",
+};
 
 export function getJSONDesc(inputs) {
+  let titleElements = [];
   let closestValidElements = [];
+  let closestValidElementsIds = [];
   let closestBooleanElements = [];
   let closestBooleanElementsIds = [];
-  let closestValidElementsIds = [];
   let inpValues = [];
   let inpIds = [];
-  let JSONStore = [];
-  let JSONStoreDescriptors = [];
-  //loop para construção dos arrays iniciais
-  for (let i = 0; i < inputs.length; i++) {
+  let JSONInpsStore = [];
+  let JSONTitlesStore = [];
+  let JSONInpsStoreDescriptors = [];
+  let JSONTitlesStoreDescriptors = [];
+  let titleAcc = 0;
+  let nullTitleAcc = 0;
+
+  //determinação do número de inputs de identificação cujos títulos são de interesse e construção de subarray para estes
+  for (let k = 0; k < inputs.length; k++) {
+    if (inputs[k]?.classList.contains("inpIdentif")) {
+      titleElements.push(inputs[k]);
+    }
+  }
+
+  //loop para construção dos arrays inicias de ids e values
+  for (let z = 0; z < inputs.length; z++) {
+    if (inputs[z] instanceof HTMLInputElement) {
+      if (inputs[z]?.type === "radio" || inputs[z]?.type === "checkbox") {
+        inpIds.push(inputs[z]?.id ?? "null");
+        inpValues.push(inputs[z]?.checked.toString() ?? "false");
+      } else {
+        if (inputs[z].id === "confrmLocId") {
+          inpIds.push("confirmLoc");
+        } else {
+          inpIds.push(inputs[z]?.id ?? "null");
+        }
+        inpValues.push(inputs[z]?.value ?? "null");
+      }
+    } else if (
+      inputs[z] instanceof HTMLTextAreaElement ||
+      inputs[z] instanceof HTMLSelectElement
+    ) {
+      inpIds.push(inputs[z]?.id ?? "null");
+      inpValues.push(inputs[z]?.value ?? "null");
+    } else if (
+      inputs[z]?.contentEditable === "true" ||
+      inputs[z]?.id === "citeNameId"
+    ) {
+      inpIds.push(inputs[z]?.id ?? "null");
+      inpValues.push(inputs[z]?.textContent ?? "null");
+    } else {
+      console.error(
+        `Erro validando elemento. Elemento ${
+          inputs[z] ?? "null"
+        }; instância ${Object.prototype.toString
+          .call(inputs[z])
+          .slice(8, -1)}; id ${inputs[z]?.id ?? "null"}`
+      );
+    }
+  }
+
+  //loop para ajuste dos elementos dos arrays de inputs e construção dos storager de inputs
+  for (let j = 0; j < inputs.length; j++) {
+    //filtragem de tipos primitivos de values
+    if (typeof inpValues[j] === "string") {
+      if (inpValues[j] === "") {
+        inpValues[j] = inpValues[j].replace("", "null") ?? "null";
+      }
+    } else {
+      inpValues[j] = inpValues[j]?.toString() ?? "null";
+    }
+
+    //avaliador de ids nulas
+    if (
+      inpIds[j]?.match(/null/g) ||
+      inpIds[j] === undefined ||
+      inpIds[j] === null
+    ) {
+      console.warn(
+        `Id null detectada. Título relativo: ${
+          closestValidElements[j]?.id ?? "null"
+        }`
+      );
+    }
+
+    //criação do storager
+    const nJSONInpStorager = new Classes.JSONStorager(inpIds[j], inpValues[j]);
+
+    //criação da store
+    if (nJSONInpStorager) {
+      JSONInpsStore.push(nJSONInpStorager);
+      const descriptor = nJSONInpStorager.showAllInfo; //TODO EXPOSIÇÃO DE DADOS SOMENTE PARA FINALIDADES DE TESTE, POIS PROPRIEDADES PRIVADAS NÃO SÃO ENUMERÁVEIS
+      if (descriptor) {
+        JSONInpsStoreDescriptors.push(descriptor.toString());
+      } else {
+        console.warn(
+          `Erro validando descriptor para instância ${j} de JSONStorager`
+        );
+      }
+    } else {
+      console.warn(`Erro validando instância ${j} de JSONStorager`);
+    }
+  }
+
+  //loop para extrair títulos/labels de interesse
+  for (let i = 0; i < titleElements.length; i++) {
+    titleAcc++;
     //loop para múltiplas tentativas de localização do texto de interesse
     let closestParent =
-      inputs[i]?.closest("span") || inputs[i]?.closest("label");
+      titleElements[i]?.closest("span") || titleElements[i]?.closest("label");
     if (closestParent) {
       let loopAcc = 0;
       while (loopAcc < 10 && closestParent.textContent === "") {
@@ -64,7 +184,9 @@ export function getJSONDesc(inputs) {
           const booleanParentCopy = closestParent;
           closestBooleanElements.push(
             booleanParentCopy?.textContent?.trim().replaceAll("\n", "") ??
-              "null"
+              `NULL ${
+                titleElements[i]?.id ?? `Id null. Iteração do loop: ${titleAcc}`
+              }`
           );
           closestBooleanElementsIds.push(booleanParentCopy.id ?? "null");
           while (
@@ -85,120 +207,112 @@ export function getJSONDesc(inputs) {
             ) {
               closestValidElements.push(
                 closestParent?.textContent?.trim().replaceAll("\n", "") ??
-                  "null"
+                  `NULL ${
+                    titleElements[i]?.id ??
+                    `Id null. Iteração do loop: ${titleAcc}`
+                  }`
               );
-              closestValidElementsIds.push(closestParent?.id ?? "null");
-              inpIds.push(inputs[i]?.id ?? "null");
-              if (
-                inputs[i] instanceof HTMLInputElement &&
-                (inputs[i]?.type === "radio" || inputs[i]?.type === "checkbox")
-              ) {
-                inpValues.push(inputs[i]?.checked.toString() ?? "false");
-              } else {
-                inpValues.push(inputs[i]?.value ?? "null");
-              }
+              closestValidElementsIds.push(
+                closestParent?.id ??
+                  `NULL ${
+                    titleElements[i]?.id ??
+                    `Id null. Iteração do loop: ${titleAcc}`
+                  }`
+              );
               break;
             }
           }
         } else {
           if (
-            inputs[i] instanceof HTMLInputElement &&
-            inputs[i]?.type === "radio" &&
-            inputs[i]?.id !== ""
+            titleElements[i] instanceof HTMLInputElement &&
+            titleElements[i]?.type === "radio" &&
+            titleElements[i]?.id !== ""
           ) {
             if (
-              inputs[i]?.nextElementSibling &&
-              inputs[i]?.nextElementSibling instanceof HTMLLabelElement &&
-              inputs[i]?.nextElementSibling.classList.contains("boolOp")
+              titleElements[i]?.nextElementSibling &&
+              titleElements[i]?.nextElementSibling instanceof
+                HTMLLabelElement &&
+              titleElements[i]?.nextElementSibling?.classList.contains("boolOp")
             ) {
-              if (inputs[i]?.id.match(/Yes/)) {
+              if (titleElements[i]?.id.match(/Yes/)) {
                 closestValidElements.push(
-                  inputs[i]?.id?.slice(-3) +
-                    closestParent?.textContent?.trim().replaceAll("\n", "") ??
-                    "null"
+                  titleElements[i]?.id?.slice(-3) ??
+                    "null" +
+                      closestParent?.textContent?.trim().replaceAll("\n", "") ??
+                    `NULL ${
+                      titleElements[i]?.id ??
+                      `Id null. Iteração do loop: ${titleAcc}`
+                    }`
                 );
-              } else if (inputs[i]?.id.match(/No/)) {
+              } else if (titleElements[i]?.id.match(/No/)) {
                 closestValidElements.push(
-                  inputs[i]?.id?.slice(-2) +
-                    closestParent?.textContent?.trim().replaceAll("\n", "") ??
-                    "null"
+                  titleElements[i]?.id?.slice(-2) ??
+                    "null" +
+                      closestParent?.textContent?.trim().replaceAll("\n", "") ??
+                    `NULL ${
+                      titleElements[i]?.id ??
+                      `Id null. Iteração do loop: ${titleAcc}`
+                    }`
                 );
               } else {
                 console.warn("Caso inesperado de boolOp Radio + Label");
               }
             } else {
               if (
-                (inputs[i] instanceof HTMLInputElement ||
-                  inputs[i] instanceof HTMLTextAreaElement) &&
-                inputs[i]?.name === "nivelFumo"
+                (titleElements[i] instanceof HTMLInputElement ||
+                  titleElements[i] instanceof HTMLTextAreaElement) &&
+                titleElements[i]?.name === "nivelFumo"
               ) {
                 closestValidElements.push(
-                  inputs[i]?.id?.slice(0, 1).toUpperCase() +
-                    inputs[i]?.id?.slice(1, 4) +
-                    "_" +
-                    inputs[i]?.id?.slice(4, 8) ?? "null"
+                  titleElements[i]?.id?.slice(0, 1)?.toUpperCase() ??
+                    "null" +
+                      titleElements[i]?.id?.slice(1, 4) +
+                      "_" +
+                      titleElements[i]?.id?.slice(4, 8) ??
+                    `NULL ${
+                      titleElements[i]?.id ??
+                      `Id null. Iteração do loop: ${titleAcc}`
+                    }`
                 );
               }
             }
           } else {
             if (
-              inputs[i]?.classList.contains("opFumSubs") &&
-              inputs[i]?.nextElementSibling &&
-              inputs[i]?.nextElementSibling?.textContent !== ""
+              titleElements[i]?.classList.contains("opFumSubs") &&
+              titleElements[i]?.nextElementSibling &&
+              titleElements[i]?.nextElementSibling?.textContent !== ""
             ) {
               closestValidElements.push(
-                inputs[i]?.nextElementSibling?.textContent +
+                titleElements[i]?.nextElementSibling?.textContent +
                   "_" +
                   closestParent?.textContent?.trim().replaceAll("\n", "") ??
-                  "null"
+                  `NULL ${
+                    titleElements[i]?.id ??
+                    `Id null. Iteração do loop: ${titleAcc}`
+                  }`
               );
             } else {
-              if (inputs[i]?.classList.contains("inpAntMed")) {
+              if (titleElements[i]?.classList.contains("inpAntMed")) {
                 closestValidElements.push(
-                  "Tratamento_Médico" + "_" + inputs[i]?.id.slice(-1) ?? "null"
+                  "Tratamento_Médico" + "_" + titleElements[i]?.id.slice(-1) ??
+                    `NULL ${
+                      titleElements[i]?.id ??
+                      `Id null. Iteração do loop: ${titleAcc}`
+                    }`
                 );
               } else {
-                if (inputs[i]?.id === "citeNameId") {
+                if (titleElements[i]?.id === "citeNameId") {
                   closestValidElements.push("Assinatura_Usuário" ?? "null");
                 } else {
-                  if (inputs[i]?.id === "confirmLocId") {
-                    console.log("loc");
-                    console.log(closestParent);
-                    console.log(
-                      closestParent?.textContent?.trim().replaceAll("\n", "") //loc está sendo pareado com 1)
-                    );
-                    closestValidElements.push(
-                      closestParent?.textContent?.trim().replaceAll("\n", "") ??
-                        "null"
-                    );
-                  } else {
-                    closestValidElements.push(
-                      closestParent?.textContent?.trim().replaceAll("\n", "") ??
-                        "null"
-                    );
-                  }
+                  closestValidElements.push(
+                    closestParent?.textContent?.trim().replaceAll("\n", "") ??
+                      `NULL ${
+                        titleElements[i]?.id ??
+                        `Id null. Iteração do loop: ${titleAcc}`
+                      }`
+                  );
                 }
               }
-            }
-          }
-          inpIds.push(inputs[i].id ?? "null"); //obtenção de id de inputs
-          if (
-            inputs[i] instanceof HTMLInputElement &&
-            (inputs[i].type === "radio" || inputs[i].type === "checkbox")
-          ) {
-            inpValues.push(inputs[i].checked.toString() ?? "false");
-          } else {
-            if (inputs[i]?.id === "citeNameId") {
-              if (
-                inputs[i]?.textContent === "Insira Seu Nome Aqui" ||
-                inputs[i]?.textContent === "--Nome"
-              ) {
-                inpValues.push("null");
-              } else {
-                inpValues.push(inputs[i]?.textContent ?? "null");
-              }
-            } else {
-              inpValues.push(inputs[i]?.value ?? "null");
             }
           }
           if (closestParent?.id !== "") {
@@ -206,7 +320,7 @@ export function getJSONDesc(inputs) {
             //correção de id de interesse caso a do parent não esteja presente (atenção: desassocia id e text de interesse)
             closestValidElementsIds.push(closestParent?.id ?? "null");
           } else if (closestParent.id === "") {
-            const nextESibling = inputs[i]?.nextElementSibling;
+            const nextESibling = titleElements[i]?.nextElementSibling;
             if (
               nextESibling &&
               nextESibling instanceof HTMLLabelElement &&
@@ -214,7 +328,7 @@ export function getJSONDesc(inputs) {
             ) {
               closestValidElementsIds.push(nextESibling.id ?? "null");
             } else {
-              const previousESibling = inputs[i]?.previousElementSibling;
+              const previousESibling = titleElements[i]?.previousElementSibling;
               if (
                 previousESibling &&
                 previousESibling instanceof HTMLLabelElement &&
@@ -222,13 +336,13 @@ export function getJSONDesc(inputs) {
               ) {
                 closestValidElementsIds.push(previousESibling.id ?? "null");
               } else if (
-                inputs[i] instanceof HTMLTextAreaElement &&
-                inputs[i]?.placeholder !== ""
+                titleElements[i] instanceof HTMLTextAreaElement &&
+                titleElements[i]?.placeholder !== ""
               ) {
-                closestValidElementsIds.push(inputs[i]?.id ?? "null");
+                closestValidElementsIds.push(titleElements[i]?.id ?? "null");
               } else {
                 console.warn(
-                  `Nenhuma id próxima válida retornada para o input ${inputs[i]?.id}`
+                  `Nenhuma id próxima válida retornada para o input ${titleElements[i]?.id}`
                 );
               }
             }
@@ -239,115 +353,120 @@ export function getJSONDesc(inputs) {
       }
     } else {
       //se falha em parents, procura em siblings <label> ou em placeholders de textareas
-      const previousSibling = inputs[i]?.previousElementSibling;
+      const previousSibling = titleElements[i]?.previousElementSibling;
       if (
         previousSibling instanceof HTMLLabelElement &&
         previousSibling.textContent !== ""
       ) {
         closestValidElements.push(
-          previousSibling.textContent?.trim().replaceAll("\n", "") ?? "null"
+          previousSibling.textContent?.trim().replaceAll("\n", "") ??
+            `NULL ${
+              titleElements[i]?.id ?? `Id null. Iteração do loop: ${titleAcc}`
+            }`
         );
         closestValidElementsIds.push(previousSibling.id ?? "null");
-        inpIds.push(inputs[i]?.id ?? "null");
-        if (
-          inputs[i] instanceof HTMLInputElement &&
-          (inputs[i]?.type === "radio" || inputs[i]?.type === "checkbox")
-        ) {
-          inpValues.push(inputs[i]?.checked.toString() ?? "false");
-        } else {
-          inpValues.push(inputs[i]?.value ?? "null");
-        }
       } else {
         if (
-          inputs[i] instanceof HTMLTextAreaElement &&
-          inputs[i]?.placeholder
+          titleElements[i] instanceof HTMLTextAreaElement &&
+          titleElements[i]?.placeholder
         ) {
-          closestValidElements.push(inputs[i]?.placeholder);
-          closestValidElementsIds.push(inputs[i]?.id ?? "null");
-          inpIds.push(inputs[i]?.id ?? "null");
-          if (
-            inputs[i] instanceof HTMLInputElement &&
-            (inputs[i]?.type === "radio" || inputs[i]?.type === "checkbox")
-          ) {
-            inpValues.push(inputs[i]?.checked.toString() ?? "false");
-          } else {
-            inpValues.push(inputs[i]?.value ?? "null");
-          }
+          closestValidElements.push(
+            titleElements[i]?.placeholder ??
+              `NULL ${
+                titleElements[i]?.id ?? `Id null. Iteração do loop: ${titleAcc}`
+              }`
+          );
+          closestValidElementsIds.push(titleElements[i]?.id ?? "null");
         } else if (
-          inputs[i] instanceof HTMLInputElement &&
-          inputs[i]?.type === "checkbox"
+          titleElements[i] instanceof HTMLInputElement &&
+          titleElements[i]?.type === "checkbox"
         ) {
-          if (inputs[i]?.classList.contains("famOp")) {
-            const upperCaseMatch = inputs[i]?.id?.match(/Fam/g);
-            if (upperCaseMatch && inputs[i]?.id) {
-              const upperCaseIndex = inputs[i]?.id.indexOf("Fam");
-              const slicedId = inputs[i]?.id.slice(0, upperCaseIndex);
+          if (titleElements[i]?.classList.contains("famOp")) {
+            const upperCaseMatch = titleElements[i]?.id?.match(/Fam/g);
+            if (upperCaseMatch && titleElements[i]?.id) {
+              const upperCaseIndex = titleElements[i]?.id.indexOf("Fam");
+              const slicedId = titleElements[i]?.id.slice(0, upperCaseIndex);
               closestValidElements.push(
                 slicedId +
                   "_" +
-                  inputs[i]?.nextSibling?.textContent?.replaceAll(
+                  titleElements[i]?.nextSibling?.textContent?.replaceAll(
                     /^[\s]+/g,
                     ""
-                  ) ?? "null"
+                  ) ??
+                  `NULL ${
+                    titleElements[i]?.id ??
+                    `Id null. Iteração do loop: ${titleAcc}`
+                  }`
               );
             } else {
               closestValidElements.push(
-                inputs[i]?.nextSibling?.textContent?.replaceAll(
+                titleElements[i]?.nextSibling?.textContent?.replaceAll(
                   /^[\s]+/g,
                   ""
-                ) ?? "null"
+                ) ??
+                  `NULL ${
+                    titleElements[i]?.id ??
+                    `Id null. Iteração do loop: ${titleAcc}`
+                  }`
               );
             }
-          } else if (inputs[i]?.classList.contains("opHep")) {
+          } else if (titleElements[i]?.classList.contains("opHep")) {
             closestValidElements.push(
               "Hepatite_" +
-                inputs[i]?.nextSibling?.textContent?.replaceAll(
+                titleElements[i]?.nextSibling?.textContent?.replaceAll(
                   /^[\s]+/g,
                   ""
                 ) ?? "null"
             );
           } else {
-            closestValidElements.push(
-              inputs[i]?.nextSibling?.textContent?.replaceAll(/^[\s]+/g, "") ??
-                "null"
-            );
+            if (titleElements[i]?.id !== "confirmId") {
+              closestValidElements.push(
+                titleElements[i]?.nextSibling?.textContent?.replaceAll(
+                  /^[\s]+/g,
+                  ""
+                ) ??
+                  `NULL ${
+                    titleElements[i]?.id ??
+                    `Id null. Iteração do loop: ${titleAcc}`
+                  }`
+              );
+            } else if (titleElements[i]?.id === "confirmId") {
+              closestValidElements.push("Concordo");
+            }
           }
-          closestValidElementsIds.push(inputs[i]?.id ?? "null");
-          inpIds.push(inputs[i].id ?? "null");
-          inpValues.push(inputs[i].checked ?? "false");
+          closestValidElementsIds.push(titleElements[i]?.id ?? "null");
         } else {
-          if (inputs[i]?.classList.contains("opHAS")) {
+          if (titleElements[i]?.classList.contains("opHAS")) {
             closestValidElements.push(
-              inputs[i]?.nextSibling?.textContent?.trim() ?? "null"
+              titleElements[i]?.nextSibling?.textContent?.trim() ??
+                `NULL ${
+                  titleElements[i]?.id ??
+                  `Id null. Iteração do loop: ${titleAcc}`
+                }`
             );
-            closestValidElementsIds.push(inputs[i]?.id ?? "null");
-            inpIds.push(inputs[i]?.id ?? "null");
-            inpValues.push(inputs[i]?.checked.toString() ?? "false");
+            closestValidElementsIds.push(titleElements[i]?.id ?? "null");
           } else {
-            const nextESibling = inputs[i]?.nextElementSibling;
+            const nextESibling = titleElements[i]?.nextElementSibling;
             if (
               nextESibling instanceof HTMLLabelElement &&
               nextESibling.textContent !== ""
             ) {
               closestValidElements.push(
-                nextESibling.textContent?.trim().replaceAll("\n", "") ?? "null"
+                nextESibling.textContent?.trim().replaceAll("\n", "") ??
+                  `NULL ${
+                    titleElements[i]?.id ??
+                    `Id null. Iteração do loop: ${titleAcc}`
+                  }`
               );
               closestValidElementsIds.push(nextESibling.id ?? "null");
-              inpIds.push(inputs[i].id ?? "null");
-              if (
-                inputs[i] instanceof HTMLInputElement &&
-                (inputs[i].type === "radio" || inputs[i].type === "checkbox")
-              ) {
-                inpValues.push(inputs[i].checked.toString() ?? "false");
-              } else {
-                inpValues.push(inputs[i].value ?? "null");
-              }
             } else {
               console.warn(
                 `Erro validando parents, labels, placeholders e textContent. Id do Input: ${
-                  inputs[i]?.id ?? null
-                }; textContent ${inputs[i]?.textContent ?? null}; placeholder ${
-                  inputs[i]?.placeholder ?? null
+                  titleElements[i]?.id ?? null
+                }; textContent ${
+                  titleElements[i]?.textContent ?? null
+                }; placeholder ${
+                  titleElements[i]?.placeholder ?? null
                 }; Última Instância de Parent avaliada ${Object.prototype.toString
                   .call(closestParent)
                   .slice(
@@ -366,95 +485,185 @@ export function getJSONDesc(inputs) {
     }
   }
 
-  //loop para ajuste dos elementos dos arrays e construção dos storager + store
-  for (let j = 0; j < closestValidElements.length; j++) {
-    const multipleSpaceMatches = closestValidElements[j]?.match(/\s\s/) ?? null;
+  //loop para ajuste dos elementos dos arrays de titles e construção dos storager de titles
+  for (let l = 0; l < titleElements.length; l++) {
+    //correção de múltiplos espaços em labels e titles
+    const multipleSpaceMatches = closestValidElements[l]?.match(/\s\s/) ?? null;
     if (
-      closestValidElements[j] &&
+      closestValidElements[l] &&
       multipleSpaceMatches &&
       multipleSpaceMatches.length > 0
     ) {
-      let iMatches = [];
+      let spaceMatchesArray = [];
       multipleSpaceMatches.forEach((multipleSpaceMatch) => {
         const multipleSpaceIndex =
-          closestValidElements[j]?.indexOf(multipleSpaceMatch) ?? 0;
-        iMatches.push(multipleSpaceIndex);
+          closestValidElements[l]?.indexOf(multipleSpaceMatch) ?? 0;
+        spaceMatchesArray.push(multipleSpaceIndex);
       });
-      for (let k = 0; k < iMatches.length; k++) {
-        closestValidElements[j] =
-          closestValidElements[j]?.slice(0, iMatches[k]).trim() ?? null;
+      for (let m = 0; m < spaceMatchesArray.length; m++) {
+        closestValidElements[l] =
+          closestValidElements[l]?.slice(0, spaceMatchesArray[m]).trim() ??
+          "null";
       }
     }
-    if (typeof inpValues[j] === "string") {
-      if (inpValues[j] === "") {
-        inpValues[j] = inpValues[j].replace("", "null") ?? "null";
+
+    //avaliador de labels e titles nulos
+    if (
+      closestValidElements[l]?.match(/[Nn][Uu][Ll][Ll]/g) ||
+      closestValidElements[l] === undefined ||
+      closestValidElements[l] === null
+    ) {
+      let inpValue = inputs[l]?.value || "null";
+      if (
+        inputs[l] instanceof HTMLInputElement &&
+        (inputs[l]?.type === "radio" || inputs[l]?.type === "checkbox")
+      ) {
+        inpValue = inputs[l]?.checked.toString() ?? "false";
       }
-    } else {
-      inpValues[j] = inpValues[j]?.toString() ?? "null";
+      nullTitleAcc++;
+      console.warn(
+        `Título nulo detectado: Número de acúmulo: ${nullTitleAcc}.
+            Título: ${
+              closestValidElements[l]?.textContent ||
+              closestValidElements[l]?.placeholder ||
+              "null"
+            };
+            instância: ${
+              Object.prototype.toString
+                .call(closestValidElements[l])
+                .slice(8, -1) ?? "undefined"
+            };
+            Id de input pareada: ${inputs[l]?.id ?? "null"};
+            Valor de input pareado ${inpValue || "null"}`
+      );
     }
-    const nJSONStorager = new Classes.JSONStorager(
-      closestValidElementsIds[j],
-      closestValidElements[j],
-      inpIds[j],
-      inpValues[j]
+
+    //criação do storager
+    const nJSONTitleStorager = new Classes.JSONTitleStorager(
+      closestValidElements[l]
     );
-    if (nJSONStorager) {
-      JSONStore.push(nJSONStorager);
-      const descriptor = nJSONStorager.showAllInfo; //TODO EXPOSIÇÃO DE DADOS SOMENTE PARA FINALIDADES DE TESTE, POIS PROPRIEDADES PRIVADAS NÃO SÃO ENUMERÁVEIS
+
+    //criação da store
+    if (nJSONTitleStorager) {
+      JSONTitlesStore.push(nJSONTitleStorager);
+      const descriptor = nJSONTitleStorager.showInpTitle; //TODO EXPOSIÇÃO DE DADOS SOMENTE PARA FINALIDADES DE TESTE, POIS PROPRIEDADES PRIVADAS NÃO SÃO ENUMERÁVEIS
       if (descriptor) {
-        JSONStoreDescriptors.push(descriptor.toString());
+        JSONTitlesStoreDescriptors.push(descriptor.toString());
       } else {
         console.warn(
-          `Erro validando descriptor para instância ${j} de JSONStorager`
+          `Erro validando descriptor para instância ${l} de JSONStorager`
         );
       }
     } else {
-      console.warn(`Erro validando instância ${j} de JSONStorager`);
+      console.warn(`Erro validando instância ${l} de JSONStorager`);
     }
   }
 
   //filtro e validação da store
-  if (JSONStoreDescriptors.length === JSONStore.length) {
-    const filter1JSONStore = JSONStore.filter(
+  if (
+    JSONInpsStoreDescriptors.length === JSONInpsStore.length &&
+    JSONTitlesStoreDescriptors.length === JSONTitlesStore.length
+  ) {
+    const filter1JSONInpsStore = JSONInpsStore.filter(
       (JSONEl) => typeof JSONEl === "object"
     );
-    if (filter1JSONStore.length === JSONStore.length) {
-      JSONStore = filter1JSONStore;
-      const filter2JSONStore = JSONStore.filter(
+    const filter1JSONTitlesStore = JSONTitlesStore.filter(
+      (JSONEl) => typeof JSONEl === "object"
+    );
+    if (
+      filter1JSONInpsStore.length === JSONInpsStore.length &&
+      filter1JSONTitlesStore.length === JSONTitlesStore.length
+    ) {
+      JSONInpsStore = filter1JSONInpsStore;
+      JSONTitlesStore = filter1JSONTitlesStore;
+      const filter2JSONInpsStore = JSONInpsStore.filter(
         (JSONEl) => JSONEl instanceof Classes.JSONStorager
       );
-      if (filter2JSONStore.length === JSONStore.length) {
-        JSONStore = filter2JSONStore;
-        let JSONStoreStringified = [];
-        JSONStore.forEach((formEl) => {
+      const filter2JSONTitlesStore = JSONTitlesStore.filter(
+        (JSONEl) => JSONEl instanceof Classes.JSONTitleStorager
+      );
+      if (
+        filter2JSONInpsStore.length === JSONInpsStore.length &&
+        filter1JSONTitlesStore.length === JSONTitlesStore.length
+      ) {
+        JSONInpsStore = filter2JSONInpsStore.sort();
+        JSONTitlesStore = filter2JSONTitlesStore.sort();
+        let JSONInpsStoreStringified = [];
+        let JSONTitlesStoreStringified = [];
+        //stringificação das stores
+        JSONInpsStore.forEach((formEl) => {
           const elValues = formEl.showAllInfo;
           const elValuesStringified = JSON.stringify(elValues); //TODO DADOS EXPOSTO SOMENTE PARA FINS DE TESTE
-          JSONStoreStringified.push(elValuesStringified);
+          JSONInpsStoreStringified.push(elValuesStringified);
         });
-        if (JSONStore && JSONStoreStringified) {
-          return [JSONStore, JSONStoreStringified];
+        JSONTitlesStore.forEach((formEl) => {
+          const elValues = formEl.showInpTitle;
+          const elValuesStringified = JSON.stringify(elValues); //TODO DADOS EXPOSTO SOMENTE PARA FINS DE TESTE
+          JSONTitlesStoreStringified.push(elValuesStringified);
+        });
+        JSONInpsStoreStringified = JSONInpsStoreStringified.sort();
+        JSONTitlesStoreStringified = JSONTitlesStoreStringified.sort();
+
+        //conclusão
+        if (
+          JSONInpsStore &&
+          JSONInpsStoreStringified &&
+          JSONTitlesStore &&
+          JSONTitlesStoreStringified
+        ) {
+          return [
+            JSONInpsStore,
+            JSONInpsStoreStringified,
+            JSONTitlesStore,
+            JSONTitlesStoreStringified,
+          ]; //stringified é a versão usada como Descriptor
         } else {
-          return [null, null];
+          return [null, null, null, null];
         }
       } else {
         console.warn(
-          `Erro validando classes de elementos no JSONStore. Número de instâncias obtidas: ${filter2JSONStore.length}; Número esperado: ${JSONStore.length}`
+          `Erro validando classes de elementos no JSONStore. 
+          Número de instâncias obtidas para inputs: ${
+            filter2JSONInpsStore.length ?? "undefined"
+          }; Número esperado: ${JSONInpsStore.length ?? "undefined"};
+          Número de instâncias obtidas para titles: ${
+            filter2JSONTitlesStore.length ?? "undefined"
+          }; Número esperado: ${JSONTitlesStore.length ?? "undefined"}`
         );
       }
     } else {
       console.warn(
-        `Erro validando tipos de elementos no JSONStore. Número de objetos obtidos: ${filter1JSONStore.length}; Número esperado: ${JSONStore.length}`
+        `Erro validando tipos de elementos nas JSONStore. 
+        Número de objetos obtidos para inputs: ${
+          filter1JSONInpsStore.length ?? "undefined"
+        }; Número esperado: ${JSONInpsStore.length ?? "undefined"};
+        Número de objetos obtidos para titles: ${
+          filter1JSONTitlesStore.length ?? "undefined"
+        }; Número esperado: ${JSONTitlesStore.length ?? "undefined"}`
       );
     }
   } else {
     console.warn(
-      `Length de JSON Store Descriptors inválida. Length obtida: ${JSONStoreDescriptors.length}; Length esperada: ${JSONStore.length}`
+      `Length de JSON Store Descriptors inválida. 
+      Length obtida para inputs: ${
+        JSONInpsStoreDescriptors.length ?? "undefined"
+      }; Length esperada: ${JSONInpsStore.length ?? "undefined"};
+      Length obtida para titles: ${
+        JSONTitlesStoreDescriptors.length ?? "undefined"
+      }; Length esperada: ${JSONTitlesStore.length ?? "undefined"}`
     );
   }
 }
 
-export function createJSONAnchor(JSONBtn, formDescriptor) {
-  const formattedFormDescriptor = formatJSONFile(formDescriptor);
+export function createJSONAnchor(
+  JSONBtn,
+  formInpsDescriptor,
+  formTitlesDescriptor
+) {
+  const formattedFormDescriptor = formatJSONFile(
+    formInpsDescriptor,
+    formTitlesDescriptor
+  );
   const JSONBlob = new Blob([formattedFormDescriptor[1]], {
     type: "application/json",
   });
@@ -470,33 +679,30 @@ export function createJSONAnchor(JSONBtn, formDescriptor) {
   return JSONLink;
 }
 
-function formatJSONFile(formDescriptor) {
-  let formatFormDescLabRead = `{\n`;
+function formatJSONFile(formInpsDescriptor, formTitlesDescriptor) {
   let formatFormDescIds = `{\n`;
   let formatFormDescTitles = ``;
-  let labAcc = 2;
-  for (let i = 0; i < formDescriptor.length; i++) {
-    let separationMatches = formDescriptor[i].match(/",/g);
+  let formatFormDescIdsRead = `{\n`;
+  let formatFormDescTitlesRead = `{\n`;
+  let labAcc = 1;
+
+  //geração das unidades formatadas
+  for (let i = 0; i < formInpsDescriptor.length; i++) {
+    let separationMatches = formInpsDescriptor[i].match(/",/g);
     if (separationMatches) {
-      const firstSepIndex = formDescriptor[i].indexOf(",");
-      const secondSepIndex = formDescriptor[i].indexOf(
+      const firstSepIndex = formInpsDescriptor[i].indexOf(",");
+      const secondSepIndex = formInpsDescriptor[i].indexOf(
         ",",
-        formDescriptor[i].indexOf(",") + 1
+        formInpsDescriptor[i].indexOf(",") + 1
       );
-      const lastSepIndex = formDescriptor[i].lastIndexOf(separationMatches[0]);
-      let lab = formDescriptor[i]
-        .slice(firstSepIndex + 1, secondSepIndex)
-        .replaceAll(" ", "_");
-      while (lab.match(/:/g)) {
-        lab = lab.replace(":", "");
-        if (!lab.match(/:"/g)) {
-          break;
-        }
-      }
-      if (!lab.endsWith('"')) {
-        lab = lab + '"';
-      }
-      let inpId = formDescriptor[i].slice(secondSepIndex + 1, lastSepIndex + 1);
+      const lastSepIndex = formInpsDescriptor[i].lastIndexOf(
+        separationMatches[0]
+      );
+      //formatação dos ids e values dos inputs
+      let inpId = formInpsDescriptor[i].slice(
+        secondSepIndex + 2,
+        lastSepIndex + 1
+      );
       while (inpId.match(/,/g)) {
         const commaIndex = inpId.indexOf(",");
         inpId = inpId.slice(commaIndex + 1);
@@ -504,29 +710,75 @@ function formatJSONFile(formDescriptor) {
           break;
         }
       }
-      const value = formDescriptor[i].slice(lastSepIndex + 2, -1);
-      formatFormDescLabRead += `\t${labAcc}. ${lab}: ${value}, \n`;
-      formatFormDescTitles += `\t${lab}: ${value}, \n`;
+      const value = formInpsDescriptor[i].slice(lastSepIndex + 2, -1);
+      let lab = mapIdsTitles[inpId.replaceAll(/"/g, "")];
+
+      if (i == 89) {
+        //bug não resolvido ainda
+        if (!inpId) {
+          inpId = '"confirmLocId"';
+          console.log(inpId);
+        }
+      }
+      //construção e concatenação das unidades formatadas
       formatFormDescIds += `\t${inpId}: ${value}, \n`;
+      formatFormDescIdsRead += `\t${labAcc}. ${inpId}: ${value}, \n`; //versões em lista numerada, para logs e enumeração posterior
       labAcc++;
+      if (lab && lab !== "null" && lab !== "") {
+        formatFormDescTitlesRead += `\t${labAcc}. ${lab} for ${inpId}: ${value}, \n`;
+        formatFormDescTitles += `\t"${lab}": ${value}, \n`;
+      }
     }
   }
-  const formattedFormDescriptor = (
+  //ajustes finais nos descriptors e união
+  const finalDescIds = (
     formatFormDescIds +
-    "\n\n" +
+    `\n\n` +
     formatFormDescTitles +
     `}`
   ).replace(", \n}", " \n}");
-  const formattedLabels = (formatFormDescLabRead + `}`).replace(
+  const finalDescTitles = (`{` + formatFormDescTitles + `}`).replace(
     ", \n}",
     " \n}"
   );
-  console.log(formattedLabels);
-  return [formattedLabels, formattedFormDescriptor];
+
+  //para leitura em logs somente
+  const finalDescIdsRead = (formatFormDescIdsRead + `}`)
+    .replace(", \n}", " \n}")
+    .replaceAll(/""null": "null",/g, "")
+    .replaceAll(/""false": "false",/g, "")
+    .replaceAll(/"null": "null",/g, "")
+    .replaceAll(/"false": "false",/g, "")
+    .replaceAll(/"false": "false"/g, "")
+    .replaceAll(/"null": "null"/g, "")
+    .replaceAll(/\t[0-9]{1,3}.\s:\s"null",\s\n/g, "")
+    .replaceAll(/\t[0-9]{1,3}.\s:\s"false",\s\n/g, "")
+    .replaceAll(/\t[0-9]{1,3}.\s\s\n/g, "");
+
+  const finalDescTitlesRead = (formatFormDescTitlesRead + `}`)
+    .replace(", \n}", " \n}")
+    .replaceAll(/""null": "null",/g, "")
+    .replaceAll(/""false": "false",/g, "")
+    .replaceAll(/"null": "null",/g, "")
+    .replaceAll(/"false": "false",/g, "")
+    .replaceAll(/"false": "false"/g, "")
+    .replaceAll(/"null": "null"/g, "")
+    .replaceAll(/\t[0-9]{1,3}.\s:\s"null",\s\n/g, "")
+    .replaceAll(/\t[0-9]{1,3}.\s:\s"false",\s\n/g, "")
+    .replaceAll(/\t[0-9]{1,3}.\s\s\n/g, "");
+
+  // console.log(finalDescIds);
+  // console.log(finalDescTitles);
+  // console.log(finalDescIdsRead);
+  console.log(finalDescTitlesRead);
+  return [finalDescTitles, finalDescIds];
 }
 
-export function regenerateJSONBtn(JSONLink, formDescriptor) {
-  console.log("event ouvido");
+export function regenerateJSONBtn(
+  JSONLink,
+  formInpsDescriptor,
+  formTitlesDescriptor
+) {
   const newJSONBtn = document.createElement("button");
   newJSONBtn.id = "btnJSON";
   newJSONBtn.className = JSONLink.className;
@@ -536,7 +788,7 @@ export function regenerateJSONBtn(JSONLink, formDescriptor) {
   JSONLink.replaceWith(newJSONBtn);
   setTimeout(() => {
     newJSONBtn.addEventListener("click", () =>
-      createJSONAnchor(newJSONBtn, formDescriptor)
+      createJSONAnchor(newJSONBtn, formInpsDescriptor, formTitlesDescriptor)
     );
   }, 1000);
   // return newJSONBtn;
@@ -795,7 +1047,6 @@ function displayCEPLoadBar(cepElement) {
     cepElement.nextElementSibling?.nextElementSibling ?? null
   );
   if (progressBar && cepElement.nextElementSibling?.nextElementSibling) {
-    isProgBarLoading = true;
     progressBar.id = "loadBarCepVars";
     progressBar.max = 100;
     progMaxInt = progressBar.max;
@@ -835,7 +1086,6 @@ function uploadCEPLoadBar(
   }
   setTimeout(() => {
     cepElement.parentElement?.removeChild(progressBar);
-    isProgBarLoading = false;
   }, roundedElapsed);
 }
 
