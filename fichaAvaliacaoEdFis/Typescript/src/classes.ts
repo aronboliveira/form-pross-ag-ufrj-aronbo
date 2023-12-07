@@ -30,8 +30,8 @@ abstract class Person implements UndefinedPerson {
     this.atvLvl = atvLvl;
   }
 
-  checkAtLvl(person: Person): number | void {
-    if (person && "atLvl" in person && this.atvLvl !== "") {
+  checkAtvLvl(person: Person): number | void {
+    if (person && "atvLvl" in person && this.atvLvl !== "") {
       switch (this.atvLvl) {
         case "sedentario":
           return 1.2;
@@ -58,59 +58,65 @@ abstract class Person implements UndefinedPerson {
           Object.prototype.toString.call(person).slice(8, -1) ?? "null"
         }; Valor de Nível de Atividade Física obtido: ${this.atvLvl ?? "null"}`
       );
+      return 0;
     }
   }
 
   calcIMC(person: Person): [string, number, number] | undefined | never {
-    if (
-      person &&
-      "weight" in person &&
-      this.weight > 0 &&
-      "height" in person &&
-      this.height > 0
-    ) {
-      const IMC = this.weight / this.height ** 2;
-      if (IMC && IMC > 0) {
-        const MLG = this.weight - this.weight * (IMC / 100) ?? 0;
-        if (IMC < 18.5) {
-          return ["Com Baixo Peso", IMC, MLG];
-        } else if (IMC >= 18.5 && IMC < 25.0) {
-          return ["Eutrófico", IMC, MLG];
-        } else if (IMC >= 25.0 && IMC < 30) {
-          return ["Com Sobrepeso (não Obeso)", IMC, MLG];
-        } else if (IMC >= 30 && IMC < 35) {
-          return ["Obeso Grau 1", IMC, MLG];
-        } else if (IMC >= 35 && IMC < 40) {
-          return ["Obeso Grau 2", IMC, MLG];
-        } else if (IMC > 40) {
-          return ["Obesidade Mórbida", IMC, MLG];
+    try {
+      if (
+        person &&
+        "weight" in person &&
+        this.weight > 0 &&
+        "height" in person &&
+        this.height > 0
+      ) {
+        const IMC = this.weight / this.height ** 2;
+        if (IMC && IMC > 0) {
+          const MLG = this.weight - this.weight * (IMC / 100) ?? 0;
+          if (IMC < 18.5) {
+            return ["abaixo", IMC, MLG];
+          } else if (IMC >= 18.5 && IMC < 25.0) {
+            return ["eutrofico", IMC, MLG];
+          } else if (IMC >= 25.0 && IMC < 30) {
+            return ["sobrepeso", IMC, MLG];
+          } else if (IMC >= 30 && IMC < 35) {
+            return ["obeso1", IMC, MLG];
+          } else if (IMC >= 35 && IMC < 40) {
+            return ["obeso2", IMC, MLG];
+          } else if (IMC > 40) {
+            return ["obeso3", IMC, MLG];
+          } else {
+            throw new Error(
+              `Erro classificando IMC. Valor obtido: ${
+                IMC ?? 0
+              }; Valores possíveis devem ser positivos`
+            );
+          }
         } else {
-          console.error(
-            `Erro classificando IMC. Valor obtido: ${
-              IMC ?? 0
-            }; Valores possíveis devem ser positivos`
+          throw new Error(
+            `Erro calculando IMC. Valores usados: Peso ${
+              this.weight ?? 0
+            } e Altura ${this.height ?? 0}`
           );
         }
       } else {
-        console.error(
-          `Erro calculando IMC. Valores usados: Peso ${
-            this.weight ?? 0
-          } e Altura ${this.height ?? 0}`
+        throw new Error(
+          `Erro validando dados fornecidos. Elemento pessoa: ${
+            Object.prototype.toString.call(person).slice(8, -1) ?? "null"
+          }; weight presente: ${"weight" in person ?? false};
+          Peso obtido: ${this.weight ?? 0};
+          height presente: ${"height" in person ?? false};
+          Altura obtida: ${this.height ?? 0}`
         );
       }
-    } else {
-      console.error(
-        `Erro validando dados fornecidos. Elemento pessoa: ${
-          Object.prototype.toString.call(person).slice(8, -1) ?? "null"
-        }; weight presente: ${"weight" in person ?? false};
-        Peso obtido: ${this.weight ?? 0};
-        height presente: ${"height" in person ?? false};
-        Altura obtida: ${this.height ?? 0}`
-      );
+    } catch (IMCError: any) {
+      console.error(IMCError.message);
+      return ["", 0, 0];
     }
   }
 
-  calcPGC(person: Person): number | void {
+  calcPGC(person: Person): number {
     if ("sumDCut" in person && this.sumDCut) {
       if (person instanceof Man) {
         const DC =
@@ -142,11 +148,13 @@ abstract class Person implements UndefinedPerson {
             Object.prototype.toString.call(person).slice(8, -1) ?? "null"
           }`
         );
+        return 0;
       }
     } else {
       console.error(`Erro validado Propriedade sumDCut:
       Está presente: ${"sumDCut" in person ?? false};
       Valor obtido: ${this.sumDCut ?? 0}`);
+      return 0;
     }
   }
 
@@ -165,17 +173,17 @@ abstract class Person implements UndefinedPerson {
           if (factorAtleta === "MLG") {
             if (MLG && MLG > 0) {
               const TMB = 25.9 * MLG + 284;
-              return ["Tinsley", TMB];
+              return ["tinsley", TMB];
             } else {
-              console.error(`Erro validando MLG.
+              throw new Error(`Erro validando MLG.
               Valor obtido: ${MLG ?? 0}`);
             }
           } else if (factorAtleta === "Peso") {
             if ("weight" in person && this.weight > 0) {
               const TMB = 24.8 * this.weight + 10;
-              return ["Tinsley", TMB];
+              return ["tinsley", TMB];
             } else {
-              console.error(`Erro validando weight.
+              throw new Error(`Erro validando weight.
               Valor obtido: ${this.weight ?? 0}`);
             }
           }
@@ -197,17 +205,17 @@ abstract class Person implements UndefinedPerson {
                 const TMB =
                   66 +
                   (13.8 * this.weight + 5.0 * this.height - 6.8 * this.age);
-                return ["Harris-Benedict", TMB];
+                return ["harrisBenedict", TMB];
               } else if (person instanceof Woman) {
                 const TMB =
                   655 +
                   (9.6 * this.weight + 1.9 * this.height - 4.7 * this.age);
-                return ["Harris-Benedict", TMB];
+                return ["harrisBenedict", TMB];
               } else if (person instanceof Neutro) {
                 const TMB =
                   360.5 +
                   (11.7 * this.weight + 3.45 * this.height - 5.75 * this.age);
-                return ["Harris-Benedict", TMB];
+                return ["harrisBenedict", TMB];
               } else {
                 throw new Error(
                   `Erro validando instância de Person. Instância obtida: ${
@@ -220,15 +228,15 @@ abstract class Person implements UndefinedPerson {
               if (person instanceof Man) {
                 const TMB =
                   10 * this.weight + 6.25 * this.height - 5.0 * this.age + 5;
-                return ["Mifflin-St.Jeor", TMB];
+                return ["mifflinStJeor", TMB];
               } else if (person instanceof Woman) {
                 const TMB =
                   10 * this.weight + 6.25 * this.height - 5.0 * this.age - 161;
-                return ["Mifflin-St.Jeor", TMB];
+                return ["mifflinStJeor", TMB];
               } else if (person instanceof Neutro) {
                 const TMB =
                   10 * this.weight + 6.25 * this.height - 5.0 * this.age - 78;
-                return ["Mifflin-St.Jeor", TMB];
+                return ["mifflinStJeor", TMB];
               } else {
                 throw new Error(
                   `Erro validando instância de Person. Instância obtida: ${Object.prototype.toString
@@ -272,17 +280,19 @@ abstract class Person implements UndefinedPerson {
       }
     } catch (TMBError: any) {
       console.error(TMBError.message);
+      return ["", 0];
     }
   }
 
-  calcGET(TMB: number, factorAtvLvl: number): number | undefined {
+  calcGET(TMB: number, factorAtvLvl: number): number {
     if (TMB && factorAtvLvl) {
       const GET = TMB * factorAtvLvl;
       return GET;
     } else {
       console.error(`Erro validando argumentos.
       TMB obtido: ${TMB ?? 0};
-      factorAtLvl obtido: ${factorAtvLvl ?? 0}`);
+      factorAtvLvl obtido: ${factorAtvLvl ?? 0}`);
+      return 0;
     }
   }
 }

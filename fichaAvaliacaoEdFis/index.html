@@ -94,7 +94,7 @@
 
               <span class="contQuat spanFsAnamG" id="spanFsAnamG5">
                 <label for="ageId" class="labelIdentif">Idade:
-                  <input type="number" name="ageName" id="ageId" class="inpIdentif threeCharLongNum" min="0" max="255" required>
+                  <input type="number" name="ageName" id="ageId" class="inpIdentif threeCharLongNum" min="0" max="255" value="30" required>
                 </label>
               </span>
               <br />
@@ -148,6 +148,27 @@
                 <br />
               </span>
 
+              <!-- 
+                Gênero: refere-se à identificação da pessoa quanto a papéis sociais associados primariamente (na nascença) ao sexo biológico.
+                  Biologicamente, indivíduos possuem um genótipo resultante da combinação dos alossomos (crossomos X e Y), que possuem o padrão XY: macho; XX: fêmea;
+                  no entanto, muitas outras variações genotípicas são possíveis, ainda que raras. Se os alossomos adicionais são reprimidos (como nos interessexuais genéticos), em geral não causam manifestações físicas;
+                  a sua ativação expressiva, porém, em geral resulta em interssexuais físicos (hermafroditas) e/ou indivíduos com síndromes diversas. As condições em que apenas um ou nenhum alossomos são expressivos
+                  também desencadeiam em síndromes, muitas vezes fatais.
+
+                  É importante salientar que a única definição confiável para a biologia de macho ou fêmea é somente o tipo de gameta e, consequentemente, a genitália em animais;
+                  Todas as demais características (e.g.: variações ósseas e adiposas) são consideradas secundárias e podem ou não se manifestar.
+
+                  O fenótipo físico resultante da expressão genética pode ou não ser aceito psicologicamente pelo indivíduo no seu processo de desenvolvimento e socialização. O caso de rejeição é conhecido como Disforia.
+                  Indivíduos que adotam o papel social previsto por padrão ao seu sexo biológico de nascença são denominados de Cissexuais/Cisgênero (abreviação: cis);
+                  Indivíduos que rejeitam o papel social previsto por padrão ao seu sexo biológio de nascença se enquadram em pessoas Transsexuais/Transgênero (abreviação: trans) ou Não-binárias.
+                  No primeiro caso, o indivíduo se identifica, ao menos predominantemente, com o papel previsto ao sexo biológico oposto ao de sua nascença (e.g.: machos biológicos que não se identificam com o papel de homem, mas de mulher);
+                  É crucial entender que nem todos os indivíduos Transsexuais apresentam disforia genital, mas somente física em algum outro nível.
+                  No segundo caso (não-binário), o indivíduo não se identifica totalmente com nenhum dos dois papéis, se vendo em um "meio-termo", e diversas denominações são usadas para as possíveis combinações.
+                  É comum a adoção de pronomes alternativos para o tratamento pessoal de indivíduos não-binários.
+
+                  A combinação de transsexualidade e não-binaridade ocorre em pessoas que se identificam predominantemente com o papel oposto ao seu sexo biológico de nascença, mas não o suficiente para que se
+                  vejam como pessoas binárias (somente homem ou somente mulher).
+               -->
               <hr />
             </div>
           </section>
@@ -674,14 +695,87 @@
             name="fsSubProgConsName"
             id="fsProgConsId"
           >
-          
-          <label for="selectNumCons" id="labSelectNumCons" class="contTerc"> Consulta em leitura:
-            <select id="selectNumCons" class="contQuat">
-              <option value="1" id="opCons1" class="contQuint">1ª</option>
-              <option value="2" id="opCons2" class="contQuint">2ª</option>
-              <option value="3" id="opCons3" class="contQuint">3ª</option>
+
+          <div>
+            <label for="selectNumCons" id="labSelectNumCons" class="contTerc"> Consulta em leitura:
+              <select id="selectNumCons" class="contQuat">
+                <option value="1" id="opCons1" class="contQuint">1ª</option>
+                <option value="2" id="opCons2" class="contQuint">2ª</option>
+                <option value="3" id="opCons3" class="contQuint">3ª</option>
+              </select>
+            </label>
+            <br />
+            <span>
+              Tipo corporal aplicado:
+              <select id="textBodytype">
+                <option value="masculino">Masculino | Masculinizado</option>
+                <option value="feminino">Feminino | Feminilizado</option>
+                <option value="neutro">Neutro</option>
+              </select>                
+            </span>
+            <br />
+            <span class="contQuat spanMain spanMainTabProgCons" id="tabSpanDCut">Protocolo:
+              <select class="contQuint selectTabProgCons" id="tabSelectDCutId" name="tabSelectDCutName" required>
+                <option value="pollock3" class="contSext opTabProgCons opProtoc" id="opProtocJP3" selected>Jackson/Pollock 3</option>
+                <option value="pollock7" class="contSext opTabProgCons opProtoc" id="opProtocJP7">Jackson/Pollock 7</option>
+              </select>
+            </span>
+            <br />
+
+            <span>
+              Nível de Gordura Corporal aplicado:
+              <select id="gordCorpLvl">
+                <option value="abaixo" selected>Com Baixo Peso</option>
+                <option value="eutrofico">Eutrófico</option>
+                <option value="sobrepeso">Com Sobrepeso &#40não Obeso&#41</option>
+                <option value="obeso1">Obeso Grau 1</option>
+                <option value="obeso2">Obeso Grau 2</option>
+                <option value="obeso3">Obeso Grau 3</option>
+              </select>
+              <span id="lockGordCorpLvl">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+                  <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
+                </svg>
+              </span>
+            </span>
+            <br />
+
+          <span>
+            Fórmula aplicada para Cálculo de TMB:
+          </span>
+          <select id="formCalcTMBType">
+            <option value="harrisBenedict">Harris-Benedict</option>
+            <option value="mifflinStJeor">Mifflin-St.Jeor</option>
+            <option value="tinsley">Tinsley</option>
+          </select>
+          <span id="lockformCalcTMB">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+              <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
+            </svg>
+          </span>
+          <br />
+
+          <span id="spanFactorAtleta" hidden>
+            Fator para Calcúlo de TMB em Atletas:
+            <select id="selFactorAtleta">
+              <option value="Peso">Peso</option>
+              <option value="MLG">MLG</option>
             </select>
-          </label>
+            <br />
+          </span>
+
+          <span>
+            Fator de Nível de Atividade Física aplicado:
+            <select id="nafType">
+              <option value="sedentario">1.2</option>
+              <option value="leve" selected>1.4</option>
+              <option value="moderado">1.6</option>
+              <option value="intenso">1.9</option>
+              <option value="muitoIntenso">2.2</option>
+            </select>
+          </span>
+          <br />
+        </div>
 
           <hr />
             <div class="divTab" id="divTabSVi">
@@ -775,15 +869,15 @@
                   <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt2" itemprop="rowMedAnt">
                     <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_1" itemprop="celMedAnt">Peso</th>
                     <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_2" itemprop="celMedAnt">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt2 inpWeight float" id="tabInpRowMedAnt2_2" min="0" max="999" required />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt2 inpWeight float" id="tabInpRowMedAnt2_2" min="0" max="999" value="70" required />
                       <label for="tabInpRowMedAnt2_2" class="contSet tabLabProgCons tabLabRowMedAnt2" id="tabLabRowMedAnt2_2">kg</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_3" itemprop="celMedAnt">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt2 inpWeight float" id="tabInpRowMedAnt2_3" min="0" max="999" />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt2 inpWeight float" id="tabInpRowMedAnt2_3" min="0" max="999" value="30"/>
                       <label for="tabInpRowMedAnt2_3" class="contSet tabLabProgCons tabLabRowMedAnt2" id="tabLabRowMedAnt2_3">kg</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt2" id="tabCelRowMedAnt2_4" itemprop="celMedAnt">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt2 inpWeight float" id="tabInpRowMedAnt2_4" min="0" max="999" />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt2 inpWeight float" id="tabInpRowMedAnt2_4" min="0" max="999" value="200"/>
                       <label for="tabInpRowMedAnt2_4" class="contSet tabLabProgCons tabLabRowMedAnt2" id="tabLabRowMedAnt2_4">kg</label>
                     </td>
                   </tr>
@@ -791,15 +885,15 @@
                   <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt3" itemprop="rowMedAnt">
                     <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_1" itemprop="celMedAnt">Altura</th>
                     <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_2" itemprop="celMedAnt">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt3 inpHeight float" id="tabInpRowMedAnt3_2" min="0" max="255" required />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt3 inpHeight float" id="tabInpRowMedAnt3_2" min="0" max="255" value="2" required />
                       <label for="tabInpRowMedAnt3_2" class="contSet tabLabProgCons tabLabRowMedAnt3" id="tabLabRowMedAnt3_2">m</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_3" itemprop="celMedAnt">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt3 inpHeight float" id="tabInpRowMedAnt3_3" min="0" max="255" />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt3 inpHeight float" id="tabInpRowMedAnt3_3" min="0" max="255" value="1"/>
                       <label for="tabInpRowMedAnt3_3" class="contSet tabLabProgCons tabLabRowMedAnt3" id="tabLabRowMedAnt3_3">m</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt3" id="tabCelRowMedAnt3_4" itemprop="celMedAnt">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt3 inpHeight float" id="tabInpRowMedAnt3_4" min="0" max="255" />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgMedAnt tabInpRowMedAnt3 inpHeight float" id="tabInpRowMedAnt3_4" min="0" max="255" value="1.8"/>
                       <label for="tabInpRowMedAnt3_4" class="contSet tabLabProgCons tabLabRowMedAnt3" id="tabLabRowMedAnt3_4">m</label>
                     </td>
                   </tr>
@@ -944,12 +1038,6 @@
                   itemprop="capDCut"
                 >
                   Dobras Cutâneas
-                <span class="contQuat spanMain spanMainTabProgCons" id="tabSpanDCut">Protocolo:
-                  <select class="contQuint selectTabProgCons" id="tabSelectDCutId" name="tabSelectDCutName" required>
-                    <option value="pollock3" class="contSext opTabProgCons opProtoc" id="opProtocJP3" selected>Jackson/Pollock 3</option>
-                    <option value="pollock7" class="contSext opTabProgCons opProtoc" id="opProtocJP7">Jackson/Pollock 7</option>
-                  </select>
-                </span>
                 </caption>
                 <colgroup class="contQuat tabCapProgCons" id="tabColGrpDCut" itemprop="blockDCut">
                   <col class="contQuint tabColProgCons tabColDCut" id="tabColDCut1" itemprop="colDCut" />
@@ -1004,16 +1092,16 @@
                   <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowCoxa">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_1" itemprop="coxaStr">Coxa</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_2" itemprop="coxaNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut4 float" id="tabInpRowDCut4_2" min="0" max="255" required />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut4 float" id="tabInpRowDCut4_2" min="0" max="255" value="18" required />
                       <label for="tabInpRowDCut4_2" id="labInpRowDCut4_2" class="contSet tabLabProgCons tabLabRowDCut4" id="tabLabRowDCut4_2">mm</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_3" itemprop="coxaNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut4 float" id="tabInpRowDCut4_3" min="0" max="255"  />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut4 float" id="tabInpRowDCut4_3" min="0" max="255" value="10"/>
                       <label for="tabInpRowDCut4_3" id="labInpRowDCut4_3" class="contSet tabLabProgCons tabLabRowDCut4" id="tabLabRowDCut4_3">mm</label>
 
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut4" id="tabCelRowDCut4_4" itemprop="coxaNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut4 float" id="tabInpRowDCut4_4" min="0" max="255"  />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut4 float" id="tabInpRowDCut4_4" min="0" max="255" value="40" />
                       <label for="tabInpRowDCut4_4" id="labInpRowDCut4_2" class="contSet tabLabProgCons tabLabRowDCut4" id="tabLabRowDCut4_2">mm</label>
                     </td>
                   </tr>
@@ -1053,15 +1141,15 @@
                   <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowPeit">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_1" itemprop="peitoralStr">Peitoral</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_2" itemprop="peitoralNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut7 float" id="tabInpRowDCut7_2" min="0" max="255" required />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut7 float" id="tabInpRowDCut7_2" min="0" max="255" value="18" required />
                       <label for="tabInpRowDCut7_2" id="labInpRowDCut7_2" class="contSet tabLabProgCons tabLabRowDCut7" id="tabLabRowDCut7_2">mm</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_3" itemprop="peitoralNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut7 float" id="tabInpRowDCut7_3" min="0" max="255"  />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut7 float" id="tabInpRowDCut7_3" min="0" max="255" value="10" />
                       <label for="tabInpRowDCut7_3" id="labInpRowDCut7_3" class="contSet tabLabProgCons tabLabRowDCut7" id="tabLabRowDCut7_3">mm</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut7" id="tabCelRowDCut7_4" itemprop="peitoralNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut7 float" id="tabInpRowDCut7_4" min="0" max="255"  />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut7 float" id="tabInpRowDCut7_4" min="0" max="255" value="40" />
                       <label for="tabInpRowDCut7_4" id="labInpRowDCut7_4" class="contSet tabLabProgCons tabLabRowDCut7" id="tabLabRowDCut7_4">mm</label>
                     </td>
                   </tr>
@@ -1069,15 +1157,15 @@
                   <tr class="contQuint tabRowProgCons tabRowDCutMed" id="rowAbd">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_1" itemprop="abdominalStr">Abdominal</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_2" itemprop="abdominalNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut8 float" id="tabInpRowDCut8_2" min="0" max="255" required />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut8 float" id="tabInpRowDCut8_2" min="0" max="255" value="18" required />
                       <label for="tabInpRowDCut8_2" id="labInpRowDCut8_2" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_2">mm</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_3" itemprop="abdominalNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut8 float" id="tabInpRowDCut8_3" min="0" max="255"  />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut8 float" id="tabInpRowDCut8_3" min="0" max="255" value="10" />
                       <label for="tabInpRowDCut8_3" id="labInpRowDCut8_3" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_3">mm</label>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut8" id="tabCelRowDCut8_4" itemprop="abdominalNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut8 float" id="tabInpRowDCut8_4" min="0" max="255"  />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut8 float" id="tabInpRowDCut8_4" min="0" max="255" value="40" />
                       <label for="tabInpRowDCut8_4" id="labInpRowDCut8_4" class="contSet tabLabProgCons tabLabRowDCut8" id="tabLabRowDCut8_4">mm</label>
                     </td>
                   </tr>
@@ -1085,17 +1173,17 @@
                   <tr class="contQuint tabRowProgCons tabRowDCutSum" id="rowSum">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_1" itemprop="somaStr">Soma</th>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDCut float" id="tabInpRowDCut9_2" min="0" max="255" required/>
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDCut float" id="tabInpRowDCut9_2" min="0" max="255" value="60" required/>
                       <label for="tabInpRowDCut9_2" id="labInpRowDCut9_2" class="contSet tabLabProgCons tabLabRowDCut9" id="tabLabRowDCut9_2">mm</label>
                       <button type="button" id="sumDCBtn9_2" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDcut float" id="tabInpRowDCut9_3" min="0" max="255" />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDcut float" id="tabInpRowDCut9_3" min="0" max="255" value="40" />
                       <label for="tabInpRowDCut9_3" id="labInpRowDCut9_3" class="contSet tabLabProgCons tabLabRowDCut9" id="tabLabRowDCut9_3">mm</label>
                       <button type="button" id="sumDCBtn9_3" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDCut float" id="tabInpRowDCut9_4" min="0" max="255" />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDCut float" id="tabInpRowDCut9_4" min="0" max="255" value="150"/>
                       <label for="tabInpRowDCut9_4" id="labInpRowDCut9_4" class="contSet tabLabProgCons tabLabRowDCut9" id="tabLabRowDCut9_4">mm</label>
                       <button type="button" id="sumDCBtn9_4" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
                     </td>
@@ -1104,6 +1192,7 @@
                 </tbody>
               </table>
             </div>
+            <br />
 
             <div class="divTab" id="divTabInd">
               <table id="tabIndPerc">
@@ -1126,7 +1215,7 @@
                 </thead>
                 <tbody>
                   <tr class="contQuint tabRowProg tabRowProgIndPerc" id="tabRowProgIndPerc2" itemprop="rowIndPerc">
-                    <th>IMC</th>
+                    <th class="contSext tabCelProgCons tabCelIndPerc tabCelRowIndPerc2" id="tabCelRowIndPerc2_1" itemprop="imcStr">IMC</th>
                     <dialog></dialog>
                     <td>
                       <input type="number" name="tabInpProgDC2_2" id="inpImc1Cel2_2" class="tabInpProgCons tabInpProgIndPerc inpInd inpImc inpCol2" required/>
@@ -1145,7 +1234,7 @@
                      </td>
                   </tr>
                   <tr class="contQuint tabRowProg tabRowProgIndPerc" id="tabRowProgIndPerc3" itemprop="rowIndPerc">
-                    <th>MLG</th>
+                    <th class="contSext tabCelProgCons tabCelIndPerc tabCelRowIndPerc3" id="tabCelRowIndPerc3_1" itemprop="mlgStr">MLG</th>
                     <dialog></dialog>
                     <td>
                       <input type="number" name="tabInpProgDC3_2" id="inpMlg1Cel3_2" class="tabInpProgCons tabInpProgIndPerc inpInd inpMlg inpCol2" required/>
@@ -1164,7 +1253,7 @@
                      </td>
                   </tr>
                   <tr class="contQuint tabRowProg tabRowProgIndPerc" id="tabRowProgIndPerc4" itemprop="rowIndPerc">
-                    <th>PGC</th>
+                    <th class="contSext tabCelProgCons tabCelIndPerc tabCelRowIndPerc4" id="tabCelRowIndPerc4_1" itemprop="pgcStr">PGC</th>
                     <dialog></dialog>
                     <td>
                       <input type="number" name="tabInpProgDC4_2" id="inpPgc1Cel4_2" class="tabInpProgCons tabInpProgIndPerc inpInd inpPgc inpCol2" required/>
@@ -1183,39 +1272,39 @@
                      </td>
                   </tr>
                   <tr class="contQuint tabRowProg tabRowProgIndPerc" id="tabRowProgIndPerc5" itemprop="rowIndPerc">
-                    <th>TMB</th>
+                    <th class="contSext tabCelProgCons tabCelIndPerc tabCelRowIndPerc5" id="tabCelRowIndPerc5_1" itemprop="tmbStr">TMB</th>
                     <dialog></dialog>
                     <td>
-                      <input type="number" name="tabInpProgDC5_2" id="inpTmb1" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol2" required/>
+                      <input type="number" name="tabInpProgDC5_2" id="inpTmb1Cel5_2" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol2" required/>
                       <label for="inpTmb1">kcal</label>
                       <button type="button" class="tabBtnTmb">Calcular</button>
                     </td>
                     <td>
-                      <input type="number" name="tabInpProgDC5_3" id="inpTmb2" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol3" />
+                      <input type="number" name="tabInpProgDC5_3" id="inpTmb2Cel5_3" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol3" />
                       <label for="inpTmb2">kcal</label>
                       <button type="button" class="tabBtnTmb">Calcular</button>
                     </td>
                     <td>
-                      <input type="number" name="tabInpProgDC5_4" id="inpTmb3" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol4" />
+                      <input type="number" name="tabInpProgDC5_4" id="inpTmb3Cel5_4" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol4" />
                       <label for="inpTmb3">kcal</label>
                       <button type="button" class="tabBtnTmb">Calcular</button>
                      </td>
                   </tr>
                   <tr class="contQuint tabRowProg tabRowProgIndPerc" id="tabRowProgIndPerc5" itemprop="rowIndPerc">
-                    <th>GET</th>
+                    <th class="contSext tabCelProgCons tabCelIndPerc tabCelRowIndPerc6" id="tabCelRowIndPerc6_1" itemprop="getStr">GET</th>
                     <dialog></dialog>
                     <td>
-                      <input type="number" name="tabInpProgDC6_2" id="inpGet1" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol2" />
+                      <input type="number" name="tabInpProgDC6_2" id="inpGet1Cel6_2" class="tabInpProgCons tabInpProgIndPerc inpInd inpGet inpCol2" />
                       <label for="inpGet1">kcal</label>
                       <button type="button" class="tabBtnGet">Calcular</button>
                     </td>
                     <td>
-                      <input type="number" name="tabInpProgDC6_3" id="inpGet2" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol3" />
+                      <input type="number" name="tabInpProgDC6_3" id="inpGet2Cel6_3" class="tabInpProgCons tabInpProgIndPerc inpInd inpGet inpCol3" />
                       <label for="inpGet2">kcal</label>
                       <button type="button" class="tabBtnGet">Calcular</button>
                     </td>
                     <td>
-                      <input type="number" name="tabInpProgDC6_4" id="inpGet3" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol4" />
+                      <input type="number" name="tabInpProgDC6_4" id="inpGet3Cel6_4" class="tabInpProgCons tabInpProgIndPerc inpInd inpGet inpCol4" />
                       <label for="inpGet3">kcal</label>
                       <button type="button" class="tabBtnGet">Calcular</button>
                      </td>
@@ -1223,40 +1312,7 @@
                 </tbody>
               </table>
             </div>
-
-            <div>
-              <span>
-                Tipo corporal aplicado:
-                <select id="textBodytype">
-                  <option value="masculino">Masculino | Masculinizado</option>
-                  <option value="feminino">Feminino | Feminilizado</option>
-                  <option value="neutro">Neutro</option>
-                </select>                
-              </span>
-              <br />
-              <span>
-                Fator de Nível de Atividade Física aplicado:
-                <select id="nafType">
-                  <option value="sedentario">1.2</option>
-                  <option value="leve" selected>1.4</option>
-                  <option value="moderado">1.6</option>
-                  <option value="intenso">1.9</option>
-                  <option value="muitoIntenso">2.2</option>
-                </select>
-              </span>
-              <br />
-              <span>
-                Nível de Gordura Corporal aplicado:
-                <select id="nafType">
-                  <option value="abaixo">Com Baixo Peso</option>
-                  <option value="eutrofico" selected>Eutrófico</option>
-                  <option value="sobrepeso">Com Sobrepeso &#40não Obeso&#41</option>
-                  <option value="obeso1">Obeso Grau 1</option>
-                  <option value="obeso2">Obeso Grau 2</option>
-                  <option value="obesoM">Obeso Mórbido</option>
-                </select>
-              </span>
-            </div>
+            <br />
 
             <hr />
           </fieldset>

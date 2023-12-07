@@ -254,19 +254,16 @@ export function checkInnerColGroups(parentElement) {
 export function generatePersonInstance(person) {
     if (typeof person.gen === "string" && person.gen !== "") {
         if (person.gen === "masculino") {
-            person = new Man(person.gen, 30, 70, 170, 60, person.atvLvl); //TODO VALORES HARDCODED PARA FINS DE TESTE
+            person = new Man(person.gen, person.age, person.weight, person.height, person.sumDCut, person.atvLvl);
             return person;
-            // person = new Man(age, weight, height, sumDCut);
         }
         else if (person.gen === "feminino") {
-            person = new Woman(person.gen, 30, 70, 170, 60, person.atvLvl); //TODO CHECAR SE ALTURA É DE FATO EM CMS COM ALINE
+            person = new Woman(person.gen, person.age, person.weight, person.height, person.sumDCut, person.atvLvl);
             return person;
-            // person = new Woman(age, weight, height, sumDCut);
         }
         else if (person.gen === "neutro") {
-            person = new Neutro(person.gen, 30, 70, 170, 60, person.atvLvl);
+            person = new Neutro(person.gen, person.age, person.weight, person.height, person.sumDCut, person.atvLvl);
             return person;
-            // person = new Woman(age, weight, height, sumDCut);
         }
         else {
             console.error(`Erro verificando value definido para Gênero.
@@ -1379,6 +1376,8 @@ export function switchAutocorrect(click, deactAutocorrectBtn) {
 }
 export function changeTabDCutLayout(protocolo, tabDC) {
     const bodyType = document.getElementById("textBodytype");
+    const optionElementMatch7 = protocolo.value.match(/^pollock7$/i)?.toString();
+    const optionElementMatch3 = protocolo.value.match(/^pollock3$/i)?.toString();
     if (protocolo &&
         tabDC &&
         bodyType &&
@@ -1391,14 +1390,7 @@ export function changeTabDCutLayout(protocolo, tabDC) {
         }
         for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
             const optionElement = filteredOpsProtocolo[iOp];
-            const optionElementMatch7 = protocolo.value
-                .match(/^pollock7$/i)
-                ?.toString();
-            const optionElementMatch3 = protocolo.value
-                .match(/^pollock3$/i)
-                ?.toString();
             if (optionElementMatch3) {
-                console.log(protocolo.value);
                 const arrayTabIds = checkTabRowsIds(tabDC);
                 if (arrayTabIds && arrayTabIds.length !== tabDC.rows.length) {
                     const genderedIds = filterIdsByGender(arrayTabIds, bodyType.value);
@@ -1423,7 +1415,9 @@ export function changeTabDCutLayout(protocolo, tabDC) {
                                 const innerInp = medTrs[iTr].querySelector("input");
                                 if (innerInp && innerInp.required) {
                                     innerInp.removeAttribute("required");
-                                    console.log("required removido");
+                                    if (medTrs[iTr].id?.slice(-4) !== "Coxa") {
+                                        innerInp.value = "";
+                                    }
                                 }
                             }
                             for (let iMat = 0; iMat < matchedIds.length; iMat++) {
@@ -1436,7 +1430,6 @@ export function changeTabDCutLayout(protocolo, tabDC) {
                                     const innerInp = matchedTr.querySelector("input");
                                     if (innerInp) {
                                         innerInp.setAttribute("required", "");
-                                        console.log("required adicionado");
                                     }
                                 }
                             }
@@ -1463,7 +1456,9 @@ export function changeTabDCutLayout(protocolo, tabDC) {
                                 medTrs[iTr].setAttribute("hidden", "");
                                 const innerInp = medTrs[iTr].querySelector("input");
                                 if (innerInp) {
-                                    innerInp.value = "0";
+                                    if (medTrs[iTr].id?.slice(-4) !== "Coxa") {
+                                        innerInp.value = "";
+                                    }
                                 }
                             }
                             for (let iM = 0; iM < matchedIds.length; iM++) {
@@ -1491,6 +1486,7 @@ export function changeTabDCutLayout(protocolo, tabDC) {
                 else {
                     console.warn(`Erro na verificação do número de rows. Elemento ${JSON.stringify(arrayTabIds)}; Número obtido: ${arrayTabIds?.length ?? null}; Número esperado: ${tabDC.rows.length}`);
                 }
+                return "pollock3";
             }
             else if (optionElementMatch7) {
                 const medTrs = Array.from(tabDC.querySelectorAll("tr.tabRowDCutMed"));
@@ -1504,15 +1500,19 @@ export function changeTabDCutLayout(protocolo, tabDC) {
                         }
                     }
                 }
+                return "pollock7";
             }
             else {
                 console.warn(`Erro na match de protocolo. Protocolo: ${protocolo.value}`);
+                return "pollock3";
             }
         }
     }
     else {
         console.warn(`Erro validando campo de tipo corporal: elemento ${bodyType}, instância ${Object.prototype.toString.call(bodyType).slice(-8, 1) ?? null}`);
+        return "pollock3";
     }
+    return "pollock3";
 }
 function checkTabRowsIds(tab) {
     let arrayTabIds = [];

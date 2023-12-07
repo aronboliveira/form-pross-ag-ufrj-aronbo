@@ -301,14 +301,34 @@ export function checkInnerColGroups(parentElement) {
 export function generatePersonInstance(person) {
   if (typeof person.gen === "string" && person.gen !== "") {
     if (person.gen === "masculino") {
-      person = new Man(person.gen, 30, 70, 170, 60, person.atvLvl); //TODO VALORES HARDCODED PARA FINS DE TESTE
-      return person;
+      console.log("HOMEM");
+      person = new Man(
+        person.gen,
+        person.age,
+        person.weight,
+        person.height,
+        person.sumDCut,
+        person.atvLvl
+      );
+      console.log(person instanceof Man);
     } else if (person.gen === "feminino") {
-      person = new Woman(person.gen, 30, 70, 170, 60, person.atvLvl); //TODO CHECAR SE ALTURA É DE FATO EM CMS COM ALINE
-      return person;
+      person = new Woman(
+        person.gen,
+        person.age,
+        person.weight,
+        person.height,
+        person.sumDCut,
+        person.atvLvl
+      );
     } else if (person.gen === "neutro") {
-      person = new Neutro(person.gen, 30, 70, 170, 60, person.atvLvl);
-      return person;
+      person = new Neutro(
+        person.gen,
+        person.age,
+        person.weight,
+        person.height,
+        person.sumDCut,
+        person.atvLvl
+      );
     } else {
       console.error(`Erro verificando value definido para Gênero.
       Valor obtido: ${person?.gen ?? "null"}`);
@@ -317,13 +337,14 @@ export function generatePersonInstance(person) {
     console.error(`Erro validando tipo de .gen na geração de objeto Person
     Instância obtida: ${typeof person.gen || "null"}`);
   }
+  console.log(person instanceof Man);
   return person;
 }
 
 //TODO AJUSTAR LIMITE LEVANDO EM CONTA NEGAÇÃO DE \d.
 export function numberLimit(inputElement) {
   let numberValue = inputElement.value;
-  console.log(numberValue);
+  // console.log(numberValue);
   let numberValueInt = parseInt(numberValue);
   const isAtivFis = inputElement.classList.contains("inpAtivFis");
   const isAlimRot = inputElement.classList.contains("inpAlimRot");
@@ -356,11 +377,11 @@ export function numberLimit(inputElement) {
     }
   }
   if (isThreeCharLong) {
-    console.log("is three");
+    // console.log("is three");
     const maxLength = 3;
     if (numberValue.length > maxLength) {
       numberValue = numberValue.slice(0, maxLength);
-      console.log(numberValue);
+      // console.log(numberValue);
     }
   }
 }
@@ -1812,6 +1833,8 @@ export function switchAutocorrect(click, deactAutocorrectBtn) {
 
 export function changeTabDCutLayout(protocolo, tabDC) {
   const bodyType = document.getElementById("textBodytype");
+  const optionElementMatch7 = protocolo.value.match(/^pollock7$/i)?.toString();
+  const optionElementMatch3 = protocolo.value.match(/^pollock3$/i)?.toString();
   if (
     protocolo &&
     tabDC &&
@@ -1830,12 +1853,6 @@ export function changeTabDCutLayout(protocolo, tabDC) {
     }
     for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
       const optionElement = filteredOpsProtocolo[iOp];
-      const optionElementMatch7 = protocolo.value
-        .match(/^pollock7$/i)
-        ?.toString();
-      const optionElementMatch3 = protocolo.value
-        .match(/^pollock3$/i)
-        ?.toString();
       if (optionElementMatch3) {
         const arrayTabIds = checkTabRowsIds(tabDC);
         if (arrayTabIds && arrayTabIds.length !== tabDC.rows.length) {
@@ -1913,7 +1930,6 @@ export function changeTabDCutLayout(protocolo, tabDC) {
                 if (innerInp) {
                   if (medTrs[iTr].id?.slice(-4) !== "Coxa") {
                     innerInp.value = "";
-                    console.log("input zerado");
                   }
                 }
               }
@@ -1953,6 +1969,7 @@ export function changeTabDCutLayout(protocolo, tabDC) {
             }; Número esperado: ${tabDC.rows.length}`
           );
         }
+        return "pollock3";
       } else if (optionElementMatch7) {
         const medTrs = Array.from(tabDC.querySelectorAll("tr.tabRowDCutMed"));
         for (let iTr = 0; iTr < medTrs.length; iTr++) {
@@ -1965,10 +1982,12 @@ export function changeTabDCutLayout(protocolo, tabDC) {
             }
           }
         }
+        return "pollock7";
       } else {
         console.warn(
           `Erro na match de protocolo. Protocolo: ${protocolo.value}`
         );
+        return "pollock3";
       }
     }
   } else {
@@ -1977,7 +1996,9 @@ export function changeTabDCutLayout(protocolo, tabDC) {
         Object.prototype.toString.call(bodyType).slice(-8, 1) ?? null
       }`
     );
+    return "pollock3";
   }
+  return "pollock3";
 }
 
 function checkTabRowsIds(tab) {

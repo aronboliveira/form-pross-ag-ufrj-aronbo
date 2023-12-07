@@ -11,7 +11,14 @@ export function updateSimpleProperty(element) {
     if (element.type === "radio" || element.type === "checkbox") {
       return element.checked.toString();
     } else if (element.type === "number") {
-      return parseFloat(element.value.replaceAll(/[^0-9.,+-]/g, ""));
+      if (
+        Number.isNaN(parseFloat(element.value.replaceAll(/[^0-9.,+-]/g, "")))
+      ) {
+        console.warn(`element.value retornado como NaN, revertido para 0`);
+        return 0;
+      } else {
+        return parseFloat(element.value.replaceAll(/[^0-9.,+-]/g, ""));
+      }
     } else if (element.type === "text" || element.type === "date") {
       return element.value;
     } else {
@@ -106,6 +113,162 @@ export function doubleClickHandler() {
   const radio = this.parentElement.querySelector("input[id^='Cpb'][id$='Yes']");
   if (radio) {
     cpbInpHandler(radio);
+  }
+}
+
+export function updateAtvLvl(mainSelect, atvLvl, secondarySelect) {
+  const returnedAtvLvl = updateSimpleProperty(mainSelect) ?? "";
+  if (typeof returnedAtvLvl === "string") {
+    atvLvl = returnedAtvLvl;
+    secondarySelect.value = atvLvl;
+  } else {
+    console.warn(`Erro no tipo retornado para atualização de mainSelect.
+    Tipo obtido: ${returnedAtvLvl ?? "undefined"};
+    Tipo aceito: string.`);
+  }
+  return atvLvl;
+}
+
+export function matchTMBElements(
+  mainSelect,
+  formTMBTypeElement,
+  spanFactorAtleta,
+  gordCorpLvl,
+  lockGordCorpLvl,
+  IMC
+) {
+  if (!IMC) {
+    IMC = 0;
+  }
+  if (
+    mainSelect instanceof HTMLSelectElement &&
+    formTMBTypeElement instanceof HTMLSelectElement &&
+    spanFactorAtleta instanceof HTMLSpanElement &&
+    gordCorpLvl instanceof HTMLSelectElement &&
+    lockGordCorpLvl instanceof HTMLSpanElement
+  ) {
+    switch (formTMBTypeElement.value) {
+      case "harrisBenedict":
+        fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl);
+        break;
+      case "mifflinStJeor":
+        fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl);
+        break;
+      case "tinsley":
+        mainSelect.value === "muitoIntenso";
+        break;
+    }
+    if (mainSelect.value === "muitoIntenso") {
+      formTMBTypeElement.value = "tinsley";
+      spanFactorAtleta.hidden = false;
+    } else if (
+      mainSelect.value === "sedentario" ||
+      mainSelect.value === "leve" ||
+      mainSelect.value === "moderado" ||
+      mainSelect.value === "intenso"
+    ) {
+      spanFactorAtleta.hidden = true;
+      if (
+        gordCorpLvl.value === "sobrepeso" ||
+        gordCorpLvl.value === "obeso1" ||
+        gordCorpLvl.value === "obeso2" ||
+        gordCorpLvl.value === "obeso3" ||
+        (IMC && IMC >= 25)
+      ) {
+        formTMBTypeElement.value = "mifflinStJeor";
+      } else if (
+        gordCorpLvl.value === "abaixo" ||
+        gordCorpLvl.value === "eutrofico" ||
+        (IMC && IMC < 25)
+      ) {
+        formTMBTypeElement.value = "harrisBenedict";
+      } else {
+        console.error(`Erro obtendo valor de Gordura Corporal.
+        Nível de Gordura Corporal obtido: ${gordCorpLvl?.value ?? "null"};
+        IMC obtido: ${IMC ?? 0}.`);
+      }
+    } else {
+      console.error(`Erro obtendo valor de mainSelect.
+      Valor obtido: ${mainSelect.value || "null"}`);
+    }
+    if (
+      mainSelect.value === "muitoIntenso" ||
+      formTMBTypeElement.value === "tinsley"
+    ) {
+      lockGordCorpLvl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock" viewBox="0 0 16 16">
+      <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2M3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/>
+    </svg>`;
+    } else {
+      lockGordCorpLvl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+      <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
+    </svg>`;
+    }
+  } else {
+    console.error(`Erro validando Elementos obtidos em argumentação para matchTMBElements.
+    Instância obtida para mainSelect: ${
+      Object.prototype.toString.call(mainSelect).slice(8, -1) ?? "null"
+    };
+    Instância obtida para formTMBTypeElement: ${
+      Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"
+    };
+    Instância obtida para spanFactorAtleta: ${
+      Object.prototype.toString.call(spanFactorAtleta).slice(8, -1) ?? "null"
+    };
+    Instância obtida para gordCorpLvl: ${
+      Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"
+    };
+    Instância obtida para lockGordCorpLvl: ${
+      Object.prototype.toString.call(lockGordCorpLvl).slice(8, -1) ?? "null"
+    };
+    Tipo primitivo obtido para IMC: ${typeof IMC ?? "undefined"}.`);
+  }
+}
+
+export function fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl) {
+  if (
+    formTMBTypeElement instanceof HTMLSelectElement &&
+    formTMBTypeElement.value !== "" &&
+    gordCorpLvl instanceof HTMLSelectElement &&
+    gordCorpLvl.value !== ""
+  ) {
+    if (IMC >= 0 && IMC < 25.0) {
+      formTMBTypeElement.value = "harrisBenedict";
+      if (IMC < 18.5) {
+        gordCorpLvl.value = "abaixo";
+      } else if (IMC >= 18.5) {
+        gordCorpLvl.value = "eutrofico";
+      }
+    } else if (IMC >= 25.0) {
+      formTMBTypeElement.value = "mifflinStJeor";
+      if (IMC < 30) {
+        gordCorpLvl.value = "sobrepeso";
+        formTMBTypeElement.value = "mifflinStJeor";
+      } else if (IMC >= 30 && IMC < 35) {
+        gordCorpLvl.value = "obeso1";
+        formTMBTypeElement.value = "mifflinStJeor";
+      } else if (IMC >= 35 && IMC < 40) {
+        gordCorpLvl.value = "obeso2";
+        formTMBTypeElement.value = "mifflinStJeor";
+      } else if (IMC > 40) {
+        gordCorpLvl.value = "obeso3";
+        formTMBTypeElement.value = "mifflinStJeor";
+      }
+    } else {
+      console.error(`Erro obtendo valor de IMC em função fluxFormIMC().
+      Valor obtido: ${IMC ?? "NaN"}`);
+    }
+  } else {
+    console.error(`Erro obtendo formTMBTypeElement e/ou gordCorpLvl Element.
+    Instância obtida para formTMBTypeElement: ${
+      Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"
+    };
+    .value obtido para formTMBTypeElement: ${
+      formTMBTypeElement?.value ?? "null"
+    };
+    Instância obtida para gordCorpLvl: ${
+      Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"
+    };
+    .value obtido para gordCorpLvl: ${gordCorpLvl?.value ?? "null"}.`);
   }
 }
 
@@ -236,6 +399,106 @@ export function addRowAtivFis(container) {
   }
 }
 
+export function updateIMCMLGContext(
+  IMCMLGArray,
+  gordCorpLvl,
+  targInpIMC,
+  targInpMLG,
+  formTMBTypeElement
+) {
+  let IMC = 0;
+  let MLG = 0;
+  if (
+    gordCorpLvl instanceof HTMLSelectElement &&
+    targInpIMC instanceof HTMLInputElement &&
+    targInpMLG instanceof HTMLInputElement &&
+    formTMBTypeElement instanceof HTMLSelectElement
+  ) {
+    if (typeof IMCMLGArray[2] === "number") {
+      MLG = IMCMLGArray[2];
+      targInpMLG.value = MLG.toString() || "0";
+    } else {
+      console.error(`IMCMLGArray[2] não validado como number.
+      Tipo primitivo obtido: ${typeof IMCMLGArray[2]}.`);
+    }
+    if (typeof IMCMLGArray[1] === "number") {
+      IMC = IMCMLGArray[1];
+      targInpIMC.value = IMC.toString() || "0";
+    } else {
+      console.error(`IMCMLGArray[1] não validado como number.
+      Tipo primitivo obtido: ${typeof IMCMLGArray[1]}.`);
+    }
+    if (typeof IMCMLGArray[0] === "string") {
+      gordCorpLvl.value = IMCMLGArray[0] || "";
+      fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl);
+    } else {
+      console.error(`IMCMLGArray[0] não validado como string.
+      Tipo primitivo obtido: ${typeof IMCMLGArray[0]}.`);
+    }
+    if (IMCMLGArray[0] === "" || IMCMLGArray[1] === 0 || IMCMLGArray[2] === 0) {
+      console.warn(`IMCMLGArray não atualizado.
+  Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${IMCMLGArray[1] ?? 0}; ${
+        IMCMLGArray[2] ?? 0
+      } }`);
+    }
+  } else {
+    console.log(`Erro validando instância(s) de Elements obtidos.
+    Instancia obtida para gordCorpLvl: ${
+      Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"
+    };
+    Instancia obtida para targInpIMC: ${
+      Object.prototype.toString.call(targInpIMC).slice(8, -1) ?? "null"
+    };
+    Instancia obtida para targInpMLG: ${
+      Object.prototype.toString.call(targInpMLG).slice(8, -1) ?? "null"
+    };
+    Instancia obtida para formTMBTypeElement: ${
+      Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"
+    };`);
+  }
+}
+
+export function updateTMB(
+  IMCMLGArray,
+  person,
+  factorAtleta,
+  formTMBTypeElement,
+  targInpTMB
+) {
+  let TMB = 0;
+  if (IMCMLGArray.length === 3) {
+    const TMBArray = person.calcTMB(
+      person,
+      IMCMLGArray[1] ?? 0,
+      factorAtleta,
+      IMCMLGArray[2] ?? 0
+    ) ?? ["", 0];
+    if (formTMBTypeElement instanceof HTMLSelectElement) {
+      formTMBTypeElement.value = TMBArray[0];
+    } else {
+      console.error(`Erro validando campo de Fórmula para TMB.
+      Instância obtida: ${
+        Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ??
+        "null"
+      }.}`);
+    }
+    TMB = parseFloat(TMBArray[1].toFixed(4)) ?? 0;
+    if (Number.isNaN(TMB) || isNaN(TMB)) {
+      console.warn(`TMB retornando como NaN`);
+      TMB = 0;
+    }
+    targInpTMB.value = TMB.toString();
+  } else {
+    console.error(
+      `Erro validando argumentos.
+      IMC obtido: ${IMCMLGArray[1]};
+      MLG obtido: ${IMCMLGArray[2]};
+      factorAtleta obtido: ${factorAtleta}`
+    );
+  }
+  return TMB;
+}
+
 export function addRowComorb(container) {
   if (container.tagName === "BUTTON" && container.id === "addComorb") {
     const parentTab = document.getElementById("tabComorb");
@@ -332,21 +595,26 @@ export function switchRequiredCols(elements) {
     const tabDC = elements[4];
     const tabIndPerc = elements[5];
     let numCons = parseInt(numConsElement?.value || "1");
-    console.log("numcons " + numCons);
+    if (Number.isNaN(numCons)) {
+      console.warn(`numCons retornado como NaN, revertido para 1`);
+      numCons = 1;
+    }
 
     //adiciona listener para responder à mudança no valor de consulta
     let returnedNum = parseInt(updateSimpleProperty(numConsElement) ?? "0", 10);
+    if (Number.isNaN(returnedNum)) {
+      console.warn(`returnedNum retornado como NaN, revertido para 0`);
+      returnedNum = 0;
+    }
     if (
       typeof returnedNum === "number" &&
       returnedNum > 0 &&
       returnedNum <= 3
     ) {
       numCons = returnedNum;
-      console.log("numcons " + numCons);
       //inicia construção de matriz para reset de required na tabela
       const totalTables = consTablesFs?.querySelectorAll("table");
       const totalRows = consTablesFs?.querySelectorAll("tr");
-      console.log(totalRows);
       let nTotalRows = 0;
       if (totalRows && totalRows.length > 0) {
         nTotalRows = totalRows.length - totalTables.length;
@@ -650,7 +918,7 @@ export function switchRequiredCols(elements) {
   }
 }
 
-export function createArraysRels(btnId, arrayRows) {
+export function createArraysRels(btnId, arrayRows, protocolo) {
   let arrayConsultasNum = [];
   let rowValues = [];
   let tabValues = [];
@@ -659,8 +927,16 @@ export function createArraysRels(btnId, arrayRows) {
   const btnRowMatch = btnId?.match(/[0-9]+(?=_)/)?.toString();
   const btnColMatch = btnId?.match(/(?<=_)[0-9]+/)?.toString();
   if (btnColMatch && btnRowMatch) {
-    const btnCol = parseInt(btnColMatch, 10);
-    const btnRow = parseInt(btnRowMatch, 10);
+    let btnCol = parseInt(btnColMatch, 10);
+    if (Number.isNaN(btnCol)) {
+      console.warn(`btnCol retornado como NaN, revertido para 1`);
+      btnCol = 1;
+    }
+    let btnRow = parseInt(btnRowMatch, 10);
+    if (Number.isNaN(btnRow)) {
+      console.warn(`btnRow retornado como NaN, revertido para 1`);
+      btnRow = 1;
+    }
     for (let iR = 0; iR < arrayRows.length; iR++) {
       const isValidRowArray = arrayRows.every(
         (row) => row instanceof HTMLTableRowElement
@@ -691,68 +967,106 @@ export function createArraysRels(btnId, arrayRows) {
     ) {
       //define qual coluna será utilizada de acordo com a posição do botão e validando se há algum preenchimento na coluna
       let inputAcc = 0;
-      for (let iR = 0; iR < btnRow - 1; iR++) {
-        const targCelInp = document.getElementById(
-          `tabInpRowDCut${2 + iR}_${btnCol}`
-        );
-        if (targCelInp instanceof HTMLInputElement) {
-          if (iR < btnRow - 2) {
-            if (targCelInp && targCelInp.value !== "") {
-              colAcc += parseInt(targCelInp?.value);
-            }
-          } else if (iR < btnRow - 1) {
-            const tbodyQuery = document.getElementById("tabTbodyDCut");
-            if (tbodyQuery) {
-              const tBodyChildren = Array.from(tbodyQuery.children);
-              if (tBodyChildren) {
-                for (let iC = 0; iC < tBodyChildren.length; iC++) {
-                  const innerInp = tBodyChildren[iC].querySelector("input");
-                  if (
-                    !tBodyChildren[iC].hidden &&
-                    inputAcc <= 3 &&
-                    innerInp &&
-                    innerInp.value !== "" &&
-                    !tBodyChildren[iC].id !== "rowSum"
-                  ) {
-                    inputAcc++;
-                    if (inputAcc === 4) {
-                      inputAcc--;
+      let protocoloNum = 0;
+      switch (protocolo) {
+        case "pollock3":
+          protocoloNum = 3;
+          break;
+        case "pollock7":
+          protocoloNum = 7;
+          break;
+        default:
+          console.error(`Erro validando Número de Protocolo Jackson/Pollock.
+          Protocolo obtido: ${protocolo ?? "null"}.`);
+      }
+      if (protocoloNum === 3 || protocoloNum === 7) {
+        for (let iR = 0; iR < btnRow - 1; iR++) {
+          const targCelInp = document.getElementById(
+            `tabInpRowDCut${2 + iR}_${btnCol}`
+          );
+          if (targCelInp instanceof HTMLInputElement) {
+            if (iR < btnRow - 2) {
+              //acumula valor de inputs na coluna (em correto funcionamento, para rows sem o input de somatório)
+              if (targCelInp && targCelInp.value !== "") {
+                if (
+                  Number.isNaN(
+                    parseFloat(parseFloat(targCelInp?.value).toFixed(4))
+                  )
+                ) {
+                  console.warn(
+                    `targCelInp.value retornado como NaN, revertido para 0`
+                  );
+                  colAcc = 0;
+                } else {
+                  colAcc += parseFloat(
+                    parseFloat(targCelInp?.value).toFixed(4)
+                  );
+                }
+              }
+            } else if (iR < btnRow - 1) {
+              //inicia busca e validação para encontrar row do botão
+              const tbodyQuery = document.getElementById("tabTbodyDCut");
+              if (tbodyQuery) {
+                const tBodyChildren = Array.from(tbodyQuery.children);
+                if (tBodyChildren) {
+                  for (let iC = 0; iC < tBodyChildren.length; iC++) {
+                    const innerInp = tBodyChildren[iC].querySelector("input");
+                    if (
+                      !tBodyChildren[iC].hidden &&
+                      inputAcc < protocoloNum &&
+                      innerInp
+                    ) {
+                      if (innerInp.value !== "") {
+                        inputAcc++;
+                      } else if (innerInp.value === "") {
+                        innerInp.value = "0";
+                        inputAcc++;
+                      }
                     }
                   }
+                } else {
+                  console.warn(
+                    `Erro validando children do tbody. Coleção: ${tBodyChildren}`
+                  );
                 }
-              } else {
-                console.warn(
-                  `Erro validando children do tbody. Coleção: ${tBodyChildren}`
-                );
+                //deposita valor no último input da coluna (em correto funcionamente, o de somatório)
+                if (inputAcc === protocoloNum) {
+                  targCelInp.value = colAcc.toString();
+                  console.log("RETORNADO " + colAcc);
+                  return colAcc;
+                } else {
+                  //TODO DIALOG DE ALERTA
+                  console.warn(
+                    `Número de preenchimentos insuficiente. Número obtido: ${inputAcc}; Número exigido: 3`
+                  );
+                }
               }
-              if (inputAcc === 3) {
-                targCelInp.value = colAcc.toString();
-              } else {
-                //TODO DIALOG DE ALERTA
-                console.warn(
-                  `Número de preenchimentos insuficiente. Número obtido: ${inputAcc}; Número exigido: 3`
-                );
-              }
-            } else {
-              console.warn(`Erro validando tbody`);
             }
           }
         }
+      } else {
+        console.error(`Erro obtendo número de protocolo.
+        Número obtido: ${protocoloNum ?? 0}`);
       }
     } else if (!columnValues) {
       //TODO DIALOG DE ALERTA
     }
   }
+  return 0;
 }
 
 function getConsultasNums(arrayRow) {
   const strConsultasNum = arrayRow.innerText.replaceAll(/[\D]/g, "");
   let arrayConsultasNum = [];
   for (let iL = 0; iL < strConsultasNum.length; iL++) {
-    const consultasLetter = parseInt(
+    let consultasLetter = parseInt(
       strConsultasNum.slice(0 + iL, 1 + iL) ?? "0",
       10
     );
+    if (Number.isNaN(consultasLetter)) {
+      console.warn(`consultasLetter retornado como NaN, revertido para 1`);
+      consultasLetter = 1;
+    }
     arrayConsultasNum = arrayConsultasNum.concat(consultasLetter);
     if (iL === strConsultasNum.length - 1) {
       return arrayConsultasNum;
@@ -764,7 +1078,11 @@ function getRowValues(arrayRows, arrayConsultasNum, arrayCelIds) {
   if (typeof arrayCelIds[0] === "string") {
     const idMatch = arrayCelIds[0]?.match(/[0-9]+(?=_)/);
     if (idMatch) {
-      const numRow = (arrayCelIds[0] = parseInt(idMatch.toString(), 10));
+      let numRow = (arrayCelIds[0] = parseInt(idMatch.toString(), 10));
+      if (Number.isNaN(numRow)) {
+        console.warn(`numRow retornado como NaN, revertido para 1`);
+        numRow = 1;
+      }
       if (numRow !== arrayRows.length) {
         let arrayRowValues = [];
         for (let iCol = 0; iCol < arrayConsultasNum.length; iCol++) {
