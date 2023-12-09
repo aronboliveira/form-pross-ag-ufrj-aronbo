@@ -7,7 +7,7 @@ export interface UndefinedPerson {
   atvLvl: string;
 }
 
-abstract class Person implements UndefinedPerson {
+export class Person implements UndefinedPerson {
   gen: string;
   age: number;
   weight: number;
@@ -119,28 +119,55 @@ abstract class Person implements UndefinedPerson {
   calcPGC(person: Person): number {
     if ("sumDCut" in person && this.sumDCut) {
       if (person instanceof Man) {
-        const DC =
+        let DC =
           1.10938 -
           0.0008267 * this.sumDCut +
           0.0000016 * this.sumDCut ** 2 -
           0.0002574 * person.age;
-        const PGC = 495 / DC - 450;
+        if (DC <= 0 || Number.isNaN(DC)) {
+          DC = 0.01;
+        }
+        let PGC = 495 / DC - 450;
+        if (PGC <= 0 || Number.isNaN(PGC)) {
+          PGC = 0.01;
+        }
+        if (PGC > 100) {
+          PGC = 100;
+        }
         return PGC;
       } else if (person instanceof Woman) {
-        const DC =
+        let DC =
           1.0994921 -
           0.0009929 * this.sumDCut +
           0.0000023 * this.sumDCut ** 2 -
           0.0001392 * person.age;
-        const PGC = 495 / DC - 450;
+        if (DC <= 0 || Number.isNaN(DC)) {
+          DC = 0.01;
+        }
+        let PGC = 495 / DC - 450;
+        if (PGC <= 0 || Number.isNaN(PGC)) {
+          PGC = 0.01;
+        }
+        if (PGC > 100) {
+          PGC = 100;
+        }
         return PGC;
       } else if (person instanceof Neutro) {
-        const DC =
+        let DC =
           1.10443605 -
           0.0009098 * this.sumDCut +
           0.00000195 * this.sumDCut ** 2 -
           0.0001983 * person.age;
-        const PGC = 495 / DC - 450;
+        if (DC <= 0 || Number.isNaN(DC)) {
+          DC = 0.01;
+        }
+        let PGC = 495 / DC - 450;
+        if (PGC <= 0 || Number.isNaN(PGC)) {
+          PGC = 0.01;
+        }
+        if (PGC > 100) {
+          PGC = 100;
+        }
         return PGC;
       } else {
         console.error(
@@ -151,7 +178,7 @@ abstract class Person implements UndefinedPerson {
         return 0;
       }
     } else {
-      console.error(`Erro validado Propriedade sumDCut:
+      console.warn(`Erro validado Propriedade sumDCut:
       Está presente: ${"sumDCut" in person ?? false};
       Valor obtido: ${this.sumDCut ?? 0}`);
       return 0;
@@ -293,6 +320,49 @@ abstract class Person implements UndefinedPerson {
       TMB obtido: ${TMB ?? 0};
       factorAtvLvl obtido: ${factorAtvLvl ?? 0}`);
       return 0;
+    }
+  }
+
+  static clonePerson(person: Man | Woman | Neutro) {
+    if (person && "gen" in person) {
+      switch (person.gen) {
+        case "masculino":
+          return new Man(
+            person.gen,
+            person.age,
+            person.weight,
+            person.height,
+            person.sumDCut,
+            person.atvLvl
+          );
+        case "feminino":
+          return new Woman(
+            person.gen,
+            person.age,
+            person.weight,
+            person.height,
+            person.sumDCut,
+            person.atvLvl
+          );
+        case "neutro":
+          return new Neutro(
+            person.gen,
+            person.age,
+            person.weight,
+            person.height,
+            person.sumDCut,
+            person.atvLvl
+          );
+        default:
+          console.error(`Erro validando .gen de person passada para .clonePerson()
+          .gen obtido: ${person?.gen ?? "null"}.`);
+      }
+    } else {
+      console.error(`Erro validando person.
+      Objeto obtido: ${
+        Object.prototype.toString.call(person).slice(8, -1) ?? "null"
+      };
+      .gen presente: ${"gen" in person ?? false}.`);
     }
   }
 }

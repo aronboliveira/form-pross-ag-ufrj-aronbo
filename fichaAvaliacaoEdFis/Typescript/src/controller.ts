@@ -1,6 +1,9 @@
+//nesse file ocorrem principalmente as adições de listeners, sincronização das chamadas de funções para manipulação de informação/layout e validação dos elementos no DOM
+
 import * as Model from "./model.js";
 import * as Handlers from "./handlers.js";
 import { UndefinedPerson, Man, Woman, Neutro } from "./classes.js";
+import * as ErrorHandler from "./errorHandler.js";
 
 //inicialização de constantes a partir de procura no DOM
 const textareas: NodeListOf<HTMLTextAreaElement> =
@@ -73,6 +76,8 @@ const TMBBtns: Element[] = Array.from(
 const GETBtns: Element[] = Array.from(
   document.getElementsByClassName("tabBtnGet")
 );
+const autoFillBtn = document.getElementById("autoFillBtn");
+const locksTabInd = Array.from(document.getElementsByClassName("lockTabInd"));
 const resetFormBtn: HTMLElement | null =
   document.getElementById("resetFormBtn");
 const subButton: HTMLElement | null =
@@ -114,11 +119,13 @@ let MLG = 0;
 let PGC = 0;
 let TMB = 0;
 let GET = 0;
+let indexesArray = [0, 0, 0, 0];
 let factorAtvLvl = 0;
 let factorAtleta = "";
 let TMBArray: [string, number] = ["", 0];
 let numConsLastOp = 0;
 let isPersonClassified = false;
+let isAutoFillActive = true;
 
 if (selFactorAtleta instanceof HTMLSelectElement) {
   factorAtleta = selFactorAtleta.value;
@@ -387,6 +394,25 @@ export function cursorCheckTimer(cursorPosition: number): number | void {
 }
 
 if (consTablesFs && consTablesFs instanceof HTMLFieldSetElement) {
+  const allTabledInps = consTablesFs.querySelectorAll("input");
+  if (allTabledInps.length > 0) {
+    allTabledInps.forEach((tabInp) => {
+      if (tabInp instanceof HTMLInputElement) {
+        tabInp.addEventListener("input", () => {
+          tabInp.value = Model.normalizeNegatives(tabInp);
+        });
+      } else {
+        console.error(`Erro validado Input de Tabela para Métricas.
+        Instância obtida: ${
+          Object.prototype.toString.call(tabInp).slice(8, -1) ?? "null"
+        }`);
+      }
+    });
+  } else {
+    console.error(
+      `Erro validando inputs internos ao <fieldset> de tabelas métricas`
+    );
+  }
   const arrColGroupsValidation = Model.checkInnerColGroups(consTablesFs) ?? [
     0,
     false,
@@ -394,8 +420,12 @@ if (consTablesFs && consTablesFs instanceof HTMLFieldSetElement) {
   if (arrColGroupsValidation[0] !== 0 && arrColGroupsValidation[1] !== false) {
     numColsCons = arrColGroupsValidation[0];
     areColGroupsSimilar = arrColGroupsValidation[1];
-    console.log(arrColGroupsValidation);
   }
+} else {
+  console.error(`Erro validando Tabela de Métricas.
+  Instância obtida: ${
+    Object.prototype.toString.call(consTablesFs).slice(8, -1) ?? "null"
+  }.`);
 }
 
 if (tabDC && tabDC instanceof HTMLTableElement) {
@@ -652,35 +682,6 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
 
         //início da construção de person (após inicialização)
 
-        //obtenção de .age inicial com listener para input e atualização correspondente
-        if (
-          ageElement instanceof HTMLInputElement &&
-          ageElement.type === "number"
-        ) {
-          person.age = parseInt(ageElement?.value || "0", 10);
-          if (typeof person.age === "number") {
-            ageElement?.addEventListener("input", () => {
-              let returnedAge = Handlers.updateSimpleProperty(ageElement) ?? 0;
-              if (typeof returnedAge === "number") {
-                person.age = returnedAge;
-              } else {
-                console.error(`Tipo primitivo obtido por update de age incorreto.
-                Tipo obtido: ${typeof returnedAge ?? "undefined"};
-                Tipo aceito: number`);
-              }
-            });
-          }
-        } else {
-          console.error(`Erro validando Input de Idade.
-                  Instância obitda: ${
-                    Object.prototype.toString.call(ageElement).slice(8, -1) ??
-                    "null"
-                  };
-                  Tipo obtido: ${
-                    (ageElement as HTMLInputElement)?.type ?? "null"
-                  }`);
-        }
-
         //obtenção de .weight inicial com listener para input e atualização correspondente
         if (
           targInpWeight instanceof HTMLInputElement &&
@@ -700,9 +701,27 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                 person.weight =
                   parseInt(returnedWeight.replaceAll(/[^0-9.,+-]/g, "")) || 0;
               }
-              // console.log(
-              //   `PERSON APÓS UPDATE DE WEIGHT ${JSON.stringify(person)}`
-              // );
+              if (isAutoFillActive) {
+                PGC = Handlers.updatePGCContext(
+                  person as Man | Woman | Neutro,
+                  targInpPGC as HTMLInputElement
+                );
+                indexesArray = Handlers.updateIndexesContexts(
+                  person as Man | Woman | Neutro,
+                  gordCorpLvl as HTMLSelectElement,
+                  targInpIMC as HTMLInputElement,
+                  targInpMLG as HTMLInputElement,
+                  targInpTMB as HTMLInputElement,
+                  targInpGET as HTMLInputElement,
+                  formTMBTypeElement as HTMLSelectElement,
+                  factorAtvLvl,
+                  factorAtleta
+                );
+                IMC = indexesArray[0];
+                MLG = indexesArray[1];
+                TMB = indexesArray[2];
+                GET = indexesArray[3];
+              }
             });
           } else {
             console.error(`Erro validando tipo primitivo de person.weight.
@@ -735,6 +754,27 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                   returnedHeight.replaceAll(/[^0-9.,+-]/g, "") || "0"
                 );
               }
+              if (isAutoFillActive) {
+                PGC = Handlers.updatePGCContext(
+                  person as Man | Woman | Neutro,
+                  targInpPGC as HTMLInputElement
+                );
+                indexesArray = Handlers.updateIndexesContexts(
+                  person as Man | Woman | Neutro,
+                  gordCorpLvl as HTMLSelectElement,
+                  targInpIMC as HTMLInputElement,
+                  targInpMLG as HTMLInputElement,
+                  targInpTMB as HTMLInputElement,
+                  targInpGET as HTMLInputElement,
+                  formTMBTypeElement as HTMLSelectElement,
+                  factorAtvLvl,
+                  factorAtleta
+                );
+                IMC = indexesArray[0];
+                MLG = indexesArray[1];
+                TMB = indexesArray[2];
+                GET = indexesArray[3];
+              }
             });
           } else {
             console.error(`Erro validando tipo primitivo de person.height
@@ -754,11 +794,64 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
           textBodytype instanceof HTMLSelectElement &&
           protocolo instanceof HTMLSelectElement
         ) {
+          //obtenção de .age inicial com listener para input e atualização correspondent
+          if (
+            ageElement instanceof HTMLInputElement &&
+            ageElement.type === "number"
+          ) {
+            ageElement.addEventListener("input", () => {
+              let returnedAge = Handlers.updateSimpleProperty(ageElement) ?? 0;
+              if (typeof returnedAge === "number") {
+                person.age = returnedAge;
+              } else {
+                console.error(`Tipo primitivo obtido por update de age incorreto.
+                Tipo obtido: ${typeof returnedAge ?? "undefined"};
+                Tipo aceito: number`);
+              }
+              if (isAutoFillActive) {
+                PGC = Handlers.updatePGCContext(
+                  person as Man | Woman | Neutro,
+                  targInpPGC as HTMLInputElement
+                );
+                indexesArray = Handlers.updateIndexesContexts(
+                  person as Man | Woman | Neutro,
+                  gordCorpLvl as HTMLSelectElement,
+                  targInpIMC as HTMLInputElement,
+                  targInpMLG as HTMLInputElement,
+                  targInpTMB as HTMLInputElement,
+                  targInpGET as HTMLInputElement,
+                  formTMBTypeElement as HTMLSelectElement,
+                  factorAtvLvl,
+                  factorAtleta
+                );
+                IMC = indexesArray[0];
+                MLG = indexesArray[1];
+                TMB = indexesArray[2];
+                GET = indexesArray[3];
+              }
+            });
+          } else {
+            console.error(`Erro validando ageElement.
+            Instância obtida: ${
+              Object.prototype.toString.call(ageElement).slice(8, -1) ?? "null"
+            };
+            .type obtido: ${
+              (ageElement as HTMLInputElement)?.type ?? "null"
+            }.`);
+          }
+
           //obtenção de .gen inicial com adição de listeners para changes em contexto e atualização de .gen
           if (textBodytype && textBodytype instanceof HTMLSelectElement) {
             textBodytype.addEventListener("change", () => {
               Model.changeTabDCutLayout(protocolo, tabDC);
               person.gen = textBodytype.value;
+              if (
+                (genBirthRel as HTMLSelectElement).value === "cis" &&
+                ((genElement as HTMLSelectElement).value === "masculino" ||
+                  (genElement as HTMLSelectElement).value === "feminino")
+              ) {
+                (genElement as HTMLSelectElement).value = textBodytype.value;
+              }
               switch (textBodytype.value) {
                 case "masculino":
                   (genFisAlin as HTMLSelectElement).value = "masculinizado";
@@ -836,19 +929,34 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
 
           /*adição de listeneres de input para capturar mudança nos inputs validados e atribuir às propriedades de person*/
           if (targInpSumDCut instanceof HTMLInputElement) {
-            person.sumDCut = parseInt(targInpSumDCut.value || "0", 10);
+            person.sumDCut = parseInt(targInpSumDCut.value || "0.01", 10);
             targInpSumDCut.addEventListener("input", () => {
               // console.log("TARGINPSUMDCUT FORA DO LISTENER " + targInpSumDCut.id);
               const returnedSumDCut =
                 Handlers.updateSimpleProperty(
                   targInpSumDCut as HTMLInputElement
-                ) || 0;
+                ) || 0.01;
               if (typeof returnedSumDCut === "number") {
                 person.sumDCut = returnedSumDCut;
               } else if (typeof returnedSumDCut === "string") {
                 person.sumDCut = parseInt(
-                  returnedSumDCut.replaceAll(/[^0-9.,+-]/g, "") || "0"
+                  returnedSumDCut.replaceAll(/[^0-9.,+-]/g, "") || "0.01",
+                  10
                 );
+              }
+              PGC = (person as Man | Woman | Neutro).calcPGC(
+                person as Man | Woman | Neutro
+              );
+              const PGCDecayArray = Model.isPGCDecaying(
+                person as Man | Woman | Neutro,
+                PGC,
+                targInpPGC as HTMLInputElement
+              );
+              if (PGCDecayArray[0] === true) {
+                PGC = PGCDecayArray[1];
+                (targInpPGC as HTMLInputElement).value = PGC.toFixed(2);
+              } else {
+                (targInpPGC as HTMLInputElement).value = PGC.toFixed(4);
               }
             });
           } else {
@@ -885,6 +993,20 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
             gordCorpLvl instanceof HTMLSelectElement
           ) {
             isPersonClassified = true;
+            if (autoFillBtn instanceof HTMLButtonElement) {
+              autoFillBtn.addEventListener("click", () => {
+                isAutoFillActive = Handlers.switchAutoFill(
+                  autoFillBtn,
+                  locksTabInd
+                );
+              });
+            } else {
+              console.error(`Erro validando Botão de Cálculo Automático.
+              Instância obtida: ${
+                Object.prototype.toString.call(autoFillBtn).slice(8, -1) ??
+                "null"
+              }`);
+            }
 
             //obtenção de .atvLvl inicial, com adição de listeners para mudança de containers no contexto
 
@@ -925,6 +1047,11 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                             Tipo primitivo obtido: ${typeof returnedfactorAtvLvl}`);
                   }
                   //ajusta elementos <select> com base em combinações
+                  Handlers.fluxFormIMC(
+                    IMC ?? 0,
+                    formTMBTypeElement,
+                    gordCorpLvl
+                  );
                   Handlers.matchTMBElements(
                     atvLvlElement,
                     formTMBTypeElement,
@@ -1032,6 +1159,28 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                 if (selFactorAtleta instanceof HTMLSelectElement) {
                   selFactorAtleta.addEventListener("change", () => {
                     factorAtleta = selFactorAtleta.value;
+                    //sem autofill, dá update somente em factorAtleta
+                    if (isAutoFillActive) {
+                      PGC = Handlers.updatePGCContext(
+                        person as Man | Woman | Neutro,
+                        targInpPGC as HTMLInputElement
+                      );
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
+                        gordCorpLvl,
+                        targInpIMC as HTMLInputElement,
+                        targInpMLG as HTMLInputElement,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
+                        formTMBTypeElement,
+                        factorAtvLvl,
+                        factorAtleta
+                      );
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
+                    }
                   });
                 } else {
                   console.error(`Erro validando select para Fator para Cálculo de TMB em Atletas.
@@ -1115,7 +1264,19 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                           console.warn(`PGC retornando como NaN`);
                           PGC = 0;
                         }
-                        targInpPGC.value = PGC.toString();
+                        const PGCDecayArray = Model.isPGCDecaying(
+                          person as Man | Woman | Neutro,
+                          PGC,
+                          targInpPGC as HTMLInputElement
+                        );
+                        if (PGCDecayArray[0] === true) {
+                          PGC = PGCDecayArray[1];
+                          (targInpPGC as HTMLInputElement).value =
+                            PGC.toFixed(2);
+                        } else {
+                          (targInpPGC as HTMLInputElement).value =
+                            PGC.toFixed(4);
+                        }
                         if (PGC <= 0) {
                           console.warn(`Valor de PGC não atualizado.
                           Valor obtido: ${PGC || 0}`);
@@ -1172,59 +1333,21 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                 IMCBtns.forEach((imcbtn) => {
                   if (imcbtn instanceof HTMLButtonElement) {
                     imcbtn.addEventListener("click", () => {
-                      IMCMLGArray = (person as Man | Woman | Neutro).calcIMC(
-                        person as Man | Woman | Neutro
-                      ) ?? ["", 0, 0];
-                      console.log(person.weight);
-                      console.log(person.height);
-                      console.log(gordCorpLvl.id);
-                      console.log(IMCMLGArray[0]);
-                      IMC = parseFloat(IMCMLGArray[1].toFixed(4));
-                      MLG = parseFloat(IMCMLGArray[2].toFixed(4));
-                      Handlers.updateIMCMLGContext(
-                        IMCMLGArray,
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
                         gordCorpLvl,
                         targInpIMC as HTMLInputElement,
                         targInpMLG as HTMLInputElement,
-                        formTMBTypeElement
-                      );
-                      TMB = Handlers.updateTMB(
-                        IMCMLGArray ?? [gordCorpLvl.value, 0, 0],
-                        person as Man | Woman | Neutro,
-                        factorAtleta,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
                         formTMBTypeElement,
-                        targInpTMB as HTMLInputElement
+                        factorAtvLvl,
+                        factorAtleta
                       );
-                      if (TMB >= 0 && factorAtvLvl) {
-                        console.log("factor " + factorAtvLvl);
-                        GET =
-                          parseFloat(
-                            (person as Man | Woman | Neutro)
-                              .calcGET(TMB || 0, factorAtvLvl)
-                              .toFixed(4)
-                          ) ?? 0;
-                        if (Number.isNaN(GET) || isNaN(GET)) {
-                          console.warn(`GET retornando como NaN`);
-                          GET = 0;
-                        }
-                        (targInpGET as HTMLInputElement).value = GET.toString();
-                      } else {
-                        console.warn(
-                          `Valor de TMB obtido: ${TMBArray[1]};
-                      factorAtvLvl obtido: ${factorAtvLvl ?? 0}`
-                        );
-                        (targInpGET as HTMLInputElement).value = "0";
-                      }
-                      if (
-                        IMCMLGArray[0] === "" ||
-                        IMCMLGArray[1] === 0 ||
-                        IMCMLGArray[2] === 0
-                      ) {
-                        console.warn(`IMCMLGArray não atualizado.
-                      Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${
-                          IMCMLGArray[1] ?? 0
-                        }; ${IMCMLGArray[2] ?? 0} }`);
-                      }
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
                     });
                   } else {
                     console.error(`Erro validando instância de Botão para Cálculo de IMC.
@@ -1243,72 +1366,21 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                 MLGBtns.forEach((mlgbtn) => {
                   if (mlgbtn instanceof HTMLButtonElement) {
                     mlgbtn.addEventListener("click", () => {
-                      IMCMLGArray = (person as Man | Woman | Neutro).calcIMC(
-                        person as Man | Woman | Neutro
-                      ) ?? ["", 0, 0];
-                      // console.log(person.weight);
-                      // console.log(person.height);
-                      // console.log(IMCMLGArray[0]);
-                      if (
-                        Number.isNaN(IMCMLGArray[1]) ||
-                        isNaN(IMCMLGArray[1])
-                      ) {
-                        console.warn(`IMCMLGCArray[1] retornando como NaN`);
-                        IMCMLGArray[1] = 0;
-                      }
-                      IMC = parseFloat(IMCMLGArray[1].toFixed(4)) ?? 0;
-                      if (
-                        Number.isNaN(IMCMLGArray[2]) ||
-                        isNaN(IMCMLGArray[2])
-                      ) {
-                        console.warn(`IMCMLGCArray[2] retornando como NaN`);
-                        IMCMLGArray[2] = 0;
-                      }
-                      MLG = parseFloat(IMCMLGArray[2].toFixed(4)) ?? 0;
-                      Handlers.updateIMCMLGContext(
-                        IMCMLGArray,
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
                         gordCorpLvl,
                         targInpIMC as HTMLInputElement,
                         targInpMLG as HTMLInputElement,
-                        formTMBTypeElement
-                      );
-                      if (
-                        IMCMLGArray[0] === "" ||
-                        IMCMLGArray[1] === 0 ||
-                        IMCMLGArray[2] === 0
-                      ) {
-                        console.warn(`IMCMLGArray não atualizado.
-                      Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${
-                          IMCMLGArray[1] ?? 0
-                        }; ${IMCMLGArray[2] ?? 0} }`);
-                      }
-                      TMB = Handlers.updateTMB(
-                        IMCMLGArray ?? [gordCorpLvl.value, 0, 0],
-                        person as Man | Woman | Neutro,
-                        factorAtleta,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
                         formTMBTypeElement,
-                        targInpTMB as HTMLInputElement
+                        factorAtvLvl,
+                        factorAtleta
                       );
-                      if (TMB >= 0 && factorAtvLvl) {
-                        console.log("factor " + factorAtvLvl);
-                        GET =
-                          parseFloat(
-                            (person as Man | Woman | Neutro)
-                              .calcGET(TMB || 0, factorAtvLvl)
-                              .toFixed(4)
-                          ) ?? 0;
-                        if (Number.isNaN(GET) || isNaN(GET)) {
-                          console.warn(`GET retornando como NaN`);
-                          GET = 0;
-                        }
-                        (targInpGET as HTMLInputElement).value = GET.toString();
-                      } else {
-                        console.warn(
-                          `Valor de TMB obtido: ${TMBArray[1]};
-                      factorAtvLvl obtido: ${factorAtvLvl ?? 0}`
-                        );
-                        (targInpGET as HTMLInputElement).value = "0";
-                      }
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
                     });
                   } else {
                     console.error(`Erro validando instância de Botão para Cálculo de MLG.
@@ -1338,7 +1410,17 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                         console.warn(`PGC retornando como NaN`);
                         PGC = 0;
                       }
-                      (targInpPGC as HTMLInputElement).value = PGC.toString();
+                      const PGCDecayArray = Model.isPGCDecaying(
+                        person as Man | Woman | Neutro,
+                        PGC,
+                        targInpPGC as HTMLInputElement
+                      );
+                      if (PGCDecayArray[0] === true) {
+                        PGC = PGCDecayArray[1];
+                        (targInpPGC as HTMLInputElement).value = PGC.toFixed(2);
+                      } else {
+                        (targInpPGC as HTMLInputElement).value = PGC.toFixed(4);
+                      }
                       if (PGC <= 0) {
                         console.warn(`Valor de PGC não atualizado.
                       Valor obtido: ${PGC || 0}`);
@@ -1361,72 +1443,21 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                 TMBBtns.forEach((tmbbtn) => {
                   tmbbtn.addEventListener("click", () => {
                     if (tmbbtn instanceof HTMLButtonElement) {
-                      IMCMLGArray = (person as Man | Woman | Neutro).calcIMC(
-                        person as Man | Woman | Neutro
-                      ) ?? ["", 0, 0];
-                      // console.log(person.weight);
-                      // console.log(person.height);
-                      // console.log(IMCMLGArray[0]);
-                      if (
-                        Number.isNaN(IMCMLGArray[1]) ||
-                        isNaN(IMCMLGArray[1])
-                      ) {
-                        console.warn(`IMCMLGCArray[1] retornando como NaN`);
-                        IMCMLGArray[1] = 0;
-                      }
-                      IMC = parseFloat(IMCMLGArray[1].toFixed(4)) ?? 0;
-                      if (
-                        Number.isNaN(IMCMLGArray[2]) ||
-                        isNaN(IMCMLGArray[2])
-                      ) {
-                        console.warn(`IMCMLGCArray[2] retornando como NaN`);
-                        IMCMLGArray[2] = 0;
-                      }
-                      MLG = parseFloat(IMCMLGArray[2].toFixed(4)) ?? 0;
-                      Handlers.updateIMCMLGContext(
-                        IMCMLGArray,
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
                         gordCorpLvl,
                         targInpIMC as HTMLInputElement,
                         targInpMLG as HTMLInputElement,
-                        formTMBTypeElement
-                      );
-                      if (
-                        IMCMLGArray[0] === "" ||
-                        IMCMLGArray[1] === 0 ||
-                        IMCMLGArray[2] === 0
-                      ) {
-                        console.warn(`IMCMLGArray não atualizado.
-                      Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${
-                          IMCMLGArray[1] ?? 0
-                        }; ${IMCMLGArray[2] ?? 0} }`);
-                      }
-                      TMB = Handlers.updateTMB(
-                        IMCMLGArray ?? [gordCorpLvl.value, 0, 0],
-                        person as Man | Woman | Neutro,
-                        factorAtleta,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
                         formTMBTypeElement,
-                        targInpTMB as HTMLInputElement
+                        factorAtvLvl,
+                        factorAtleta
                       );
-                      if (TMB >= 0 && factorAtvLvl) {
-                        console.log("factor " + factorAtvLvl);
-                        GET =
-                          parseFloat(
-                            (person as Man | Woman | Neutro)
-                              .calcGET(TMB || 0, factorAtvLvl)
-                              .toFixed(4)
-                          ) ?? 0;
-                        if (Number.isNaN(GET) || isNaN(GET)) {
-                          console.warn(`GET retornando como NaN`);
-                          GET = 0;
-                        }
-                        (targInpGET as HTMLInputElement).value = GET.toString();
-                      } else {
-                        console.warn(
-                          `Valor de TMB obtido: ${TMBArray[1]};
-                      factorAtvLvl obtido: ${factorAtvLvl ?? 0}`
-                        );
-                        (targInpGET as HTMLInputElement).value = "0";
-                      }
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
                     } else {
                       console.error(`Erro validando instância de Botão para Cálculo de TMB.
                     Instância Obtida: ${
@@ -1445,49 +1476,21 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                 GETBtns.forEach((getbtn) => {
                   getbtn.addEventListener("click", () => {
                     if (getbtn instanceof HTMLButtonElement) {
-                      IMCMLGArray = (person as Man | Woman | Neutro).calcIMC(
-                        person as Man | Woman | Neutro
-                      ) ?? ["", 0, 0];
-                      console.log(person.weight);
-                      console.log(person.height);
-                      console.log(gordCorpLvl.id);
-                      console.log(IMCMLGArray[0]);
-                      IMC = parseFloat(IMCMLGArray[1].toFixed(4));
-                      MLG = parseFloat(IMCMLGArray[2].toFixed(4));
-                      Handlers.updateIMCMLGContext(
-                        IMCMLGArray,
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
                         gordCorpLvl,
                         targInpIMC as HTMLInputElement,
                         targInpMLG as HTMLInputElement,
-                        formTMBTypeElement
-                      );
-                      TMB = Handlers.updateTMB(
-                        IMCMLGArray ?? [gordCorpLvl.value, 0, 0],
-                        person as Man | Woman | Neutro,
-                        factorAtleta,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
                         formTMBTypeElement,
-                        targInpTMB as HTMLInputElement
+                        factorAtvLvl,
+                        factorAtleta
                       );
-                      if (TMB >= 0 && factorAtvLvl) {
-                        console.log("factor " + factorAtvLvl);
-                        GET =
-                          parseFloat(
-                            (person as Man | Woman | Neutro)
-                              .calcGET(TMB || 0, factorAtvLvl)
-                              .toFixed(4)
-                          ) ?? 0;
-                        if (Number.isNaN(GET) || isNaN(GET)) {
-                          console.warn(`GET retornando como NaN`);
-                          GET = 0;
-                        }
-                        (targInpGET as HTMLInputElement).value = GET.toString();
-                      } else {
-                        console.warn(
-                          `Valor de TMB obtido: ${TMBArray[1]};
-                      factorAtvLvl obtido: ${factorAtvLvl ?? 0}`
-                        );
-                        (targInpGET as HTMLInputElement).value = "0";
-                      }
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
                     } else {
                       console.error(`Erro validando instância de Botão para Cálculo de TMB.
                   Instância Obtida: ${
@@ -1514,10 +1517,25 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                     IMC = parseFloat(returnedIMC.toFixed(4));
                   } else {
                     console.error(`Tipo primitivo obtido por update de IMC incorreto.
-                                    Tipo obtido: ${
-                                      typeof returnedIMC ?? "undefined"
-                                    };
-                                    Tipo aceito: number`);
+                    Tipo obtido: ${typeof returnedIMC ?? "undefined"};
+                    Tipo aceito: number`);
+                  }
+                  if (isAutoFillActive) {
+                    indexesArray = Handlers.updateIndexesContexts(
+                      person as Man | Woman | Neutro,
+                      gordCorpLvl,
+                      targInpIMC as HTMLInputElement,
+                      targInpMLG as HTMLInputElement,
+                      targInpTMB as HTMLInputElement,
+                      targInpGET as HTMLInputElement,
+                      formTMBTypeElement,
+                      factorAtvLvl,
+                      factorAtleta
+                    );
+                    IMC = indexesArray[0];
+                    MLG = indexesArray[1];
+                    TMB = indexesArray[2];
+                    GET = indexesArray[3];
                   }
                 });
               } else {
@@ -1538,10 +1556,25 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                     MLG = returnedMLG;
                   } else {
                     console.error(`Tipo primitivo obtido por update de MLG incorreto.
-                                    Tipo obtido: ${
-                                      typeof returnedMLG ?? "undefined"
-                                    };
-                                    Tipo aceito: number`);
+                    Tipo obtido: ${typeof returnedMLG ?? "undefined"};
+                    Tipo aceito: number`);
+                    if (isAutoFillActive) {
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
+                        gordCorpLvl,
+                        targInpIMC as HTMLInputElement,
+                        targInpMLG as HTMLInputElement,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
+                        formTMBTypeElement,
+                        factorAtvLvl,
+                        factorAtleta
+                      );
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
+                    }
                   }
                 });
               } else {
@@ -1568,10 +1601,8 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                       PGC = parseFloat(returnedPGC.toFixed(4));
                     } else {
                       console.error(`Tipo primitivo obtido por update de PGC incorreto.
-                                    Tipo obtido: ${
-                                      typeof returnedPGC ?? "undefined"
-                                    };
-                                    Tipo aceito: number`);
+                      Tipo obtido: ${typeof returnedPGC ?? "undefined"};
+                      Tipo aceito: number`);
                     }
                   });
                 } else {
@@ -1602,10 +1633,25 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                     console.log(TMB);
                   } else {
                     console.error(`Tipo primitivo obtido por update de TMB incorreto.
-                                    Tipo obtido: ${
-                                      typeof returnedTMB ?? "undefined"
-                                    };
-                                    Tipo aceito: number`);
+                    Tipo obtido: ${typeof returnedTMB ?? "undefined"};
+                    Tipo aceito: number`);
+                    if (isAutoFillActive) {
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
+                        gordCorpLvl,
+                        targInpIMC as HTMLInputElement,
+                        targInpMLG as HTMLInputElement,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
+                        formTMBTypeElement,
+                        factorAtvLvl,
+                        factorAtleta
+                      );
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
+                    }
                   }
                 });
               } else {
@@ -1626,10 +1672,25 @@ if (tabDC && tabDC instanceof HTMLTableElement) {
                     GET = parseFloat(returnedGET.toFixed(4));
                   } else {
                     console.error(`Tipo primitivo obtido por update de GET incorreto.
-                                    Tipo obtido: ${
-                                      typeof returnedGET ?? "undefined"
-                                    };
-                                    Tipo aceito: number`);
+                    Tipo obtido: ${typeof returnedGET ?? "undefined"};
+                    Tipo aceito: number`);
+                    if (isAutoFillActive) {
+                      indexesArray = Handlers.updateIndexesContexts(
+                        person as Man | Woman | Neutro,
+                        gordCorpLvl,
+                        targInpIMC as HTMLInputElement,
+                        targInpMLG as HTMLInputElement,
+                        targInpTMB as HTMLInputElement,
+                        targInpGET as HTMLInputElement,
+                        formTMBTypeElement,
+                        factorAtvLvl,
+                        factorAtleta
+                      );
+                      IMC = indexesArray[0];
+                      MLG = indexesArray[1];
+                      TMB = indexesArray[2];
+                      GET = indexesArray[3];
+                    }
                   }
                 });
               } else {

@@ -1,5 +1,6 @@
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import * as Controller from "./controller.js";
-import { Man, Woman, Neutro } from "./classes.js";
+import { Person, Man, Woman, Neutro } from "./classes.js";
 const autoCapitalizeFirstLetterRegex = /\b\w/;
 let repAcumulator = 0;
 let isAutocorrectOn = true;
@@ -276,43 +277,58 @@ export function generatePersonInstance(person) {
     }
     return person;
 }
-//TODO AJUSTAR LIMITE LEVANDO EM CONTA NEGAÇÃO DE \d.
 export function numberLimit(inputElement) {
     let numberValue = inputElement.value;
     let numberValueInt = parseInt(numberValue);
     const isAtivFis = inputElement.classList.contains("inpAtivFis");
     const isAlimRot = inputElement.classList.contains("inpAlimRot");
+    const isLocNum = inputElement.classList.contains("inpLocNum");
     const isFloat = inputElement.classList.contains("float");
     const isThreeCharLong = inputElement.classList.contains("threeCharLongNum");
-    const isSixCharLong = inputElement.classList.contains("sixCharLongNum");
-    if ((isAtivFis || isAlimRot) && !isFloat) {
+    if ((isAtivFis || isAlimRot || isLocNum) && !isFloat) {
+        if (numberValue.match(/[=.,;~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]/g)) {
+            const wrongMatch = numberValue.match(/[=.,;~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]/g);
+            const wrongMatchIndex = numberValue.indexOf(wrongMatch?.toString() ?? "undefined");
+            const slicedValue = numberValue.slice(0, wrongMatchIndex);
+            const afterSlice = numberValue.slice(wrongMatchIndex + 1);
+            inputElement.value = slicedValue + afterSlice;
+        }
         const maxLength = 2;
         const maxInput = inputElement.id.endsWith("Max");
+        //corrige se máximo é digitado como 0
         if (numberValueInt < 1 && maxInput) {
             const inpValueArray = Array.from(inputElement.value);
             inpValueArray.splice(0, 1, "1");
             const fixedInpValueinpValueArray = inpValueArray.toString();
             inputElement.value = fixedInpValueinpValueArray;
-            // console.log(inputElement.value);
         }
-        if (numberValue.length > maxLength) {
+        //previne comportamento anômalo/erro de parsing para NaN digitado com final . ou , ao dar assign em .value para type='number'
+        if ((isAtivFis || isAlimRot) && numberValue.length > maxLength) {
             numberValue = numberValue.slice(0, maxLength);
-        }
-        inputElement.value = numberValue;
-    }
-    if (isThreeCharLong) {
-        const maxLength = 3;
-        if (numberValue.length > maxLength) {
-            numberValue = numberValue.slice(0, maxLength);
-        }
-        inputElement.value = numberValue;
-    }
-    if (isSixCharLong) {
-        const maxLength = 6;
-        if (numberValue.length > maxLength) {
-            numberValue = numberValue.slice(0, maxLength);
+            if (numberValue.match(/[.,]$/g)) {
+                inputElement.value =
+                    numberValue.slice(0, -1) + inputElement.value.slice(-1);
+            }
+            else {
+                inputElement.value = numberValue;
+            }
         }
     }
+}
+export function normalizeNegatives(tabInp) {
+    let parsedInpValue = 0;
+    if (tabInp instanceof HTMLInputElement) {
+        parsedInpValue = parseFloat(tabInp.value);
+        if (Number.isNaN(parsedInpValue) || parsedInpValue < 0) {
+            parsedInpValue = 0;
+        }
+    }
+    else {
+        console.error(`Erro validando tabInp.
+    Instância obtida: ${Object.prototype.toString.call(tabInp).slice(8, -1) ?? "null"};
+    .value obtido: ${tabInp?.value ?? "null"}.`);
+    }
+    return parsedInpValue.toString();
 }
 export function autoCapitalizeInputs(textElement) {
     if (isAutocorrectOn) {
@@ -1581,4 +1597,74 @@ function filterIdsByGender(arrayIds, bodyType) {
     else {
         console.warn(`Erro validando array`);
     }
+}
+export function isPGCDecaying(person, PGC, targInpPGC) {
+    let foundDecayPoint = false;
+    let sumAcc = 1;
+    const initSumDCut = person.sumDCut;
+    let decreasedPerson = Person.clonePerson(person);
+    const spanRoundingAlertIcon = document.getElementById(`alert_${targInpPGC.id}`);
+    if (!(spanRoundingAlertIcon instanceof HTMLSpanElement)) {
+        console.warn(`Erro validando Span de Alerta para Arredondamento na célula.
+    Instância obtida: ${Object.prototype.toString.call(spanRoundingAlertIcon).slice(8, -1) ??
+            "null"}.`);
+    }
+    else {
+        if (spanRoundingAlertIcon.hidden === false) {
+            console.log("não está escondido");
+            spanRoundingAlertIcon.hidden = true;
+        }
+    }
+    if (decreasedPerson) {
+        decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
+        let decreasedPGC = decreasedPerson.calcPGC(decreasedPerson);
+        //caso padrão de decay
+        if (decreasedPGC > PGC) {
+            if (spanRoundingAlertIcon?.hidden === true) {
+                spanRoundingAlertIcon.hidden = false;
+            }
+            let arrDecreasedPGC = [];
+            while (decreasedPerson.sumDCut > 0) {
+                sumAcc++;
+                decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
+                decreasedPGC = decreasedPerson.calcPGC(decreasedPerson);
+                arrDecreasedPGC.push(decreasedPGC);
+                if (decreasedPGC < PGC) {
+                    break;
+                }
+                if (sumAcc > 999) {
+                    console.warn(`Ciclo 2 exaurido.`);
+                    break;
+                }
+            }
+            if (arrDecreasedPGC.length > 0) {
+                const factorNormDecayedPGC = ((initSumDCut - 260) / 100) * 5;
+                PGC =
+                    Math.ceil((Math.max(...arrDecreasedPGC) + 0.05) * 10) / 10 +
+                        factorNormDecayedPGC;
+                if (decreasedPerson.sumDCut > 515) {
+                    PGC = 60.5;
+                }
+            }
+            else {
+                PGC = decreasedPGC;
+            }
+            foundDecayPoint = true;
+        }
+        else if (decreasedPGC <= PGC) {
+            //casos específicos para handling de input anômalo (além do possível para um ser humano), evitando bugs nos listeners devido a NaN e loops de normalização
+            if (PGC > 100 || decreasedPerson.sumDCut > 514) {
+                console.warn(`Valor anômalo de entrada para sumDCut e/ou PGC. Valor aproximado fornecido`);
+                if (spanRoundingAlertIcon?.hidden === true) {
+                    spanRoundingAlertIcon.hidden = false;
+                }
+                foundDecayPoint = true;
+                PGC = 60.45 + 0.05 * ((decreasedPerson?.sumDCut ?? 514) - 513);
+            }
+        }
+    }
+    else {
+        console.error(`Erro validando decreasedPerson em isPGCDecaying.`);
+    }
+    return [foundDecayPoint, PGC];
 }

@@ -1,4 +1,6 @@
+//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import * as Model from "./model.js";
+import * as ErrorHandler from "./errorHandler.js";
 let rowCountAtivFisRot = 3;
 let rowCountAtivFisProp = 3;
 let rowCountComorb = 3;
@@ -96,18 +98,220 @@ export function doubleClickHandler() {
         cpbInpHandler(radio);
     }
 }
-export function updateAtvLvl(mainSelect, atvLvl, secondarySelect) {
-    const returnedAtvLvl = updateSimpleProperty(mainSelect) ?? "";
-    if (typeof returnedAtvLvl === "string") {
-        atvLvl = returnedAtvLvl;
-        secondarySelect.value = atvLvl;
+export function switchAutoFill(autoFillBtn, locksTabInd) {
+    let autoFillActivation = true;
+    if (autoFillBtn instanceof HTMLButtonElement) {
+        if (autoFillBtn.innerText.match(/Desativar Cálculo Automático/)) {
+            autoFillActivation = false;
+            autoFillBtn.textContent = "Ativar Cálculo Automático";
+            switchLockInputs(locksTabInd, autoFillActivation);
+        }
+        else if (autoFillBtn.innerText.match(/Ativar Cálculo Automático/)) {
+            autoFillActivation = true;
+            autoFillBtn.textContent = "Desativar Cálculo Automático";
+            switchLockInputs(locksTabInd, autoFillActivation);
+        }
     }
     else {
-        console.warn(`Erro no tipo retornado para atualização de mainSelect.
-    Tipo obtido: ${returnedAtvLvl ?? "undefined"};
-    Tipo aceito: string.`);
+        console.error(`Erro validando Botão de Cálculo Automático.
+    Instância obtida: ${Object.prototype.toString.call(autoFillBtn).slice(8, -1) ?? "null"}`);
     }
-    return atvLvl;
+    return autoFillActivation;
+}
+function switchLockInputs(locksTabInd, autoFillActivation) {
+    if (locksTabInd.length > 0 &&
+        locksTabInd.every((lock) => lock instanceof HTMLSpanElement)) {
+        if (autoFillActivation) {
+            locksTabInd.forEach((lock) => {
+                const siblingInput = searchPreviousSiblings(lock, "inpInd");
+                if (siblingInput instanceof HTMLInputElement) {
+                    lock.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
+          </svg>`;
+                }
+                else {
+                    console.error(`Erro validando siblingInput.
+          Instância obtida: ${Object.prototype.toString.call(siblingInput).slice(8, -1) ?? "null"}.`);
+                }
+            });
+        }
+        else {
+            locksTabInd.forEach((lock) => {
+                const siblingInput = searchPreviousSiblings(lock, "inpInd");
+                if (siblingInput instanceof HTMLInputElement) {
+                    lock.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock" viewBox="0 0 16 16">
+          <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2M3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/>
+        </svg>`;
+                }
+                else {
+                    console.error(`Erro validando siblingInput.
+          Instância obtida: ${Object.prototype.toString.call(siblingInput).slice(8, -1) ?? "null"}.`);
+                }
+            });
+        }
+    }
+    else {
+        console.error(`Erro validando Locks de Tábela de Índices.
+    Length obtida: ${locksTabInd?.length ?? 0};
+    Todos os Elements como Span: ${locksTabInd.every((lock) => lock instanceof HTMLSpanElement) ?? false}`);
+    }
+}
+export function updateIndexesContexts(person, gordCorpLvl, targInpIMC, targInpMLG, targInpTMB, targInpGET, formTMBTypeElement, factorAtvLvl, factorAtleta) {
+    let IMC = 0;
+    let MLG = 0;
+    let TMB = 0;
+    let GET = 0;
+    let IMCMLGArray = person.calcIMC(person) ?? ["", 0, 0];
+    if (Number.isNaN(IMCMLGArray[1]) || isNaN(IMCMLGArray[1])) {
+        console.warn(`IMCMLGCArray[1] retornando como NaN`);
+        IMCMLGArray[1] = 0;
+    }
+    IMC = parseFloat(IMCMLGArray[1].toFixed(4)) ?? 0;
+    if (Number.isNaN(IMCMLGArray[2]) || isNaN(IMCMLGArray[2])) {
+        console.warn(`IMCMLGCArray[2] retornando como NaN`);
+        IMCMLGArray[2] = 0;
+    }
+    MLG = parseFloat(IMCMLGArray[2].toFixed(4)) ?? 0;
+    updateIMCMLGContext(IMCMLGArray, gordCorpLvl, targInpIMC, targInpMLG, formTMBTypeElement, "NONE");
+    if (IMCMLGArray[0] === "" || IMCMLGArray[1] === 0 || IMCMLGArray[2] === 0) {
+        console.warn(`IMCMLGArray não atualizado.
+              Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${IMCMLGArray[1] ?? 0}; ${IMCMLGArray[2] ?? 0} }`);
+    }
+    TMB = updateTMBContext(IMCMLGArray ?? [gordCorpLvl.value, 0, 0], person, factorAtleta, formTMBTypeElement, targInpTMB);
+    if (TMB >= 0 && factorAtvLvl) {
+        GET = updateGETContext(person, targInpGET, TMB, factorAtvLvl);
+    }
+    else {
+        console.warn(`Valor de TMB obtido: ${TMB};
+    factorAtvLvl obtido: ${factorAtvLvl ?? 0}`);
+        targInpGET.value = "0";
+    }
+    return [IMC, MLG, TMB, GET];
+}
+export function updateIMCMLGContext(IMCMLGArray, gordCorpLvl, targInpIMC, targInpMLG, formTMBTypeElement, ignoredIndex) {
+    let IMC = 0;
+    let MLG = 0;
+    if (gordCorpLvl instanceof HTMLSelectElement &&
+        targInpIMC instanceof HTMLInputElement &&
+        targInpMLG instanceof HTMLInputElement &&
+        formTMBTypeElement instanceof HTMLSelectElement &&
+        (ignoredIndex === "MLG" ||
+            ignoredIndex === "IMC" ||
+            ignoredIndex === "BOTH" ||
+            ignoredIndex === "NONE")) {
+        if (!(ignoredIndex === "MLG" || ignoredIndex === "BOTH") &&
+            typeof IMCMLGArray[2] === "number") {
+            MLG = IMCMLGArray[2];
+            targInpMLG.value = MLG.toFixed(4) || "0";
+        }
+        else {
+            console.error(`IMCMLGArray[2] não validado como number.
+      Tipo primitivo obtido: ${typeof IMCMLGArray[2]}.`);
+        }
+        if (!(ignoredIndex === "IMC" || ignoredIndex === "BOTH") &&
+            typeof IMCMLGArray[1] === "number") {
+            IMC = IMCMLGArray[1];
+            targInpIMC.value = IMC.toFixed(4) || "0";
+        }
+        else {
+            console.error(`IMCMLGArray[1] não validado como number.
+      Tipo primitivo obtido: ${typeof IMCMLGArray[1]}.`);
+        }
+        if (typeof IMCMLGArray[0] === "string") {
+            gordCorpLvl.value = IMCMLGArray[0] || "";
+            fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl);
+        }
+        else {
+            console.error(`IMCMLGArray[0] não validado como string.
+      Tipo primitivo obtido: ${typeof IMCMLGArray[0]}.`);
+        }
+        if (IMCMLGArray[0] === "" || IMCMLGArray[1] === 0 || IMCMLGArray[2] === 0) {
+            console.warn(`IMCMLGArray não atualizado.
+  Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${IMCMLGArray[1] ?? 0}; ${IMCMLGArray[2] ?? 0} }`);
+        }
+    }
+    else {
+        console.log(`Erro validando instância(s) de Elements obtidos.
+    Instancia obtida para gordCorpLvl: ${Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"};
+    Instancia obtida para targInpIMC: ${Object.prototype.toString.call(targInpIMC).slice(8, -1) ?? "null"};
+    Instancia obtida para targInpMLG: ${Object.prototype.toString.call(targInpMLG).slice(8, -1) ?? "null"};
+    Instancia obtida para formTMBTypeElement: ${Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"};.
+    ignoredIndex: ${ignoredIndex}`);
+    }
+}
+export function fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl) {
+    if (formTMBTypeElement instanceof HTMLSelectElement &&
+        formTMBTypeElement.value !== "" &&
+        gordCorpLvl instanceof HTMLSelectElement &&
+        gordCorpLvl.value !== "") {
+        if (IMC >= 0 && IMC < 25.0) {
+            formTMBTypeElement.value = "harrisBenedict";
+            if (IMC < 18.5) {
+                gordCorpLvl.value = "abaixo";
+            }
+            else if (IMC >= 18.5) {
+                gordCorpLvl.value = "eutrofico";
+            }
+        }
+        else if (IMC >= 25.0) {
+            formTMBTypeElement.value = "mifflinStJeor";
+            if (IMC < 30) {
+                gordCorpLvl.value = "sobrepeso";
+                formTMBTypeElement.value = "mifflinStJeor";
+            }
+            else if (IMC >= 30 && IMC < 35) {
+                gordCorpLvl.value = "obeso1";
+                formTMBTypeElement.value = "mifflinStJeor";
+            }
+            else if (IMC >= 35 && IMC < 40) {
+                gordCorpLvl.value = "obeso2";
+                formTMBTypeElement.value = "mifflinStJeor";
+            }
+            else if (IMC > 40) {
+                gordCorpLvl.value = "obeso3";
+                formTMBTypeElement.value = "mifflinStJeor";
+            }
+        }
+        else {
+            console.error(`Erro obtendo valor de IMC em função fluxFormImc().
+      Valor obtido: ${IMC ?? "NaN"}`);
+        }
+    }
+    else {
+        console.error(`Erro obtendo formTMBTypeElement e/ou gordCorpLvl Element.
+    Instância obtida para formTMBTypeElement: ${Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"};
+    .value obtido para formTMBTypeElement: ${formTMBTypeElement?.value ?? "null"};
+    Instância obtida para gordCorpLvl: ${Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"};
+    .value obtido para gordCorpLvl: ${gordCorpLvl?.value ?? "null"}.`);
+    }
+}
+export function updateTMBContext(IMCMLGArray, person, factorAtleta, formTMBTypeElement, targInpTMB) {
+    let TMB = 0;
+    if (IMCMLGArray.length === 3) {
+        const TMBArray = person.calcTMB(person, IMCMLGArray[1] ?? 0, factorAtleta, IMCMLGArray[2] ?? 0) ?? ["", 0];
+        if (formTMBTypeElement instanceof HTMLSelectElement) {
+            formTMBTypeElement.value = TMBArray[0];
+        }
+        else {
+            console.error(`Erro validando campo de Fórmula para TMB.
+      Instância obtida: ${Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ??
+                "null"}.}`);
+        }
+        TMB = parseFloat(TMBArray[1].toFixed(4)) ?? 0;
+        if (Number.isNaN(TMB) || isNaN(TMB)) {
+            console.warn(`TMB retornando como NaN`);
+            TMB = 0;
+        }
+        targInpTMB.value = TMB.toString();
+    }
+    else {
+        console.error(`Erro validando argumentos.
+      IMC obtido: ${IMCMLGArray[1]};
+      MLG obtido: ${IMCMLGArray[2]};
+      factorAtleta obtido: ${factorAtleta}`);
+    }
+    return TMB;
 }
 export function matchTMBElements(mainSelect, formTMBTypeElement, spanFactorAtleta, gordCorpLvl, lockGordCorpLvl, IMC) {
     if (!IMC) {
@@ -182,51 +386,48 @@ export function matchTMBElements(mainSelect, formTMBTypeElement, spanFactorAtlet
     Tipo primitivo obtido para IMC: ${typeof IMC ?? "undefined"}.`);
     }
 }
-export function fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl) {
-    if (formTMBTypeElement instanceof HTMLSelectElement &&
-        formTMBTypeElement.value !== "" &&
-        gordCorpLvl instanceof HTMLSelectElement &&
-        gordCorpLvl.value !== "") {
-        if (IMC >= 0 && IMC < 25.0) {
-            formTMBTypeElement.value = "harrisBenedict";
-            if (IMC < 18.5) {
-                gordCorpLvl.value = "abaixo";
-            }
-            else if (IMC >= 18.5) {
-                gordCorpLvl.value = "eutrofico";
-            }
-        }
-        else if (IMC >= 25.0) {
-            formTMBTypeElement.value = "mifflinStJeor";
-            if (IMC < 30) {
-                gordCorpLvl.value = "sobrepeso";
-                formTMBTypeElement.value = "mifflinStJeor";
-            }
-            else if (IMC >= 30 && IMC < 35) {
-                gordCorpLvl.value = "obeso1";
-                formTMBTypeElement.value = "mifflinStJeor";
-            }
-            else if (IMC >= 35 && IMC < 40) {
-                gordCorpLvl.value = "obeso2";
-                formTMBTypeElement.value = "mifflinStJeor";
-            }
-            else if (IMC > 40) {
-                gordCorpLvl.value = "obeso3";
-                formTMBTypeElement.value = "mifflinStJeor";
-            }
-        }
-        else {
-            console.error(`Erro obtendo valor de IMC em função fluxFormImc().
-      Valor obtido: ${IMC ?? "NaN"}`);
-        }
+export function updateGETContext(person, targInpGET, TMB, factorAtvLvl) {
+    let GET = parseFloat(person.calcGET(TMB || 0, factorAtvLvl).toFixed(4)) ?? 0;
+    if (Number.isNaN(GET) || isNaN(GET)) {
+        console.warn(`GET retornando como NaN`);
+        GET = 0;
+    }
+    targInpGET.value = GET.toString();
+    return GET;
+}
+export function updatePGCContext(person, targInpPGC) {
+    let PGC = parseFloat(person.calcPGC(person).toFixed(4)) ?? 0;
+    if (Number.isNaN(PGC) || isNaN(PGC)) {
+        console.warn(`PGC retornando como NaN`);
+        PGC = 0;
+    }
+    const PGCDecayArray = Model.isPGCDecaying(person, PGC, targInpPGC);
+    console.log("pgc " + PGCDecayArray[1]);
+    if (PGCDecayArray[0] === true) {
+        PGC = PGCDecayArray[1];
+        targInpPGC.value = PGC.toFixed(2);
     }
     else {
-        console.error(`Erro obtendo formTMBTypeElement e/ou gordCorpLvl Element.
-    Instância obtida para formTMBTypeElement: ${Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"};
-    .value obtido para formTMBTypeElement: ${formTMBTypeElement?.value ?? "null"};
-    Instância obtida para gordCorpLvl: ${Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"};
-    .value obtido para gordCorpLvl: ${gordCorpLvl?.value ?? "null"}.`);
+        targInpPGC.value = PGC.toFixed(4);
     }
+    if (PGC <= 0) {
+        console.warn(`Valor de PGC não atualizado.
+              Valor obtido: ${PGC || 0}`);
+    }
+    return PGC;
+}
+export function updateAtvLvl(mainSelect, atvLvl, secondarySelect) {
+    const returnedAtvLvl = updateSimpleProperty(mainSelect) ?? "";
+    if (typeof returnedAtvLvl === "string") {
+        atvLvl = returnedAtvLvl;
+        secondarySelect.value = atvLvl;
+    }
+    else {
+        console.warn(`Erro no tipo retornado para atualização de mainSelect.
+    Tipo obtido: ${returnedAtvLvl ?? "undefined"};
+    Tipo aceito: string.`);
+    }
+    return atvLvl;
 }
 export function addRowAtivFis(container) {
     if (container instanceof HTMLButtonElement &&
@@ -332,77 +533,6 @@ export function addRowAtivFis(container) {
             }
         }
     }
-}
-export function updateIMCMLGContext(IMCMLGArray, gordCorpLvl, targInpIMC, targInpMLG, formTMBTypeElement) {
-    let IMC = 0;
-    let MLG = 0;
-    if (gordCorpLvl instanceof HTMLSelectElement &&
-        targInpIMC instanceof HTMLInputElement &&
-        targInpMLG instanceof HTMLInputElement &&
-        formTMBTypeElement instanceof HTMLSelectElement) {
-        if (typeof IMCMLGArray[2] === "number") {
-            MLG = IMCMLGArray[2];
-            targInpMLG.value = MLG.toString() || "0";
-        }
-        else {
-            console.error(`IMCMLGArray[2] não validado como number.
-      Tipo primitivo obtido: ${typeof IMCMLGArray[2]}.`);
-        }
-        if (typeof IMCMLGArray[1] === "number") {
-            IMC = IMCMLGArray[1];
-            targInpIMC.value = IMC.toString() || "0";
-        }
-        else {
-            console.error(`IMCMLGArray[1] não validado como number.
-      Tipo primitivo obtido: ${typeof IMCMLGArray[1]}.`);
-        }
-        if (typeof IMCMLGArray[0] === "string") {
-            gordCorpLvl.value = IMCMLGArray[0] || "";
-            fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl);
-        }
-        else {
-            console.error(`IMCMLGArray[0] não validado como string.
-      Tipo primitivo obtido: ${typeof IMCMLGArray[0]}.`);
-        }
-        if (IMCMLGArray[0] === "" || IMCMLGArray[1] === 0 || IMCMLGArray[2] === 0) {
-            console.warn(`IMCMLGArray não atualizado.
-  Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${IMCMLGArray[1] ?? 0}; ${IMCMLGArray[2] ?? 0} }`);
-        }
-    }
-    else {
-        console.log(`Erro validando instância(s) de Elements obtidos.
-    Instancia obtida para gordCorpLvl: ${Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"};
-    Instancia obtida para targInpIMC: ${Object.prototype.toString.call(targInpIMC).slice(8, -1) ?? "null"};
-    Instancia obtida para targInpMLG: ${Object.prototype.toString.call(targInpMLG).slice(8, -1) ?? "null"};
-    Instancia obtida para formTMBTypeElement: ${Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"};`);
-    }
-}
-export function updateTMB(IMCMLGArray, person, factorAtleta, formTMBTypeElement, targInpTMB) {
-    let TMB = 0;
-    if (IMCMLGArray.length === 3) {
-        const TMBArray = person.calcTMB(person, IMCMLGArray[1] ?? 0, factorAtleta, IMCMLGArray[2] ?? 0) ?? ["", 0];
-        if (formTMBTypeElement instanceof HTMLSelectElement) {
-            formTMBTypeElement.value = TMBArray[0];
-        }
-        else {
-            console.error(`Erro validando campo de Fórmula para TMB.
-      Instância obtida: ${Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ??
-                "null"}.}`);
-        }
-        TMB = parseFloat(TMBArray[1].toFixed(4)) ?? 0;
-        if (Number.isNaN(TMB) || isNaN(TMB)) {
-            console.warn(`TMB retornando como NaN`);
-            TMB = 0;
-        }
-        targInpTMB.value = TMB.toString();
-    }
-    else {
-        console.error(`Erro validando argumentos.
-      IMC obtido: ${IMCMLGArray[1]};
-      MLG obtido: ${IMCMLGArray[2]};
-      factorAtleta obtido: ${factorAtleta}`);
-    }
-    return TMB;
 }
 export function addRowComorb(container) {
     if (container.tagName === "BUTTON" && container.id === "addComorb") {
@@ -898,6 +1028,39 @@ function getRowValues(arrayRows, arrayConsultasNum, arrayCelIds) {
             }
         }
     }
+}
+export function defineTargInps(numCons, tabsParent) {
+    let targInpWeight = null;
+    let targInpHeight = null;
+    let targInpSumDCut = null;
+    let targInpIMC = null;
+    let targInpMLG = null;
+    let targInpPGC = null;
+    let targInpTMB = null;
+    let targInpGET = null;
+    let arrayTargInps = [];
+    if (typeof numCons === "number") {
+        targInpWeight = tabsParent.querySelector(`#tabInpRowMedAnt2_${numCons + 1}`);
+        arrayTargInps.push(targInpWeight);
+        targInpHeight = tabsParent.querySelector(`#tabInpRowMedAnt3_${numCons + 1}`);
+        arrayTargInps.push(targInpHeight);
+        targInpSumDCut = tabsParent.querySelector(`#tabInpRowDCut9_${numCons + 1}`);
+        arrayTargInps.push(targInpSumDCut);
+        targInpIMC = tabsParent.querySelector(`#inpImc${numCons}Cel2_${numCons + 1}`);
+        arrayTargInps.push(targInpIMC);
+        targInpMLG = tabsParent.querySelector(`#inpMlg${numCons}Cel3_${numCons + 1}`);
+        arrayTargInps.push(targInpMLG);
+        targInpPGC = tabsParent.querySelector(`#inpPgc${numCons}Cel4_${numCons + 1}`);
+        arrayTargInps.push(targInpPGC);
+        targInpTMB = tabsParent.querySelector(`#inpTmb${numCons}Cel5_${numCons + 1}`);
+        arrayTargInps.push(targInpTMB);
+        targInpGET = tabsParent.querySelector(`#inpGet${numCons}Cel6_${numCons + 1}`);
+        arrayTargInps.push(targInpGET);
+    }
+    else {
+        ErrorHandler.typeError("numCons", numCons ?? null, "number");
+    }
+    return arrayTargInps;
 }
 export function changeToAstDigit(click, toFileInpBtn) {
     const useAstDigitRegex = /Usar Assinatura Digital/;
