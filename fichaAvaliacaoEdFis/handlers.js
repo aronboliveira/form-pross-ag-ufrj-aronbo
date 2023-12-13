@@ -1874,6 +1874,15 @@ export function changeToAstDigit(click, toFileInpBtn) {
             console.warn("Erro no match de ids do Input");
           }
         }
+      } else {
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.elementNotFound(
+          inpAst ?? null,
+          "inpAst",
+          slicedError ?? "NULL"
+        );
       }
     }
   }

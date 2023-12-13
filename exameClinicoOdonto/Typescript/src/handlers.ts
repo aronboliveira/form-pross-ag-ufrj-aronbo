@@ -722,6 +722,15 @@ export function changeToAstDigit(
             console.warn("Erro no match de ids dos inputs");
           }
         }
+      } else {
+        const error = new Error();
+        const splitError = (error.stack as string)?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.elementNotFound(
+          inpAst ?? null,
+          "inpAst",
+          slicedError ?? "NULL"
+        );
       }
     }
   }

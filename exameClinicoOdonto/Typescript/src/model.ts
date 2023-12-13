@@ -1523,6 +1523,23 @@ export function resetAvDentValue(selectInp: Event) {
           clearTimeout(placeholderTimer);
         });
       }
+    } else {
+      for (let i = 0; i < dlOptionsArray.length; i++) {
+        if (
+          !(
+            dlOptionsArray[i] instanceof HTMLInputElement || HTMLTextAreaElement
+          )
+        ) {
+          const error = new Error();
+          const splitError = (error.stack as string)?.split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.inputNotFound(
+            dlOptionsArray[i] ?? null,
+            `${dlOptionsArray[i]?.id ?? "UNDEFINED ID DLOPTION"}`,
+            slicedError ?? "NULL"
+          );
+        }
+      }
     }
   }
 }
@@ -1540,6 +1557,15 @@ export function orderLabels() {
           labsNList[i].style.setProperty("order", nOrder);
         }
       }
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotPopulated(
+        labsNList ?? null,
+        "labsNLIST",
+        slicedError ?? "NULL"
+      );
     }
   });
 }

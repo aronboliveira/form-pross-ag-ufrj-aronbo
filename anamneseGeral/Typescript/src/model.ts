@@ -1585,6 +1585,15 @@ export function fluxGen(
       genValue = "neutro";
       return genValue;
     }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.stringError(
+      "obtendo gen.value",
+      gen?.value ?? "UNDEFINED VALUE",
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -1655,6 +1664,15 @@ export function addEmailExtension(container: HTMLInputElement) {
       container.value += "@.";
       container.setSelectionRange(0, 0);
     }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      container ?? null,
+      `${(container as HTMLElement)?.id ?? "UNDEFINED ID EMAIL CONTAINER"}`,
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -1679,5 +1697,14 @@ export function addDblQuotes(container: HTMLTextAreaElement) {
       container.value += '"';
       container.setSelectionRange(1, 1);
     }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      container ?? null,
+      `${(container as HTMLElement)?.id ?? "UNDEFINED ID QUOTED CONTAINER"}`,
+      slicedError ?? "NULL"
+    );
   }
 }

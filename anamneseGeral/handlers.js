@@ -10,8 +10,6 @@ import {
 } from "./classes.js";
 import * as ErrorHandler from "./errorHandler.js";
 
-//TODO ADICIONAR CHAMADAS DE ERRORHANDLER
-
 const rgbaRegex = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
 let blockCount = 1;
 
@@ -844,6 +842,19 @@ export function opRadioHandler(keydown) {
         }, 5000);
         return;
       }
+    } else {
+      console.warn(`radioYes: ${radioYes?.checked ?? false}`);
+      console.warn(`radioNo: ${radioNo?.checked ?? false}`);
+      console.warn(`${JSON.stringify(keydown)}`);
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.multipleElementsNotFound(
+        slicedError ?? "NULL",
+        "validando radioYes ou radiosNo ou keydown event target",
+        radioYes ?? null,
+        radioNo ?? null
+      );
     }
   }
 }
@@ -1169,6 +1180,15 @@ export function addAntMedHandler(click) {
       divToRemove.remove();
       blockCount -= 1;
     }
+  } else {
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      click.target ?? null,
+      `${click.target.id ?? "UNDEFINED BUTTON ID"}`,
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -1194,6 +1214,15 @@ export function useCurrentDate(activation, dateBtn) {
     targInputDate instanceof HTMLInputElement
   ) {
     targInputDate.value = ano + "-" + mes + "-" + dia;
+  } else {
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      targInputDate ?? null,
+      "targInputDate",
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -1358,6 +1387,15 @@ export function changeToAstDigit(click, toFileInpBtn) {
             });
           }
         }
+      } else {
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.inputNotFound(
+          inpAst ?? null,
+          "inpAst",
+          slicedError ?? "NULL"
+        );
       }
       //TODO INCLUIR TOKEN ANTI-CSRF QUANDO HOUVER SERVIDOR
 
@@ -1400,6 +1438,15 @@ export function changeToAstDigit(click, toFileInpBtn) {
             console.warn("Erro no match de ids do Input");
           }
         }
+      } else {
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.elementNotFound(
+          inpAst ?? null,
+          "inpAst",
+          slicedError ?? "NULL"
+        );
       }
     }
   }
@@ -1416,7 +1463,7 @@ export function resetarFormulario(click, toFileInpBtns) {
     if (formulario && formulario instanceof HTMLFormElement) {
       formulario.reset();
     } else {
-      console.warn("Erro validando formulário");
+      console.error("Erro validando formulário");
     }
 
     if (editableCite) {

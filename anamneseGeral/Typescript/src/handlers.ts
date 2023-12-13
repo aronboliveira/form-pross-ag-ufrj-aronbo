@@ -870,6 +870,23 @@ export function opRadioHandler(keydown: Event) {
         }, 5000);
         return;
       }
+    } else {
+      console.warn(
+        `radioYes: ${(radioYes as HTMLInputElement)?.checked ?? false}`
+      );
+      console.warn(
+        `radioNo: ${(radioNo as HTMLInputElement)?.checked ?? false}`
+      );
+      console.warn(`${JSON.stringify(keydown)}`);
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.multipleElementsNotFound(
+        slicedError ?? "NULL",
+        "validando radioYes ou radiosNo ou keydown event target",
+        radioYes ?? null,
+        radioNo ?? null
+      );
     }
   }
 }
@@ -1214,6 +1231,15 @@ export function addAntMedHandler(click: Event) {
       divToRemove.remove();
       blockCount -= 1;
     }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      (click.target as HTMLElement) ?? null,
+      `${(click.target as HTMLElement).id ?? "UNDEFINED BUTTON ID"}`,
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -1239,6 +1265,15 @@ export function useCurrentDate(activation: Event, dateBtn: HTMLButtonElement) {
     targInputDate instanceof HTMLInputElement
   ) {
     targInputDate.value = ano + "-" + mes + "-" + dia;
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      targInputDate ?? null,
+      "targInputDate",
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -1533,10 +1568,13 @@ export function resetarFormulario(
             console.warn(`Erro localizando Parent Element de inpAst`);
           }
         } else {
-          console.warn(
-            `Erro reconhecendo Previous Element Sibling: inpAst ${Object.prototype.toString
-              .call(inpAst)
-              .slice(8, -1)}`
+          const error = new Error();
+          const splitError = (error.stack as string)?.split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.elementNotFound(
+            inpAst ?? null,
+            "inpAst",
+            slicedError ?? "NULL"
           );
         }
       }
