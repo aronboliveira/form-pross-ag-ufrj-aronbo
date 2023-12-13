@@ -1,4 +1,9 @@
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
+"use strict";
 import * as Controller from "./controller.js";
+import * as ErrorHandler from "./errorHandler.js";
+
+//TODO ADICIONAR CHAMADAS DE ERRORHANDLER
 
 const subDivsQuadrs = document.querySelectorAll(".quadrSubDiv");
 const autoCapitalizeFirstLetterRegex = /\b\w/;

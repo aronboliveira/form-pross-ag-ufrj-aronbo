@@ -1,4 +1,19 @@
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import * as Controller from "./controller.js";
+import type {
+  looseNum,
+  targNum,
+  targStrArr,
+  targEl,
+  arrTargEl,
+  HTMLTargEl,
+  entryEl,
+  textEl,
+  formPerson,
+  formClassPerson,
+  looseMatchText,
+} from "./types.js";
+import * as ErrorHandler from "./errorHandler.js";
 
 const autoCapitalizeFirstLetterRegex = /\b\w/;
 let repAcumulator = 0;
@@ -43,9 +58,7 @@ export function numberLimit(inputElement: HTMLInputElement) {
   }
 }
 
-export function autoCapitalizeInputs(
-  textElement: HTMLInputElement | HTMLTextAreaElement
-) {
+export function autoCapitalizeInputs(textElement: textEl) {
   let text = textElement.value;
   if (isAutocorrectOn && text) {
     let newWordMatches = text.match(
@@ -434,9 +447,7 @@ export function autoCapitalizeInputs(
           forceUpperCase();
         }
 
-        function wrongStartCorrection(
-          wrongStartMatch: string | RegExpMatchArray | null
-        ) {
+        function wrongStartCorrection(wrongStartMatch: looseMatchText) {
           // console.log("chegou na checagem de wrong start");
           if (wrongStartMatch && text) {
             let wrongStartLength = wrongStartMatch
@@ -814,8 +825,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement) {
     const spaceRegex = /\s/g;
     const wrongStartRegex =
       /^[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/;
-    let wrongStartMatch: RegExpMatchArray | string | null =
-      citeText.match(wrongStartRegex);
+    let wrongStartMatch: looseMatchText = citeText.match(wrongStartRegex);
     const wrongCharsRegexOp1 =
       /[\s]*[\d\n,;.+=~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]+[\s]*[\d\n,;.+-=~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]*/g;
     let wrongCharsMatchesOp1 = citeText.match(wrongCharsRegexOp1);
@@ -1099,7 +1109,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement) {
       forceUpperCase();
     }
 
-    function wrongStartCorrection(wrongStartMatch: RegExpMatchArray | string) {
+    function wrongStartCorrection(wrongStartMatch: looseMatchText) {
       // console.log("chegou na checagem de wrong start");
       if (wrongStartMatch && citeText) {
         let wrongStartLength = wrongStartMatch

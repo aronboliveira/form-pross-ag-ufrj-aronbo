@@ -1,5 +1,16 @@
+//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
+"use strict";
 import * as Model from "./model.js";
-import * as Classes from "./classes.js";
+import {
+  Man,
+  Woman,
+  Neutro,
+  JSONStorager,
+  JSONTitleStorager,
+} from "./classes.js";
+import * as ErrorHandler from "./errorHandler.js";
+
+//TODO ADICIONAR CHAMADAS DE ERRORHANDLER
 
 const rgbaRegex = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
 let blockCount = 1;
@@ -141,7 +152,7 @@ export function getJSONDesc(inputs) {
     }
 
     //criação do storager
-    const nJSONInpStorager = new Classes.JSONStorager(inpIds[j], inpValues[j]);
+    const nJSONInpStorager = new JSONStorager(inpIds[j], inpValues[j]);
 
     //criação da store
     if (nJSONInpStorager) {
@@ -539,9 +550,7 @@ export function getJSONDesc(inputs) {
     }
 
     //criação do storager
-    const nJSONTitleStorager = new Classes.JSONTitleStorager(
-      closestValidElements[l]
-    );
+    const nJSONTitleStorager = new JSONTitleStorager(closestValidElements[l]);
 
     //criação da store
     if (nJSONTitleStorager) {
@@ -577,10 +586,10 @@ export function getJSONDesc(inputs) {
       JSONInpsStore = filter1JSONInpsStore;
       JSONTitlesStore = filter1JSONTitlesStore;
       const filter2JSONInpsStore = JSONInpsStore.filter(
-        (JSONEl) => JSONEl instanceof Classes.JSONStorager
+        (JSONEl) => JSONEl instanceof JSONStorager
       );
       const filter2JSONTitlesStore = JSONTitlesStore.filter(
-        (JSONEl) => JSONEl instanceof Classes.JSONTitleStorager
+        (JSONEl) => JSONEl instanceof JSONTitleStorager
       );
       if (
         filter2JSONInpsStore.length === JSONInpsStore.length &&

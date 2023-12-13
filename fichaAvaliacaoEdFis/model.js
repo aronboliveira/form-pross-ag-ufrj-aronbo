@@ -1,5 +1,5 @@
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
-
+"use strict";
 import * as Controller from "./controller.js";
 import { Person, Man, Woman, Neutro } from "./classes.js";
 import * as ErrorHandler from "./errorHandler.js";
@@ -250,9 +250,14 @@ export function checkInnerColGroups(parentElement) {
             }`;
             colsInstances.push(childInstance);
             if (childInstance !== `HTMLTableColElement`) {
-              console.error(`Erro validando colGroup${i}.
-              Instância da child inválida: ${childInstance};
-              Posição da child inválida: ${j}`);
+              const error = new Error();
+              const splitError = error.stack?.split("\n");
+              const slicedError = splitError[1].trim().slice(-7, -1);
+              ErrorHandler.elementNotFound(
+                cols[j] ?? null,
+                "child <col>",
+                slicedError ?? "NULL"
+              );
             }
           }
           const validCols = cols.filter(
@@ -262,7 +267,7 @@ export function checkInnerColGroups(parentElement) {
         }
       }
     } else {
-      console.error(`Erro validando colGroups.
+      console.warn(`Erro validando colGroups.
       areColGroupValids: ${areColGroupValids ?? false};
       Instância obtida: ${
         Object.prototype.toString.call(colGroups).slice(8, -1) ?? "null"
@@ -331,12 +336,25 @@ export function generatePersonInstance(person) {
         person.atvLvl
       );
     } else {
-      console.error(`Erro verificando value definido para Gênero.
-      Valor obtido: ${person?.gen ?? "null"}`);
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.stringError(
+        "person.gen",
+        person?.gen ?? null,
+        slicedError ?? "NULL"
+      );
     }
   } else {
-    console.error(`Erro validando tipo de .gen na geração de objeto Person
-    Instância obtida: ${typeof person.gen || "null"}`);
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.typeError(
+      "person.gen",
+      person?.gen ?? null,
+      "string",
+      slicedError ?? "NULL"
+    );
   }
   return person;
 }
@@ -389,7 +407,6 @@ export function numberLimit(inputElement) {
       numberValue = numberValue.slice(0, maxLength);
     }
     if (inputElement.value !== "") {
-      console.log(inputElement.value);
       inputElement.value = numberValue;
     }
   }
@@ -403,11 +420,10 @@ export function normalizeNegatives(tabInp) {
     //   parsedInpValue = 0;
     // }
   } else {
-    console.error(`Erro validando tabInp.
-    Instância obtida: ${
-      Object.prototype.toString.call(tabInp).slice(8, -1) ?? "null"
-    };
-    .value obtido: ${tabInp?.value ?? "null"}.`);
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(tabInp ?? null, "tabInp", slicedError ?? "NULL");
   }
   return parsedInpValue.toString();
 }
@@ -1982,8 +1998,13 @@ export function changeTabDCutLayout(protocolo, tabDC) {
               );
             }
           } else {
-            console.warn(
-              `Erro validando valor de bodyType. Valor: ${bodyType.value}`
+            const error = new Error();
+            const splitError = error.stack?.split("\n");
+            const slicedError = splitError[1].trim().slice(-7, -1);
+            ErrorHandler.stringError(
+              "validando .value de bodyType",
+              bodyType?.value ?? null,
+              slicedError ?? "NULL"
             );
           }
         } else {
@@ -2010,17 +2031,25 @@ export function changeTabDCutLayout(protocolo, tabDC) {
         }
         return "pollock7";
       } else {
-        console.warn(
-          `Erro na match de protocolo. Protocolo: ${protocolo.value}`
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.stringError(
+          "obtendo pollock.value",
+          protocolo?.value ?? null,
+          slicedError ?? "NULL"
         );
         return "pollock3";
       }
     }
   } else {
-    console.warn(
-      `Erro validando campo de tipo corporal: elemento ${bodyType}, instância ${
-        Object.prototype.toString.call(bodyType).slice(-8, 1) ?? null
-      }`
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      bodyType ?? null,
+      "bodyType",
+      slicedError ?? "NULL"
     );
     return "pollock3";
   }
@@ -2038,11 +2067,25 @@ function checkTabRowsIds(tab) {
         const slicedRowId = rowId.slice(3).toLowerCase();
         arrayTabIds.push(slicedRowId);
       } else {
-        console.warn(`Erro validando id da row. Id: ${rowId}`);
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.stringError(
+          `obtendo id da row ${tableRows[iR] ?? null}`,
+          rowId ?? null,
+          slicedError ?? "NULL"
+        );
       }
     }
   } else {
-    console.warn(`Erro validando id da Tabela de DCut. Id: ${tab.id}`);
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.stringError(
+      `obtendo id da table ${tab ?? null}`,
+      tab.id ?? null,
+      slicedError ?? "NULL"
+    );
   }
   return arrayTabIds;
 }
@@ -2090,16 +2133,28 @@ function filterIdsByGender(arrayIds, bodyType) {
           }
           break;
         default:
-          console.warn(
-            `Erro reocnhecendo value de bodyType. Value: ${bodyType}`
+          const error = new Error();
+          const splitError = error.stack?.split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.stringError(
+            `obtendo bodyType válido`,
+            bodyType ?? null,
+            slicedError ?? "NULL"
           );
       }
       return genderedIds;
     } else {
-      console.warn(`Erro validando elementos como strings`);
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.typeError(
+        `validando elementos para definição de gênero como strings`,
+        bodyType ?? null,
+        slicedError ?? "NULL"
+      );
     }
   } else {
-    console.warn(`Erro validando array`);
+    console.warn(`Erro validando array em filterIdsByGender()`);
   }
 }
 
@@ -2114,14 +2169,16 @@ export function isPGCDecaying(person, PGC, targInpPGC) {
   );
 
   if (!(spanRoundingAlertIcon instanceof HTMLSpanElement)) {
-    console.warn(`Erro validando Span de Alerta para Arredondamento na célula.
-    Instância obtida: ${
-      Object.prototype.toString.call(spanRoundingAlertIcon).slice(8, -1) ??
-      "null"
-    }.`);
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      spanRoundingAlertIcon ?? null,
+      "spanRoundingAlertIcon",
+      slicedError ?? "NULL"
+    );
   } else {
     if (spanRoundingAlertIcon.hidden === false) {
-      console.log("não está escondido");
       spanRoundingAlertIcon.hidden = true;
     }
   }
@@ -2174,7 +2231,16 @@ export function isPGCDecaying(person, PGC, targInpPGC) {
       }
     }
   } else {
-    console.error(`Erro validando decreasedPerson em isPGCDecaying.`);
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.objectError(
+      "decreasedPerson",
+      person ?? null,
+      "person",
+      "6",
+      slicedError
+    );
   }
 
   return [foundDecayPoint, PGC];

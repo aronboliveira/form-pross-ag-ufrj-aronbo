@@ -30,7 +30,7 @@ export class Person implements UndefinedPerson {
     this.atvLvl = atvLvl;
   }
 
-  checkAtvLvl(person: Person): number | void {
+  checkAtvLvl(person: Person): number {
     if (person && "atvLvl" in person && this.atvLvl !== "") {
       switch (this.atvLvl) {
         case "sedentario":
@@ -60,6 +60,7 @@ export class Person implements UndefinedPerson {
       );
       return 0;
     }
+    return 0;
   }
 
   calcIMC(person: Person): [string, number, number] | undefined | never {

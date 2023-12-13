@@ -1,7 +1,17 @@
+//nesse file ocorrem principalmente as adições de listeners, sincronização das chamadas de funções para manipulação de informação/layout e validação dos elementos no DOM
+"use strict";
 import * as Handlers from "./handlers.js";
 import * as Model from "./model.js";
-import * as Classes from "./classes.js";
+import {
+  Man,
+  Woman,
+  Neutro,
+  JSONStorager,
+  JSONTitleStorager,
+} from "./classes.js";
+import * as ErrorHandler from "./errorHandler.js";
 
+//inicialização de constantes percorrendo o DOM
 const inputs = document.querySelectorAll("input");
 const textInputs = document.querySelectorAll('input[type="text"]');
 const textareas = document.querySelectorAll("textarea");
@@ -36,10 +46,10 @@ const allInputs = Array.from([
   editableCite,
 ]).flat(1);
 let JSONBtn = document.getElementById("btnJSON");
-
 let JSONLink;
 let shouldRegenerateBtn = false;
 
+//validação de constantes obtidas e aplicação de listeners/callbacks
 if (allInputs.length > 0) {
   if (JSONBtn) {
     let formDescription = [];
@@ -65,56 +75,93 @@ if (allInputs.length > 0) {
       `Erro validando JSONBtn. Elementos: ${JSONBtn?.id} && ${allInputs.length}`
     );
   }
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(
+    JSONBtn ?? null,
+    "JSONBtn",
+    slicedError ?? "NULL"
+  );
+  ErrorHandler.elementNotPopulated(
+    allInputs ?? null,
+    "allInputs",
+    slicedError ?? "NULL"
+  );
 }
 
-// const handleMutation = (mutationsList, observer) => {
-//   for (const mutation of mutationsList) {
-//     if (mutation.type === "childList") {
-//       // Verifica se o JSONBtn foi removido e o JSONLink foi adicionado
-//       const JSONBtnRemoved = mutation.removedNodes[0] === JSONBtn;
-//       const JSONLinkAdded = Array.from(mutation.addedNodes).some(
-//         (node) => node === JSONLink
-//       );
+if (textConts.length > 0) {
+  textConts.forEach(function (textCont) {
+    const isTelInput = textCont.classList.contains("inpTel");
+    const isEmailInput = textCont.classList.contains("inpEmail");
+    if (!isTelInput && !isEmailInput && !(textCont.id === "cepId")) {
+      textCont.addEventListener("input", function (input) {
+        if (
+          input.target &&
+          (input.target instanceof HTMLTextAreaElement ||
+            input.target instanceof HTMLInputElement)
+        ) {
+          Model.autoCapitalizeInputs(input.target);
+        } else {
+          const error = new Error();
+          const splitError = error.stack?.split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.inputNotFound(
+            input.target,
+            "target textCont",
+            slicedError ?? "NULL"
+          );
+        }
+      });
+    }
+    // else {
+    //   console.error(
+    //     `Erro validando condições para adição de listener em textCont.
+    //     isTelInput: ${isTelInput ?? false};
+    //     isEmailInput: ${isEmailInput ?? false};
+    //     textCont.id: ${textCont?.id ?? "UNDEFINED ID"}`
+    //   );
+    // }
+  });
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    textConts ?? null,
+    "textConts",
+    slicedError ?? "NULL"
+  );
+}
 
-//       if (JSONBtnRemoved && JSONLinkAdded) {
-//         // Lógica a ser executada quando a troca ocorrer
-//         console.log("JSONBtn foi removido, e JSONLink foi adicionado.");
-//         // Adicione aqui qualquer lógica ou evento adicional que você deseja executar
-//       }
-//     }
-//   }
-// };
-
-// // Função que será chamada quando houver uma mutação no DOM
-// // Cria um novo observador de mutação com a função de callback
-// const observer = new MutationObserver(handleMutation);
-
-// // Configura o observador para observar mudanças no nó pai (por exemplo, o body)
-// observer.observe(document.body, { childList: true, subtree: true });
-
-textConts.forEach(function (textCont) {
-  const isTelInput = textCont.classList.contains("inpTel");
-  const isEmailInput = textCont.classList.contains("inpEmail");
-  if (!isTelInput && !isEmailInput && !(textCont.id === "cepId")) {
-    textCont.addEventListener("input", function (input) {
-      if (
-        input.target &&
-        (input.target instanceof HTMLTextAreaElement ||
-          input.target instanceof HTMLInputElement)
-      ) {
-        Model.autoCapitalizeInputs(input.target);
+if (numInps.length > 0) {
+  numInps.forEach(function (numInp) {
+    numInp.addEventListener("input", function (input) {
+      if (input.target && input.target instanceof HTMLInputElement) {
+        Model.numberLimit(input.target);
+      } else {
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.inputNotFound(
+          input.target ?? null,
+          "target numInp",
+          slicedError ?? "NULL"
+        );
       }
     });
-  }
-});
-
-numInps.forEach(function (numInp) {
-  numInp.addEventListener("input", function (input) {
-    if (input.target && input.target instanceof HTMLInputElement) {
-      Model.numberLimit(input.target);
-    }
   });
-});
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    numInps ?? null,
+    "numInps",
+    slicedError ?? "NULL"
+  );
+}
 
 function checkAllGenConts(gen, genBirthRel, genTrans, genFisAlin) {
   let isGenValid = false;
@@ -220,58 +267,176 @@ if (areAllGenContChecked && typeof genValue === "string") {
     genValue = Model.fluxGen(gen, gen.value, genBirthRel, genTrans, genFisAlin);
   });
 } else {
-  console.error(
-    `Erro na aplicação de listeners para containers de gen: containers de gen válidos ${areAllGenContChecked}
-    } / genValue tipo ${typeof genValue}`
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  console.warn(`areAllGenContChecked ${areAllGenContChecked ?? false}`);
+  ErrorHandler.elementNotFound(
+    gen ?? null,
+    "genElement",
+    slicedError ?? "NULL"
   );
 }
 
-telInputs.forEach((telInput) => {
-  telInput.addEventListener("input", (inputTel) => {
-    if (inputTel.target && inputTel.target instanceof HTMLInputElement) {
-      Model.formatTel(inputTel.target);
+if (telInputs.length > 0) {
+  telInputs.forEach((telInput) => {
+    telInput.addEventListener("input", (inputTel) => {
+      if (inputTel.target && inputTel.target instanceof HTMLInputElement) {
+        Model.formatTel(inputTel.target);
+      } else {
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.inputNotFound(
+          inputTel.target ?? null,
+          "target inputTel",
+          slicedError ?? "NULL"
+        );
+      }
+    });
+  });
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    telInputs ?? null,
+    "telInputs",
+    slicedError ?? "NULL"
+  );
+}
+
+if (emailInputs.length > 0) {
+  emailInputs.forEach((emailInput) => {
+    if (emailInput instanceof HTMLInputElement) {
+      emailInput.addEventListener("click", () =>
+        Model.addEmailExtension(emailInput)
+      );
+      emailInput.addEventListener("input", () =>
+        Model.addEmailExtension(emailInput)
+      );
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        emailInput ?? null,
+        `${emailInput?.id ?? "UNDEFINED ID INPUT"}`,
+        slicedError ?? "NULL"
+      );
     }
   });
-});
-
-emailInputs.forEach((emailInput) => {
-  emailInput.addEventListener("click", () =>
-    Model.addEmailExtension(emailInput)
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    emailInputs ?? null,
+    "emailInputs",
+    slicedError ?? "NULL"
   );
-  emailInput.addEventListener("input", () =>
-    Model.addEmailExtension(emailInput)
-  );
-});
+}
 
-radioButtons.forEach((radio) => {
-  radio.addEventListener("keydown", (keydown) => {
-    Handlers.opRadioHandler(keydown);
+if (radioButtons.length > 0) {
+  radioButtons.forEach((radio) => {
+    if (radio instanceof HTMLInputElement && radio.type === "radio") {
+      radio.addEventListener("keydown", (keydown) => {
+        Handlers.opRadioHandler(keydown);
+      });
+      radio.addEventListener("change", Handlers.cpbInpHandler);
+      radio.addEventListener("keydown", Handlers.cpbInpHandler);
+      radio.addEventListener("dblclick", () =>
+        Handlers.doubleClickHandler(radio)
+      );
+      radio.addEventListener("touchstart", Handlers.touchStartHandler);
+      radio.addEventListener("change", Handlers.deactTextInput);
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        radio ?? null,
+        `${radio?.id ?? "UNDEFINED ID RADIO"}`,
+        slicedError ?? "NULL"
+      );
+    }
   });
-  radio.addEventListener("change", Handlers.cpbInpHandler);
-  radio.addEventListener("keydown", Handlers.cpbInpHandler);
-  radio.addEventListener("dblclick", () => Handlers.doubleClickHandler(radio));
-  radio.addEventListener("touchstart", Handlers.touchStartHandler);
-  radio.addEventListener("change", Handlers.deactTextInput);
-});
-
-antFamChecks.forEach((antFamCheck) => {
-  antFamCheck.addEventListener("change", Handlers.cpbInpHandler);
-  antFamCheck.addEventListener("dblclick", () =>
-    Handlers.doubleClickHandler(antFamCheck)
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    radioButtons ?? null,
+    "radioButtons",
+    slicedError ?? "NULL"
   );
-});
+}
+
+if (antFamChecks.length > 0) {
+  antFamChecks.forEach((antFamCheck) => {
+    if (antFamCheck instanceof HTMLInputElement) {
+      antFamCheck.addEventListener("change", Handlers.cpbInpHandler);
+      antFamCheck.addEventListener("dblclick", () =>
+        Handlers.doubleClickHandler(antFamCheck)
+      );
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        antFamCheck ?? null,
+        `${antFamCheck.id ?? "UNDEFINED ID INPUT"}`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    antFamChecks ?? null,
+    "antFamChecks",
+    slicedError ?? "NULL"
+  );
+}
 
 if (antMedContainer) {
   antMedContainer.addEventListener("click", Handlers.addAntMedHandler);
 } else {
-  console.warn("Erro validando Container de Antecedentes Médicos");
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(null, "antMedContainer", slicedError ?? "NULL");
 }
 
-dateBtns.forEach(function (dateBtn) {
-  dateBtn.addEventListener("click", (activation) => {
-    Handlers.useCurrentDate(activation, dateBtn);
+if (dateBtns.length > 0) {
+  dateBtns.forEach(function (dateBtn) {
+    if (dateBtn instanceof HTMLButtonElement) {
+      dateBtn.addEventListener("click", (activation) => {
+        Handlers.useCurrentDate(activation, dateBtn);
+      });
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        dateBtn ?? null,
+        `${dateBtn?.id ?? "UNDEFINED ID DATE BUTTON"}`,
+        slicedError ?? "NULL"
+      );
+    }
   });
-});
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    dateBtns ?? null,
+    "dateBtns",
+    slicedError ?? "NULL"
+  );
+}
 
 if (
   cepElement &&
@@ -293,17 +458,42 @@ if (
       cepElementBtn.addEventListener("click", () =>
         Handlers.searchCEP(cepElement)
       );
+    } else if (!(cepElementBtn instanceof HTMLButtonElement)) {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      console.warn(`isCepBtnOff + ${isCepBtnOff ?? false}`);
+      ErrorHandler.elementNotFound(
+        cepElementBtn ?? null,
+        "cepElementBtn",
+        slicedError ?? "NULL"
+      );
     }
   });
 } else {
-  console.warn("Erro validando Inputs de CEP");
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.multipleElementsNotFound(
+    slicedError ?? "NULL",
+    "Elements para CEP",
+    cepElement ?? null,
+    cepElementBtn ?? null
+  );
 }
 
 if (qxPrinc && qxPrinc instanceof HTMLTextAreaElement) {
   qxPrinc.addEventListener("click", () => Model.addDblQuotes(qxPrinc));
   qxPrinc.addEventListener("input", () => Model.addDblQuotes(qxPrinc));
 } else {
-  console.warn("Erro validando Container de Queixa Principal");
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(
+    qxPrinc ?? null,
+    "qxPrinc",
+    slicedError ?? "NULL"
+  );
 }
 
 if (editableCite) {
@@ -313,42 +503,121 @@ if (editableCite) {
       Model.removeFirstClick(click.target);
       firstClick = false;
       editableCite.removeEventListener("click", citeClickHandler);
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        click.target ?? null,
+        "click target editableCite",
+        slicedError ?? "NULL"
+      );
     }
   };
   editableCite.addEventListener("keyup", function (keypress) {
     if (keypress.target && keypress.target instanceof HTMLElement) {
       Model.autoCapitalizeCite(keypress.target);
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        keypress.target ?? null,
+        "keypress target editableCite",
+        slicedError ?? "NULL"
+      );
     }
   });
   editableCite.addEventListener("click", citeClickHandler);
 } else {
-  console.warn("Erro validando Cite Editável");
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(null, "editableCite", slicedError ?? "NULL");
 }
 
-deactAutocorrectBtns.forEach(function (deactAutocorrectBtn) {
-  deactAutocorrectBtn.addEventListener("click", function (click) {
-    return Model.switchAutocorrect(click, deactAutocorrectBtn);
+if (deactAutocorrectBtns.length > 0) {
+  deactAutocorrectBtns.forEach(function (deactAutocorrectBtn) {
+    if (deactAutocorrectBtn instanceof HTMLButtonElement) {
+      deactAutocorrectBtn.addEventListener("click", function (click) {
+        return Model.switchAutocorrect(click, deactAutocorrectBtn);
+      });
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotPopulated(
+        deactAutocorrectBtn ?? null,
+        `${deactAutocorrectBtn?.id ?? "UNDEFINED ID BUTTON"}`,
+        slicedError ?? "NULL"
+      );
+    }
   });
-});
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    deactAutocorrectBtns ?? null,
+    "deactAutoCorrectBtns",
+    slicedError ?? "NULL"
+  );
+}
 
-astDigtBtns.forEach(function (astDigtBtn) {
-  astDigtBtn.addEventListener("click", function (click) {
-    return Handlers.changeToAstDigit(click, astDigtBtn);
+if (astDigtBtns.length > 0) {
+  astDigtBtns.forEach(function (astDigtBtn) {
+    if (astDigtBtn instanceof HTMLButtonElement) {
+      astDigtBtn.addEventListener("click", function (click) {
+        return Handlers.changeToAstDigit(click, astDigtBtn);
+      });
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        astDigtBtn ?? null,
+        astDigtBtn?.id ?? "UNDEFINED ID BUTTON",
+        slicedError ?? "NULL"
+      );
+    }
   });
-});
+} else {
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    astDigtBtns ?? null,
+    "astDigtBtns",
+    slicedError ?? "NULL"
+  );
+}
 
-if (subButton) {
+if (subButton instanceof HTMLButtonElement) {
   subButton.addEventListener("click", Handlers.subForm);
 } else {
-  console.warn("Erro validando Botão de Submeter");
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(
+    subButton ?? null,
+    "subButton",
+    slicedError ?? "NULL"
+  );
 }
 
-if (resetFormBtn) {
+if (resetFormBtn instanceof HTMLButtonElement) {
   resetFormBtn.addEventListener("click", (click) =>
     Handlers.resetarFormulario(click, astDigtBtns)
   );
 } else {
-  console.warn("Erro validando Botão de Resetar");
+  const error = new Error();
+  const splitError = error.stack?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(
+    resetFormBtn ?? null,
+    "resetFormBtn",
+    slicedError ?? "NULL"
+  );
 }
 
 export function cursorCheckTimer(cursorPosition) {
@@ -359,4 +628,30 @@ export function cursorCheckTimer(cursorPosition) {
       return cursorPosition;
     }, 3000);
   }
+  return 0;
 }
+
+// const handleMutation = (mutationsList, observer) => {
+//   for (const mutation of mutationsList) {
+//     if (mutation.type === "childList") {
+//       // Verifica se o JSONBtn foi removido e o JSONLink foi adicionado
+//       const JSONBtnRemoved = mutation.removedNodes[0] === JSONBtn;
+//       const JSONLinkAdded = Array.from(mutation.addedNodes).some(
+//         (node) => node === JSONLink
+//       );
+
+//       if (JSONBtnRemoved && JSONLinkAdded) {
+//         // Lógica a ser executada quando a troca ocorrer
+//         console.log("JSONBtn foi removido, e JSONLink foi adicionado.");
+//         // Adicione aqui qualquer lógica ou evento adicional que você deseja executar
+//       }
+//     }
+//   }
+// };
+
+// // Função que será chamada quando houver uma mutação no DOM
+// // Cria um novo observador de mutação com a função de callback
+// const observer = new MutationObserver(handleMutation);
+
+// // Configura o observador para observar mudanças no nó pai (por exemplo, o body)
+// observer.observe(document.body, { childList: true, subtree: true });

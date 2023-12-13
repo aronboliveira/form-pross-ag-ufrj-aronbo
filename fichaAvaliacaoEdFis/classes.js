@@ -1,3 +1,4 @@
+"use strict";
 export class Person {
   gen;
   age;
@@ -44,6 +45,7 @@ export class Person {
       );
       return 0;
     }
+    return 0;
   }
 
   calcIMC(person) {

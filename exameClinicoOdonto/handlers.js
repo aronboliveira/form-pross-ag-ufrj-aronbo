@@ -1,4 +1,7 @@
+//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
+"use strict";
 import * as Model from "./model.js";
+import * as ErrorHandler from "./errorHandler.js";
 
 let movingSrcItem = null;
 let targItem = null;
@@ -69,6 +72,19 @@ export function opRadioHandler(keydown) {
         }, 5000);
         return;
       }
+    } else {
+      console.warn(`radioYes: ${radioYes?.checked ?? false}`);
+      console.warn(`radioNo: ${radioNo?.checked ?? false}`);
+      console.warn(`${JSON.stringify(keydown)}`);
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.multipleElementsNotFound(
+        slicedError ?? "NULL",
+        "validando radioYes ou radiosNo ou keydown event target",
+        radioYes ?? null,
+        radioNo ?? null
+      );
     }
   }
 }
@@ -101,6 +117,10 @@ export function showInspSpanSub(changeRadio, inspRadio) {
         if (inspRadio.checked === true) {
           validSibling.setAttribute("hidden", "");
         }
+      } else {
+        console.error(`Erro validando parentElement class.
+        Classes obtidas: ${inspRadio.parentElement?.classList ?? "NULL"};
+        Classe procurada: "inspSpanMain"`);
       }
     }
   }
@@ -154,6 +174,15 @@ export function showInspDialogs(click, inspDialogBtn) {
         inspDialogBtn.textContent = "Mostrar Sugestões";
         isDialogCalled = !isDialogCalled;
       }
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        calledDialog ?? null,
+        "calledDialog",
+        slicedError ?? "NULL"
+      );
     }
   }
 }
@@ -176,6 +205,15 @@ export function addTextToObs(click, inspLIBtn) {
         let loweredFixedTextParent = fixedTextParent?.toLowerCase();
         validParentSibling.value += loweredFixedTextParent;
       }
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        validParentSibling ?? null,
+        "validParentSibling",
+        slicedError ?? "NULL"
+      );
     }
   }
 }
@@ -282,25 +320,54 @@ export function resetLabels(quadrBtn) {
         );
       }
       innerDivInps.forEach((innerDivInp) => {
-        innerDivInp.value = "Hígido";
+        if (innerDivInp instanceof HTMLInputElement) {
+          innerDivInp.value = "Hígido";
+        }
       });
+    } else {
+      const error = new Error();
+      const splitError = error.stack?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        innerDivInps ?? null,
+        "innerDivInps",
+        slicedError ?? "NULL"
+      );
     }
   } else {
-    console.warning(`Erro localizando parent div`);
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      parentDiv ?? null,
+      "parentDiv",
+      slicedError ?? "NULL"
+    );
   }
 }
 
 export function clearQuadrInps(quadrInp) {
   if (quadrInp instanceof HTMLInputElement) {
-    const dlOptions = quadrInp.nextElementSibling.children;
-    let dlOptionsValues = [];
-    for (let i = 0; i < dlOptions.length; i++) {
-      dlOptionsValues.push(dlOptions[i].value);
+    if (quadrInp.nextElementSibling) {
+      const dlOptions = quadrInp.nextElementSibling.children;
+      let dlOptionsValues = [];
+      for (let i = 0; i < dlOptions.length; i++) {
+        dlOptionsValues.push(dlOptions[i].value);
+      }
+      if (dlOptionsValues.includes(quadrInp.value)) {
+        quadrInp.value = "";
+        quadrInp.placeholder = "Apagado";
+      }
     }
-    if (dlOptionsValues.includes(quadrInp.value)) {
-      quadrInp.value = "";
-      quadrInp.placeholder = "Apagado";
-    }
+  } else {
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      quadrInp ?? null,
+      "quadrInp",
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -384,6 +451,15 @@ export function addSubDivTrat(click) {
         blockCount -= 1;
       }
     }
+  } else {
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      click.target ?? null,
+      "target <button>",
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -407,6 +483,17 @@ export function useCurrentDate(activation, dateBtn) {
       dateBtn.previousElementSibling instanceof HTMLTextAreaElement)
   ) {
     dateBtn.previousElementSibling.value = ano + "-" + mes + "-" + dia;
+  } else {
+    console.error(`Erro executando useCurrentDate().
+    dateBtn: ${JSON.stringify(dateBtn) ?? "NULL"}`);
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      dateBtn.previousElementSibling ?? null,
+      "dateBtn.previousElementSibling",
+      slicedError ?? "NULL"
+    );
   }
 }
 
@@ -548,6 +635,15 @@ export function changeToAstDigit(click, toFileInpBtn) {
             });
           }
         }
+      } else {
+        const error = new Error();
+        const splitError = error.stack?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.inputNotFound(
+          inpAst ?? null,
+          "inpAst",
+          slicedError ?? "NULL"
+        );
       }
       //TODO INCLUIR TOKEN ANTI-CSRF QUANDO HOUVER SERVIDOR
 
@@ -662,19 +758,25 @@ export function resetarFormulario(click, toFileInpBtns) {
             console.warn(`Erro localizando Parent Element de inpAst`);
           }
         } else {
-          console.warn(
-            `Erro reconhecendo Previous Element Sibling: inpAst ${Object.prototype.toString
-              .call(inpAst)
-              .slice(8, -1)}`
+          const error = new Error();
+          const splitError = error.stack?.split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.elementNotFound(
+            inpAst ?? null,
+            `${inpAst?.id ?? "UNDEFINED ID INPUT"}`,
+            slicedError ?? "NULL"
           );
         }
       }
     });
   } else {
-    console.error(
-      `Erro validando target: instância de ${Object.prototype.toString
-        .call(click.target)
-        .slice(8, -1)}`
+    const error = new Error();
+    const splitError = error.stack?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      click.target ?? null,
+      "click target",
+      slicedError ?? "NULL"
     );
   }
 }

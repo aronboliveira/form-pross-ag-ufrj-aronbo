@@ -1,5 +1,27 @@
+//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import * as Model from "./model.js";
-import * as Classes from "./classes.js";
+import {
+  UndefinedPerson,
+  Man,
+  Woman,
+  Neutro,
+  JSONStorager,
+  JSONTitleStorager,
+} from "./classes.js";
+import type {
+  looseNum,
+  targNum,
+  targStr,
+  targStrArr,
+  targEl,
+  arrTargEl,
+  HTMLTargEl,
+  entryEl,
+  textEl,
+  formPerson,
+  formClassPerson,
+} from "./types.js";
+import * as ErrorHandler from "./errorHandler.js";
 
 const rgbaRegex = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
 let blockCount = 1;
@@ -56,16 +78,16 @@ const mapIdsTitles = {
   genFisAlinId: "Alinhamento_de_características_físicas_predominante",
 };
 
-export function getJSONDesc(inputs: (Element | null)[]) {
-  let titleElements: (Element | null)[] = [];
+export function getJSONDesc(inputs: targEl[]) {
+  let titleElements: targEl[] = [];
   let closestValidElements: (Element | string | null)[] = [];
-  let closestValidElementsIds: (string | null)[] = [];
-  let closestBooleanElements: (Element | string | null)[] = [];
-  let closestBooleanElementsIds: (string | null)[] = [];
+  let closestValidElementsIds: targStr[] = [];
+  let closestBooleanElements: (Element | targStr)[] = [];
+  let closestBooleanElementsIds: targStr[] = [];
   let inpValues: string[] = [];
   let inpIds: string[] = [];
-  let JSONInpsStore: Classes.JSONStorager[] = [];
-  let JSONTitlesStore: Classes.JSONTitleStorager[] = [];
+  let JSONInpsStore: JSONStorager[] = [];
+  let JSONTitlesStore: JSONTitleStorager[] = [];
   let JSONInpsStoreDescriptors: string[] = [];
   let JSONTitlesStoreDescriptors: string[] = [];
   let titleAcc = 0;
@@ -143,7 +165,7 @@ export function getJSONDesc(inputs: (Element | null)[]) {
     }
 
     //criação do storager
-    const nJSONInpStorager = new Classes.JSONStorager(inpIds[j], inpValues[j]);
+    const nJSONInpStorager = new JSONStorager(inpIds[j], inpValues[j]);
 
     //criação da store
     if (nJSONInpStorager) {
@@ -263,8 +285,7 @@ export function getJSONDesc(inputs: (Element | null)[]) {
               if (
                 (titleElements[i] instanceof HTMLInputElement ||
                   titleElements[i] instanceof HTMLTextAreaElement) &&
-                (titleElements[i] as HTMLInputElement | HTMLTextAreaElement)
-                  ?.name === "nivelFumo"
+                (titleElements[i] as textEl)?.name === "nivelFumo"
               ) {
                 closestValidElements.push(
                   titleElements[i]?.id?.slice(0, 1)?.toUpperCase() ??
@@ -528,13 +549,7 @@ export function getJSONDesc(inputs: (Element | null)[]) {
       closestValidElements[l] === undefined ||
       closestValidElements[l] === null
     ) {
-      let inpValue =
-        (
-          inputs[l] as
-            | HTMLTextAreaElement
-            | HTMLTextAreaElement
-            | HTMLSelectElement
-        )?.value || "null";
+      let inpValue = (inputs[l] as entryEl)?.value || "null";
       if (
         inputs[l] instanceof HTMLInputElement &&
         ((inputs[l] as HTMLInputElement)?.type === "radio" ||
@@ -562,9 +577,7 @@ export function getJSONDesc(inputs: (Element | null)[]) {
     }
 
     //criação do storager
-    const nJSONTitleStorager = new Classes.JSONTitleStorager(
-      closestValidElements[l]
-    );
+    const nJSONTitleStorager = new JSONTitleStorager(closestValidElements[l]);
 
     //criação da store
     if (nJSONTitleStorager) {
@@ -600,10 +613,10 @@ export function getJSONDesc(inputs: (Element | null)[]) {
       JSONInpsStore = filter1JSONInpsStore;
       JSONTitlesStore = filter1JSONTitlesStore;
       const filter2JSONInpsStore = JSONInpsStore.filter(
-        (JSONEl) => JSONEl instanceof Classes.JSONStorager
+        (JSONEl) => JSONEl instanceof JSONStorager
       );
       const filter2JSONTitlesStore = JSONTitlesStore.filter(
-        (JSONEl) => JSONEl instanceof Classes.JSONTitleStorager
+        (JSONEl) => JSONEl instanceof JSONTitleStorager
       );
       if (
         filter2JSONInpsStore.length === JSONInpsStore.length &&

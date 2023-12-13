@@ -1,19 +1,6 @@
-import type {
-  primitiveType,
-  targStr,
-  errorHandleNumberType,
-  errorHandleTextType,
-  errorHandleElType,
-  errorHandleArrayType,
-  errorHandleSpreadType,
-  errorHandleObjectType,
-} from "./types";
+"use strict";
 
-export function elementNotFound(
-  element: errorHandleElType,
-  elementName: errorHandleTextType,
-  line: targStr
-) {
+export function elementNotFound(element, elementName, line) {
   if (!element) {
     element = "Undefined Element";
   }
@@ -27,9 +14,7 @@ export function elementNotFound(
   ) {
     console.error(`
   ELEMENT NOT FOUND, LINE ${line ?? "UNDEFINED"}:
-  Erro validando instância de ${
-    (element as Element)?.id || elementName || "UNDEFINED ID OR NAME"
-  }.
+  Erro validando instância de ${element?.id || elementName || "null"}.
   Instância obtida: ${
     Object.prototype.toString.call(element)?.slice(8, -1) || "null"
   };
@@ -38,7 +23,7 @@ export function elementNotFound(
     console.error(`
   ELEMENT NOT FOUND, LINE ${line ?? "UNDEFINED"}:
   Erro validando instância de ${
-    (element as Element)?.id || elementName || "null"
+    element?.id || elementName || "UNDEFINED ID OR NAME"
   }.
   Instância obtida: ${
     Object.prototype.toString.call(element)?.slice(8, -1) || "null"
@@ -46,11 +31,7 @@ export function elementNotFound(
   }
 }
 
-export function inputNotFound(
-  element: errorHandleElType,
-  elementName: errorHandleTextType,
-  line: targStr
-) {
+export function inputNotFound(element, elementName, line) {
   if (!element) {
     element = "Undefined Element";
   }
@@ -58,27 +39,23 @@ export function inputNotFound(
     elementName = "Unnamed Element";
   }
   console.error(`INPUT NOT FOUND, LINE ${line ?? "UNDEFINED"}:
-  Erro validando ${
-    (element as Element)?.id || elementName || "UNDEFINED ID OR NAME"
-  }.
+  Erro validando ${element?.id || elementName || "UNDEFINED ID OR NAME"}.
   Elemento obtido: ${element ?? "null"};
   Instância obtida: ${
     Object.prototype.toString.call(element)?.slice(8, -1) || "null"
   };
-  Tipo obtido (válido somente para <input>): ${
-    (element as HTMLInputElement)?.type || "null"
-  };
-  .value obtido: ${(element as HTMLInputElement)?.value || "NULL"};
-  .checked obitod: ${(element as HTMLInputElement)?.checked || "NULL"}.`);
+  Tipo obtido (válido somente para <input>): ${element?.type || "null"};
+  .value obtido: ${element?.value || "NULL"};
+  .checked obitod: ${element?.checked || "NULL"}.`);
 }
 
 export function elementWithArrayError(
-  context: errorHandleTextType,
-  array: errorHandleArrayType,
-  arrayName: errorHandleTextType,
-  element: errorHandleElType,
-  elementName: errorHandleTextType,
-  line: targStr
+  context,
+  array,
+  arrayName,
+  element,
+  elementName,
+  line
 ) {
   console.error(`ELEMENT WITH ARRAY ERROR, LINE ${line ?? "UNDEFINED"}:
   Erro validando ${context}.
@@ -91,11 +68,11 @@ export function elementWithArrayError(
 }
 
 export function elementWithObjectError(
-  context: errorHandleTextType,
-  object: errorHandleObjectType,
-  element: errorHandleElType,
-  elementName: errorHandleTextType,
-  line: targStr
+  context,
+  object,
+  element,
+  elementName,
+  line
 ) {
   console.error(
     `ELEMENT WITH OBJECT ERROR, LINE ${line ?? "UNDEFINED"}:
@@ -108,11 +85,7 @@ export function elementWithObjectError(
   );
 }
 
-export function elementNotPopulated(
-  array: errorHandleArrayType,
-  arrayName: errorHandleTextType,
-  line: targStr
-) {
+export function elementNotPopulated(array, arrayName, line) {
   if (!array) {
     array = "Undefined Array";
   }
@@ -129,16 +102,12 @@ export function elementNotPopulated(
   Stringificação: ${JSON.stringify(array) ?? "null"}`);
 }
 
-export function multipleElementsNotFound(
-  line: targStr,
-  context: errorHandleTextType,
-  ...elements: errorHandleSpreadType
-) {
+export function multipleElementsNotFound(line, context, ...elements) {
   if (!context || context === "") {
     context = "Undefined Context";
   }
   let errorMessage = `MULTIPLE ELEMENTS NOT FOUND, LINE ${line ?? "UNDEFINED"}:
-  Erro validando ${context || "null"}.`;
+  Erro validando ${context || "Undefined Function Name"}.`;
   let mappedNullElements = elements.map((element) =>
     element === null || element === undefined ? "null" : element
   );
@@ -165,9 +134,7 @@ export function multipleElementsNotFound(
         .value obtido: ${element?.value || "NULL"}`;
       }
     } else {
-      errorMessage += `Instância de ${
-        (element as Element)?.id || "null"
-      } obtida: ${
+      errorMessage += `Instância de ${element.id || "null"} obtida: ${
         Object.prototype.toString.call(element)?.slice(8, -1) ?? "null"
       };\n`;
     }
@@ -176,17 +143,11 @@ export function multipleElementsNotFound(
   console.error(errorMessage);
 }
 
-export function elementsNotFoundFunction(
-  line: targStr,
-  funcName: errorHandleTextType,
-  ...elements: errorHandleSpreadType
-) {
+export function elementsNotFoundFunction(line, funcName, ...elements) {
   let errorMessage = `ELEMENTS NOT FOUND FOR FUNCTION, LINE ${
     line ?? "UNDEFINED"
   }:
-  Erro validando instância obtida para ${
-    funcName || "Undefined Function Name"
-  }`;
+  Erro validando instância obtida para ${funcName || "null"}`;
 
   let mappedNullElements = elements.map((element) =>
     element === null || element === undefined ? "null" : element
@@ -214,9 +175,7 @@ export function elementsNotFoundFunction(
         .value obtido: ${element?.value || "NULL"}`;
       }
     } else {
-      errorMessage += `Instância de ${
-        (element as Element)?.id || "null"
-      } obtida: ${
+      errorMessage += `Instância de ${element?.id || "null"} obtida: ${
         Object.prototype.toString.call(element)?.slice(8, -1) ?? "null"
       };\n`;
     }
@@ -225,11 +184,7 @@ export function elementsNotFoundFunction(
   console.error(errorMessage);
 }
 
-export function maxNumberError(
-  unvalidNumber: errorHandleNumberType,
-  title: errorHandleTextType,
-  line: targStr
-) {
+export function maxNumberError(unvalidNumber, title, line) {
   if (!unvalidNumber) {
     unvalidNumber = "0";
   }
@@ -238,37 +193,23 @@ export function maxNumberError(
   }
   console.error(`MAX NUMBER ERROR, LINE ${line ?? "UNDEFINED"}:
   Número de ${title || "Undefined Title"} inválidos.
-  Número máximo obtido: ${parseInt(unvalidNumber as string, 10) || 0}`);
+  Número máximo obtido: ${parseInt(unvalidNumber, 10) || 0}`);
 }
 
-export function stringError(
-  context: errorHandleTextType,
-  text: errorHandleTextType,
-  line: targStr
-) {
+export function stringError(context, text, line) {
   console.error(`STRING ERROR, LINE ${line ?? "UNDEFINED"}:
   Erro ${context}.
   Valor obtido: ${text ?? "null"}`);
 }
 
-export function matchError(
-  context: errorHandleTextType,
-  element: errorHandleElType,
-  text: errorHandleTextType,
-  line: targStr
-) {
+export function matchError(context, element, text, line) {
   console.error(`MATCH ERROR, LINE ${line ?? "UNDEFINED"}:
   Erro validando ${context || "Undefined Context"}.
   Elemento obtido: ${element || "Undefined Element"};
   Título obtido: ${text || "Undefined Title"}.`);
 }
 
-export function typeError(
-  context: errorHandleTextType,
-  element: primitiveType,
-  acceptedType: errorHandleTextType,
-  line: targStr
-) {
+export function typeError(context, element, acceptedType, line) {
   console.error(`TYPE ERROR, LINE ${line ?? "UNDEFINED"}:
   Tipo primitivo obtido para ${context || "Undefined Context"} incorreto.
   Tipo obtido: ${typeof element ?? "Undefined typeof"};
@@ -276,18 +217,18 @@ export function typeError(
 }
 
 export function objectError(
-  context: errorHandleTextType,
-  object: errorHandleObjectType,
-  objectName: targStr,
-  maxPropertiesNumber: errorHandleNumberType,
-  line: targStr
+  context,
+  object,
+  objectName,
+  maxPropertiesNumber,
+  line
 ) {
   console.error(`OBJECT ERROR, LINE ${line ?? "UNDEFINED"}:
   Erro validando ${objectName ?? "UNDEFINED OBJECT NAME"} para ${
     context || "Undefined Context"
   }.
   Objecto obtido: ${JSON.stringify(object) ?? "Undefined Object"};
-  Número obtido de propriedades: ${
-    Object.keys(object as object).length ?? 0
-  }; Número aceito: ${maxPropertiesNumber ?? 0}`);
+  Número obtido de propriedades: ${Object.keys.length ?? 0}; Número aceito: ${
+    maxPropertiesNumber ?? 0
+  }`);
 }

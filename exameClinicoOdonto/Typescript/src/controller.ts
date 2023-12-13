@@ -1,13 +1,24 @@
 import * as Handlers from "./handlers.js";
 import * as Model from "./model.js";
+import type {
+  looseNum,
+  targStr,
+  targNum,
+  targStrArr,
+  targEl,
+  arrTargEl,
+  HTMLTargEl,
+  entryEl,
+  textEl,
+} from "./types.js";
+import * as ErrorHandler from "./errorHandler.js";
 
+//inicialização de constantes percorrendo o DOM
 const textInputs: NodeListOf<HTMLInputElement> =
   document.querySelectorAll('input[type="text"]');
 const textareas: NodeListOf<HTMLTextAreaElement> =
   document.querySelectorAll("textarea");
 const textConts = [...textInputs, ...textareas];
-// const inspSpanSubs = document.getElementsByClassName("inspSpanSub");
-// const inspSpanSubsArray = Array.from(inspSpanSubs);
 const radioButtons: NodeListOf<HTMLInputElement> = document.querySelectorAll(
   'input[type="radio"]'
 );
@@ -23,19 +34,13 @@ const inspLIBtns: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
   'button[id^="inspLIBtn"]'
 );
 const quadrDents: HTMLCollectionOf<Element> =
-  document.getElementsByClassName("quadrMainDiv"); //retorna HTMLCollection
-const quadrDentsArray: Element[] = Array.from(quadrDents); // tem que ser aplicada em Arrray, não coleção HTML
+  document.getElementsByClassName("quadrMainDiv");
+const quadrDentsArray: Element[] = Array.from(quadrDents);
 const avElemDents: HTMLCollectionOf<Element> =
   document.getElementsByClassName("inpAvDent");
 const avElemDentsArray: Element[] = Array.from(avElemDents);
-const subDivsQuadrs: NodeListOf<HTMLDivElement> =
-  document.querySelectorAll(".quadrSubDiv");
-const resetDivsQuadrs: NodeListOf<HTMLDivElement> =
-  document.querySelectorAll(".resetBut");
 const tratContainer: HTMLElement | null =
   document.getElementById("tratContainer");
-// const tratTypeSpans = document.querySelectorAll('span[id^="tratTypeSpan"]');
-// const taTrats = document.querySelectorAll("textarea[id^=taTrat");
 const dateBtns: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
   'button[id$="DatBtn"]'
 );
@@ -51,78 +56,510 @@ const resetFormBtn: HTMLElement | null =
   document.getElementById("resetFormBtn");
 const subButton: HTMLElement | null =
   document.getElementById("submitFormButId");
+const quadrInps = document.querySelectorAll('input[id^="inpD"]');
+const resetDivsQuadrs: NodeListOf<HTMLDivElement> =
+  document.querySelectorAll(".resetBut");
+// const subDivsQuadrs: NodeListOf<HTMLDivElement> =
+//   document.querySelectorAll(".quadrSubDiv");
+// const tratTypeSpans = document.querySelectorAll('span[id^="tratTypeSpan"]');
+// const taTrats = document.querySelectorAll("textarea[id^=taTrat"
+// const inspSpanSubs = document.getElementsByClassName("inspSpanSub");
+// const inspSpanSubsArray = Array.from(inspSpanSubs);
 // let selection = window.getSelection();
 // let range = document.createRange();
 
-textConts.forEach((textCont) => {
-  textCont.addEventListener("input", (input) => {
-    if (
-      input.target instanceof HTMLInputElement ||
-      input.target instanceof HTMLTextAreaElement
-    ) {
-      Model.autoCapitalizeInputs(input.target);
+//validação de constantes e adição de listeners
+if (textConts.length > 0) {
+  textConts.forEach(function (textCont) {
+    textCont.addEventListener("input", function (input) {
+      if (
+        input.target &&
+        (input.target instanceof HTMLTextAreaElement ||
+          input.target instanceof HTMLInputElement)
+      ) {
+        Model.autoCapitalizeInputs(input.target);
+      } else {
+        const error = new Error();
+        const splitError = (error.stack as string)?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.inputNotFound(
+          input.target as HTMLElement,
+          "target textCont",
+          slicedError ?? "NULL"
+        );
+      }
+    });
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    textConts ?? null,
+    "textConts",
+    slicedError ?? "NULL"
+  );
+}
+
+if (radioButtons.length > 0) {
+  radioButtons.forEach((radio) => {
+    if (radio instanceof HTMLInputElement && radio.type === "radio") {
+      radio.addEventListener("keydown", (keydown) => {
+        Handlers.opRadioHandler(keydown);
+      });
+      radio.addEventListener("dblclick", () =>
+        Handlers.doubleClickHandler(radio)
+      );
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        radio ?? null,
+        `${radio?.id || "UNDEFINED ID RADIO"}`,
+        slicedError ?? "NULL"
+      );
     }
   });
-});
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    radioButtons ?? null,
+    "radioButtons",
+    slicedError ?? "NULL"
+  );
+}
 
-//TODO DESATIVADO POR ENQUANTO
-// inspSpanSubsArray.forEach((inspSpanSub) => {
-//   inspSpanSub.addEventListener("mousedown", (mousemove) =>
-//     Handlers.resizeContainers(mousemove, true, inspSpanSub)
-//   );
-// });
-
-radioButtons.forEach((radio) => {
-  radio.addEventListener("keydown", (keydown) => {
-    Handlers.opRadioHandler(keydown);
+if (inspRadiosYes.length > 0) {
+  inspRadiosYes.forEach((inspRadioYes) => {
+    if (
+      inspRadioYes instanceof HTMLInputElement &&
+      (inspRadioYes.type === "radio" || inspRadioYes.type === "checkbox")
+    ) {
+      inspRadioYes.addEventListener("click", (clickRadio) =>
+        Handlers.showInspSpanSub(clickRadio, inspRadioYes)
+      );
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        inspRadioYes ?? null,
+        `${inspRadioYes?.id || "UNDEFINED ID YES INPUT"}`,
+        slicedError ?? "NULL"
+      );
+    }
   });
-  radio.addEventListener("dblclick", () => Handlers.doubleClickHandler(radio));
-  // radio.addEventListener("touchstart", Handlers.touchStartHandler);
-});
-
-inspRadiosYes.forEach((inspRadioYes) => {
-  inspRadioYes.addEventListener("click", (clickRadio) =>
-    Handlers.showInspSpanSub(clickRadio, inspRadioYes)
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    inspRadiosYes ?? null,
+    "inspRadioYes",
+    slicedError ?? "NULL"
   );
-});
+}
 
-inspRadiosNo.forEach((inspRadioNo) => {
-  inspRadioNo.addEventListener("click", (clickRadio) =>
-    Handlers.showInspSpanSub(clickRadio, inspRadioNo)
-  );
-});
-
-inspDialogsBtns.forEach((inspDialogBtn) => {
-  inspDialogBtn.addEventListener("click", (click) =>
-    Handlers.showInspDialogs(click, inspDialogBtn)
-  );
-});
-
-inspLIBtns.forEach((inspLIBtn) => {
-  inspLIBtn.addEventListener("click", (click) =>
-    Handlers.addTextToObs(click, inspLIBtn)
-  );
-});
-
-quadrDentsArray.forEach((quadrDent) => {
-  quadrDent.addEventListener("mousemove", () => Handlers.dragHover(quadrDent));
-  quadrDent.addEventListener("dragstart", () => Handlers.dragStart);
-  quadrDent.addEventListener("dragenter", Handlers.dragEnter);
-  quadrDent.addEventListener("dragover", Handlers.dragOver);
-  quadrDent.addEventListener("dragleave", Handlers.dragLeave);
-  quadrDent.addEventListener("drop", Handlers.dragDrop);
-  quadrDent.addEventListener("dragend", Handlers.dragEnd);
-});
-
-avElemDentsArray.forEach((avElemDent) => {
-  avElemDent.addEventListener("click", (selectInp) => {
-    Model.resetAvDentValue(selectInp);
+if (inspRadiosNo.length > 0) {
+  inspRadiosNo.forEach((inspRadioNo) => {
+    if (
+      inspRadioNo instanceof HTMLInputElement &&
+      (inspRadioNo.type === "radio" || inspRadioNo.type === "checkbox")
+    ) {
+      inspRadioNo.addEventListener("click", (clickRadio) =>
+        Handlers.showInspSpanSub(clickRadio, inspRadioNo)
+      );
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        inspRadioNo ?? null,
+        `${inspRadioNo?.id || "UNDEFINED ID YES INPUT"}`,
+        slicedError ?? "NULL"
+      );
+    }
   });
-});
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    inspRadiosNo ?? null,
+    "inspRadioNo",
+    slicedError ?? "NULL"
+  );
+}
+
+if (inspDialogsBtns.length > 0) {
+  inspDialogsBtns.forEach((inspDialogBtn) => {
+    if (inspDialogBtn instanceof HTMLButtonElement) {
+      inspDialogBtn.addEventListener("click", (click) =>
+        Handlers.showInspDialogs(click, inspDialogBtn)
+      );
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        inspDialogBtn ?? null,
+        `${
+          (inspDialogBtn as HTMLButtonElement)?.id ||
+          "UNDEFINED ID DIALOG BUTTON"
+        }`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    inspDialogsBtns ?? null,
+    "inspDialogsBtns",
+    slicedError ?? "NULL"
+  );
+}
+
+if (inspLIBtns.length > 0) {
+  inspLIBtns.forEach((inspLIBtn) => {
+    if (inspLIBtn instanceof HTMLButtonElement) {
+      inspLIBtn.addEventListener("click", (click) =>
+        Handlers.addTextToObs(click, inspLIBtn)
+      );
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        inspLIBtn ?? null,
+        `${(inspLIBtn as HTMLButtonElement)?.id || "UNDEFINED ID LI BUTTON"}`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    inspLIBtns ?? null,
+    "inspLIBtns",
+    slicedError ?? "NULL"
+  );
+}
+
+if (quadrDentsArray.length > 0) {
+  quadrDentsArray.forEach((quadrDent) => {
+    if (quadrDent instanceof HTMLElement) {
+      quadrDent.addEventListener("mousemove", () =>
+        Handlers.dragHover(quadrDent)
+      );
+      quadrDent.addEventListener("dragstart", Handlers.dragStart);
+      quadrDent.addEventListener("dragenter", Handlers.dragEnter);
+      quadrDent.addEventListener("dragover", Handlers.dragOver);
+      quadrDent.addEventListener("dragleave", Handlers.dragLeave);
+      quadrDent.addEventListener("drop", Handlers.dragDrop);
+      quadrDent.addEventListener("dragend", Handlers.dragEnd);
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        quadrDent ?? null,
+        `${quadrDent?.id ?? "UNDEFINED QUADRANT ID"}`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    quadrDentsArray ?? null,
+    "quadrDentsArray",
+    slicedError ?? "NULL"
+  );
+}
+
+if (avElemDentsArray.length > 0) {
+  avElemDentsArray.forEach((avElemDent) => {
+    avElemDent.addEventListener("click", (selectInp) => {
+      if (
+        avElemDent instanceof HTMLButtonElement ||
+        HTMLSelectElement ||
+        HTMLInputElement
+      ) {
+        Model.resetAvDentValue(selectInp);
+      } else {
+        const error = new Error();
+        const splitError = (error.stack as string)?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.elementNotFound(
+          avElemDent ?? null,
+          `${(avElemDent as HTMLElement)?.id ?? "UNDEFINED ID ELEMENT"}`,
+          slicedError ?? "NULL"
+        );
+      }
+    });
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    avElemDentsArray ?? null,
+    "avElemDentsArray",
+    slicedError ?? "NULL"
+  );
+}
+
+if (quadrInps.length > 0) {
+  quadrInps.forEach((quadrInp) => {
+    if (quadrInp instanceof HTMLInputElement) {
+      quadrInp.addEventListener("click", () =>
+        Handlers.clearQuadrInps(quadrInp)
+      );
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.inputNotFound(
+        quadrInp ?? null,
+        `${quadrInp?.id ?? "UNDEFINED QUADRANT INPUT ID"}`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    quadrInps ?? null,
+    "quadrInps",
+    slicedError ?? "NULL"
+  );
+}
+
+if (resetDivsQuadrs.length > 0) {
+  resetDivsQuadrs.forEach((resetBtn) => {
+    if (resetBtn instanceof HTMLButtonElement) {
+      resetBtn.addEventListener("click", () => {
+        Handlers.resetLabels(resetBtn);
+      });
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        resetBtn ?? null,
+        `${resetBtn?.id ?? "UNDEFINED ID RESET BUTTON"}`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    resetDivsQuadrs ?? null,
+    "resetDivsQaudrs",
+    slicedError ?? "NULL"
+  );
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   Model.orderLabels();
 });
+
+if (tratContainer instanceof HTMLElement) {
+  tratContainer.addEventListener("click", (click) =>
+    Handlers.addSubDivTrat(click)
+  );
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(
+    tratContainer ?? null,
+    "tratContainer",
+    slicedError ?? "NULL"
+  );
+}
+
+if (dateBtns.length > 0) {
+  dateBtns.forEach(function (dateBtn) {
+    if (dateBtn instanceof HTMLButtonElement) {
+      dateBtn.addEventListener("click", (activation) => {
+        Handlers.useCurrentDate(activation, dateBtn);
+      });
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        dateBtn ?? null,
+        `${(dateBtn as HTMLButtonElement)?.id || "UNDEFINED ID DATE BUTTON"}`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    dateBtns ?? null,
+    "dateBtns",
+    slicedError ?? "NULL"
+  );
+}
+
+if (editableCite) {
+  let firstClick = true;
+  const citeClickHandler = function (click: Event) {
+    if (firstClick && click.target && click.target instanceof HTMLElement) {
+      Model.removeFirstClick(click.target);
+      firstClick = false;
+      editableCite.removeEventListener("click", citeClickHandler);
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        (click.target as HTMLElement) ?? null,
+        "click target editableCite",
+        slicedError ?? "NULL"
+      );
+    }
+  };
+  editableCite.addEventListener("keyup", function (keypress) {
+    if (keypress.target && keypress.target instanceof HTMLElement) {
+      Model.autoCapitalizeCite(keypress.target);
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        (keypress.target as HTMLElement) ?? null,
+        "keypress target editableCite",
+        slicedError ?? "NULL"
+      );
+    }
+  });
+  editableCite.addEventListener("click", citeClickHandler);
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(null, "editableCite", slicedError ?? "NULL");
+}
+
+if (astDigtBtns.length > 0) {
+  astDigtBtns.forEach(function (astDigtBtn) {
+    if (astDigtBtn instanceof HTMLButtonElement) {
+      astDigtBtn.addEventListener("click", function (click) {
+        return Handlers.changeToAstDigit(click, astDigtBtn);
+      });
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        astDigtBtn ?? null,
+        (astDigtBtn as HTMLButtonElement)?.id || "UNDEFINED ID BUTTON",
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    astDigtBtns ?? null,
+    "astDigtBtns",
+    slicedError ?? "NULL"
+  );
+}
+
+if (deactAutocorrectBtns.length > 0) {
+  deactAutocorrectBtns.forEach(function (deactAutocorrectBtn) {
+    if (deactAutocorrectBtn instanceof HTMLButtonElement) {
+      deactAutocorrectBtn.addEventListener("click", function (click) {
+        return Model.switchAutocorrect(click, deactAutocorrectBtn);
+      });
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotPopulated(
+        deactAutocorrectBtn ?? null,
+        `${
+          (deactAutocorrectBtn as HTMLButtonElement)?.id ||
+          "UNDEFINED ID BUTTON"
+        }`,
+        slicedError ?? "NULL"
+      );
+    }
+  });
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotPopulated(
+    deactAutocorrectBtns ?? null,
+    "deactAutoCorrectBtns",
+    slicedError ?? "NULL"
+  );
+}
+
+if (subButton instanceof HTMLButtonElement) {
+  subButton.addEventListener("click", Handlers.subForm);
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(
+    subButton ?? null,
+    "subButton",
+    slicedError ?? "NULL"
+  );
+}
+
+if (resetFormBtn instanceof HTMLButtonElement) {
+  resetFormBtn.addEventListener("click", (click) =>
+    Handlers.resetarFormulario(click, astDigtBtns)
+  );
+} else {
+  const error = new Error();
+  const splitError = (error.stack as string)?.split("\n");
+  const slicedError = splitError[1].trim().slice(-7, -1);
+  ErrorHandler.elementNotFound(
+    resetFormBtn ?? null,
+    "resetFormBtn",
+    slicedError ?? "NULL"
+  );
+}
+export function cursorCheckTimer(cursorPosition: number): number | void {
+  let selection = window.getSelection();
+  if (selection && selection.focusNode !== null) {
+    cursorPosition = selection.getRangeAt(0)?.startOffset;
+    setTimeout(() => {
+      return cursorPosition;
+    }, 3000);
+  }
+  return 0;
+}
+
+//TODO DESATIVADO POR ENQUANTO
 
 // subDivsQuadrs.forEach((subDivQuadrs) => {
 //   subDivQuadrs.addEventListener("click", (selectedBut) => {
@@ -136,72 +573,12 @@ document.addEventListener("DOMContentLoaded", () => {
 //   });
 // });
 
-if (tratContainer) {
-  tratContainer.addEventListener("click", (click) =>
-    Handlers.addSubDivTrat(click)
-  );
-} else {
-  console.warn("Erro validando Container de Tratamento");
-}
+// inspSpanSubsArray.forEach((inspSpanSub) => {
+//   inspSpanSub.addEventListener("mousedown", (mousemove) =>
+//     Handlers.resizeContainers(mousemove, true, inspSpanSub)
+//   );
+// });
 
-dateBtns.forEach((dateBtn) => {
-  dateBtn.addEventListener("click", (activation) =>
-    Handlers.useCurrentDate(activation, dateBtn)
-  );
-});
-
-if (editableCite) {
-  let firstClick = true;
-  const citeClickHandler = function (click: Event) {
-    if (firstClick && click.target && click.target instanceof HTMLElement) {
-      Model.removeFirstClick(click.target);
-      firstClick = false;
-      editableCite.removeEventListener("click", citeClickHandler);
-    }
-  };
-  editableCite.addEventListener("keyup", function (keypress) {
-    if (keypress.target && keypress.target instanceof HTMLElement) {
-      Model.autoCapitalizeCite(keypress.target);
-    }
-  });
-  editableCite.addEventListener("click", citeClickHandler);
-} else {
-  console.warn("Erro validando Cite Editável");
-}
-
-astDigtBtns.forEach((astDigtBtn) => {
-  astDigtBtn.addEventListener("click", (click) =>
-    Handlers.changeToAstDigit(click, astDigtBtn)
-  );
-});
-
-deactAutocorrectBtns.forEach((deactAutocorrectBtn) => {
-  deactAutocorrectBtn.addEventListener("click", (click) =>
-    Model.switchAutocorrect(click, deactAutocorrectBtn)
-  );
-});
-
-if (subButton) {
-  subButton.addEventListener("click", Handlers.subForm);
-}
-
-if (resetFormBtn) {
-  resetFormBtn.addEventListener("click", (click) =>
-    Handlers.resetarFormulario(click, astDigtBtns)
-  );
-}
-
-export function cursorCheckTimer(cursorPosition: number): number | void {
-  let selection = window.getSelection();
-  if (selection && selection.focusNode !== null) {
-    cursorPosition = selection.getRangeAt(0)?.startOffset;
-    setTimeout(() => {
-      return cursorPosition;
-    }, 3000);
-  }
-}
-
-//TODO DESATIVADO POR ENQUANTO
 // const inpsAst = document.querySelectorAll('input[id^="inpAst"]');
 // const confirmLocId = document.querySelector('label[for="confirmLocId"]');
 // const inspDialogs = document.querySelectorAll('dialog[id^="inspDialog"]');

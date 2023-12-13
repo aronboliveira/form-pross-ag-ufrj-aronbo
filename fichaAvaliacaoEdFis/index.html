@@ -32,6 +32,9 @@
       >
         Desativar Autocorreção
       </button>
+      <button type="button" class="contQuint" id="autoFillBtn">
+        Desativar Cálculo Automático
+      </button>
       </h1>
     </header>
     <main>
@@ -704,12 +707,17 @@
           >
 
           <div>
-            <label for="selectNumCons" id="labSelectNumCons" class="contTerc"> Consulta em leitura:
+            <label for="selectNumCons" id="labSelectNumCons" class="contTerc"> Consulta em Leitura:
               <select id="selectNumCons" class="contQuat">
                 <option value="1" id="opCons1" class="contQuint">1ª</option>
                 <option value="2" id="opCons2" class="contQuint">2ª</option>
                 <option value="3" id="opCons3" class="contQuint">3ª</option>
               </select>
+            </label>
+            <br />
+
+            <label for="trioReadNumCons" id="labTrioReadNumCons" class="contTerc"> Número inicial da Consulta em Leitura:
+              <input type="number" class="contQuat" id="trioReadNumCons" min="1" max="255">
             </label>
             <br />
             <span>
@@ -782,10 +790,6 @@
             </select>
           </span>
           <br />
-
-          <button type="button" id="autoFillBtn">
-            Desativar Cálculo Automático
-          </button>
         </div>
 
           <hr />
@@ -807,9 +811,9 @@
                 <thead class="contQuat tabTheadProg" id="tabTheadProgSVi" itemprop="blockSVi">
                   <tr class="contQuint tabRowProg tabRowProgSVi" id="tabRowProgSVi1" itemprop="rowSVi">
                     <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_1" itemprop="celSVi"></th>
-                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_2" itemprop="celSVi">1ª Consulta</th>
-                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_3" itemprop="celSVi">2ª Consulta</th>
-                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1" id="tabCelRowProgSVi1_4" itemprop="celSVi">3ª Consulta</th>
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1 numConsTextHeadCel" id="tabCelRowProgSVi1_2" itemprop="celSVi">1ª Consulta</th>
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1 numConsTextHeadCel" id="tabCelRowProgSVi1_3" itemprop="celSVi">2ª Consulta</th>
+                    <th class="contSext tabCelProg tabCelProgSvi tabCelRowProgSVi1 numConsTextHeadCel" id="tabCelRowProgSVi1_4" itemprop="celSVi">3ª Consulta</th>
                   </tr>
                 </thead>
                 <tbody class="contQuat tabTbodyProg" id="tabTbodyProgSvi" itemprop="blockSVi">
@@ -869,9 +873,9 @@
 
                   <tr class="contQuint tabRowProgCons tabRowMedAnt" id="tabRowMedAnt1" itemprop="rowMedAnt">
                     <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_1" itemprop="celMedAnt"></th>
-                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_2" itemprop="celMedAnt">1ª Consulta</th>
-                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_3" itemprop="celMedAnt">2ª Consulta</th>
-                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1" id="tabCelRowMedAnt1_4" itemprop="celMedAnt">3ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1 numConsTextHeadCel" id="tabCelRowMedAnt1_2" itemprop="celMedAnt">1ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1 numConsTextHeadCel" id="tabCelRowMedAnt1_3" itemprop="celMedAnt">2ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelMedAnt tabCelRowMedAnt1 numConsTextHeadCel" id="tabCelRowMedAnt1_4" itemprop="celMedAnt">3ª Consulta</th>
                   </tr>
 
                 </thead>
@@ -1059,9 +1063,9 @@
                 <thead class="contQuat tabTheadProgCons" id="tabTheadDCut" itemprop="blockDCut">
                   <tr class="contQuint tabRowProgCons tabRowDCut" id="tabRowDCut1" itemprop="rowDCut">
                     <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_1" itemprop="celDCut"></th>
-                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_2" itemprop="celDCut">1ª Consulta</th>
-                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_3" itemprop="celDCut">2ª Consulta</th>
-                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1" id="tabCelRowDCut1_4" itemprop="celDCut">3ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1 numConsTextHeadCel" id="tabCelRowDCut1_2" itemprop="celDCut">1ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1 numConsTextHeadCel" id="tabCelRowDCut1_3" itemprop="celDCut">2ª Consulta</th>
+                    <th class="contSext tabCelProgCons tabCelDCut tabCelRowDCut1 numConsTextHeadCel" id="tabCelRowDCut1_4" itemprop="celDCut">3ª Consulta</th>
                   </tr>
                 </thead>
                 <tbody class="contQuat tabTbodyProgCons" id="tabTbodyDCut" itemprop="blockDCut">
@@ -1189,7 +1193,7 @@
                       <button type="button" id="sumDCBtn9_2" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
                     </td>
                     <td class="contSext tabCelProgCons tabCelDCut tabCelRowDCut9" id="tabCelRowDCut9_2" itemprop="somaNum">
-                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDcut float sevenCharLongNum" id="tabInpRowDCut9_3" min="0" max="65535" value="40" />
+                      <input type="number" class="contSet tabInpProgCons tabInpProgSumDCut tabInpRowDCut9 inpSumDCut float sevenCharLongNum" id="tabInpRowDCut9_3" min="0" max="65535" value="40" />
                       <label for="tabInpRowDCut9_3" id="labInpRowDCut9_3" class="contSet tabLabProgCons tabLabRowDCut9" id="tabLabRowDCut9_3">mm</label>
                       <button type="button" id="sumDCBtn9_3" class="contSet tabBtn tabBtnProgCons tabBtnSum tabBtnRowDCut9">Calcular</button>
                     </td>
@@ -1219,9 +1223,9 @@
                 <thead>
                   <tr class="contQuint tabRowProg tabRowProgIndPerc" id="tabRowProgIndPerc1" itemprop="rowIndPerc">
                     <th></th>
-                    <th>1ª Consulta</th>
-                    <th>2ª Consulta</th>
-                    <th>3ª Consulta</th>
+                    <th class="numConsTextHeadCel">1ª Consulta</th>
+                    <th class="numConsTextHeadCel">2ª Consulta</th>
+                    <th class="numConsTextHeadCel">3ª Consulta</th>
                   </tr>      
                 </thead>
                 <tbody>
@@ -1344,7 +1348,7 @@
                           <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
                         </svg>
                       </span>
-                      <button type="button" class="tabBtnTmb">Calcular</button>
+                      <button type="button" id="btnTmb1Cel5_2" class="tabBtnTmb">Calcular</button>
                     </td>
                     <td>
                       <input type="number" name="tabInpProgDC5_3" id="inpTmb2Cel5_3" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol3 sevenCharLongNum" min="0" />
@@ -1354,7 +1358,7 @@
                           <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
                         </svg>
                       </span>
-                      <button type="button" class="tabBtnTmb">Calcular</button>
+                      <button type="button" id="btnTmb2Cel5_3" class="tabBtnTmb">Calcular</button>
                     </td>
                     <td>
                       <input type="number" name="tabInpProgDC5_4" id="inpTmb3Cel5_4" class="tabInpProgCons tabInpProgIndPerc inpInd inpTmb inpCol4 sevenCharLongNum" min="0" />
@@ -1364,7 +1368,7 @@
                           <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
                         </svg>
                       </span>
-                      <button type="button" class="tabBtnTmb">Calcular</button>
+                      <button type="button" id="btnTmb3Cel5_4" class="tabBtnTmb">Calcular</button>
                      </td>
                   </tr>
                   <tr class="contQuint tabRowProg tabRowProgIndPerc" id="tabRowProgIndPerc5" itemprop="rowIndPerc">
@@ -1373,17 +1377,17 @@
                     <td>
                       <input type="number" name="tabInpProgDC6_2" id="inpGet1Cel6_2" class="tabInpProgCons tabInpProgIndPerc inpInd inpGet inpCol2 sevenCharLongNum" min="0" />
                       <label for="inpGet1Cel6_2">kcal</label>
-                      <button type="button" class="tabBtnGet">Calcular</button>
+                      <button type="button" id="btnGet1Cel6_2" class="tabBtnGet">Calcular</button>
                     </td>
                     <td>
                       <input type="number" name="tabInpProgDC6_3" id="inpGet2Cel6_3" class="tabInpProgCons tabInpProgIndPerc inpInd inpGet inpCol3 sevenCharLongNum" min="0" />
                       <label for="inpGet2Cel6_3">kcal</label>
-                      <button type="button" class="tabBtnGet">Calcular</button>
+                      <button type="button" id="btnGet2Cel6_3" class="tabBtnGet">Calcular</button>
                     </td>
                     <td>
                       <input type="number" name="tabInpProgDC6_4" id="inpGet3Cel6_4" class="tabInpProgCons tabInpProgIndPerc inpInd inpGet inpCol4 sevenCharLongNum" min="0" />
                       <label for="inpGet3Cel6_4">kcal</label>
-                      <button type="button" class="tabBtnGet">Calcular</button>
+                      <button type="button" id="btnGet3Cel6_4" class="tabBtnGet">Calcular</button>
                      </td>
                   </tr>
                 </tbody>

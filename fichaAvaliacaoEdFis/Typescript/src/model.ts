@@ -2,6 +2,21 @@
 
 import * as Controller from "./controller.js";
 import { UndefinedPerson, Person, Man, Woman, Neutro } from "./classes.js";
+import type {
+  looseNum,
+  targNum,
+  targStr,
+  targStrArr,
+  targEl,
+  arrTargEl,
+  HTMLTargEl,
+  entryEl,
+  textEl,
+  formPerson,
+  formClassPerson,
+  targMatchText,
+  looseMatchText,
+} from "./types.js";
 import * as ErrorHandler from "./errorHandler.js";
 
 const autoCapitalizeFirstLetterRegex = /\b\w/;
@@ -236,9 +251,14 @@ export function checkInnerColGroups(
             }`;
             colsInstances.push(childInstance);
             if (childInstance !== `HTMLTableColElement`) {
-              console.error(`Erro validando colGroup${i}.
-              Instância da child inválida: ${childInstance};
-              Posição da child inválida: ${j}`);
+              const error = new Error();
+              const splitError = (error.stack as string)?.split("\n");
+              const slicedError = splitError[1].trim().slice(-7, -1);
+              ErrorHandler.elementNotFound(
+                cols[j] ?? null,
+                "child <col>",
+                slicedError ?? "NULL"
+              );
             }
           }
           const validCols = cols.filter(
@@ -287,9 +307,7 @@ export function checkInnerColGroups(
   return [validColGroupsChildCount?.length ?? 0, areAllCoolGroupsSimilar];
 }
 
-export function generatePersonInstance(
-  person: Man | Woman | Neutro | UndefinedPerson
-) {
+export function generatePersonInstance(person: formPerson) {
   if (typeof person.gen === "string" && person.gen !== "") {
     if (person.gen === "masculino") {
       person = new Man(
@@ -322,12 +340,25 @@ export function generatePersonInstance(
       );
       return person;
     } else {
-      console.error(`Erro verificando value definido para Gênero.
-      Valor obtido: ${person?.gen ?? "null"}`);
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.stringError(
+        "person.gen",
+        person?.gen ?? null,
+        slicedError ?? "NULL"
+      );
     }
   } else {
-    console.error(`Erro validando tipo de .gen na geração de objeto Person
-    Instância obtida: ${typeof person.gen || "null"}}`);
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.typeError(
+      "person.gen",
+      person?.gen ?? null,
+      "string",
+      slicedError ?? "NULL"
+    );
   }
   return person;
 }
@@ -383,20 +414,17 @@ export function normalizeNegatives(tabInp: Element) {
       parsedInpValue = 0;
     }
   } else {
-    console.error(`Erro validando tabInp.
-    Instância obtida: ${
-      Object.prototype.toString.call(tabInp).slice(8, -1) ?? "null"
-    };
-    .value obtido: ${(tabInp as HTMLInputElement)?.value ?? "null"}.`);
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(tabInp ?? null, "tabInp", slicedError ?? "NULL");
   }
   return parsedInpValue.toString();
 }
 
-export function autoCapitalizeInputs(
-  textElement: HTMLInputElement | HTMLTextAreaElement
-): void {
+export function autoCapitalizeInputs(textEl: textEl): void {
   if (isAutocorrectOn) {
-    let text = textElement.value;
+    let text = textEl.value;
     let newWordMatches = text.match(
       /\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g
     );
@@ -404,7 +432,7 @@ export function autoCapitalizeInputs(
     let letterMatchesIniD = text.match(/\sd/g);
     const notMatchesAfterDRegex =
       /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]?\s/g;
-    let letterNotMatchesAfterD: RegExpMatchArray | string[] | null = text.match(
+    let letterNotMatchesAfterD: RegExpMatchArray | targStrArr = text.match(
       notMatchesAfterDRegex
     );
     const afterDRegexOp1 =
@@ -481,13 +509,13 @@ export function autoCapitalizeInputs(
       if (firstLetterMatch) {
         let capitalizedFirstLetter = text[0]?.toUpperCase();
         let nextLetters = text.substring(1).toLowerCase();
-        textElement.value = capitalizedFirstLetter + nextLetters;
+        textEl.value = capitalizedFirstLetter + nextLetters;
 
         let firstLetterMatch = text[0]?.match(autoCapitalizeFirstLetterRegex);
         if (firstLetterMatch) {
           if (range.endOffset >= 1) {
-            range.setStart(textElement, 0);
-            range.setEnd(textElement, 1);
+            range.setStart(textEl, 0);
+            range.setEnd(textEl, 1);
             range.collapse(true);
             selection?.removeAllRanges();
             selection?.addRange(range);
@@ -496,8 +524,8 @@ export function autoCapitalizeInputs(
       }
     } else if (text.length > 1) {
       if (
-        textElement.classList.contains("inpAst") ||
-        textElement.classList.contains("inpIdentif")
+        textEl.classList.contains("inpAst") ||
+        textEl.classList.contains("inpIdentif")
       ) {
         // console.log("inp nome");
 
@@ -529,9 +557,9 @@ export function autoCapitalizeInputs(
                 let arrayCite = Array.from(text);
                 arrayCite.splice(wrongCharIndex, wrongCharLength, "");
                 let fixedStrCite = arrayCite.toString().replaceAll(",", "");
-                textElement.value = fixedStrCite;
+                textEl.value = fixedStrCite;
                 correctCursorNextWords(isUndoUppercase);
-                range.selectNodeContents(textElement);
+                range.selectNodeContents(textEl);
                 range.collapse(false);
                 selection?.removeAllRanges();
                 selection?.addRange(range);
@@ -666,7 +694,7 @@ export function autoCapitalizeInputs(
             if (upperlowercombDS) {
               upperlowercombDS.splice(3, 1, "s");
             }
-            textElement.value =
+            textEl.value =
               textBeforeRepetitions +
               repeatedLetter +
               loweredRepetitions +
@@ -675,8 +703,8 @@ export function autoCapitalizeInputs(
             isUndoUppercase = true;
             correctCursorNextWords(isUndoUppercase);
             if (range.endOffset >= 1) {
-              range.setStart(textElement, 0);
-              range.setEnd(textElement, 1);
+              range.setStart(textEl, 0);
+              range.setEnd(textEl, 1);
               range.collapse(true);
               selection?.removeAllRanges();
               selection?.addRange(range);
@@ -711,7 +739,7 @@ export function autoCapitalizeInputs(
               loweredRepetitions.length,
               loweredRepetitions
             );
-            let upperlowercombD: RegExpMatchArray | string | null = text.match(
+            let upperlowercombD: targMatchText = text.match(
               /D[a-záàâäãéèêëíìîïóòôöõúùûü][sS]?[\s]/
             );
             if (upperlowercombD) {
@@ -723,14 +751,14 @@ export function autoCapitalizeInputs(
             // console.log(textBeforeRepetitions);
             // console.log(loweredRepetitions);
             // console.log(textAfterRepetitions);
-            textElement.value =
+            textEl.value =
               textBeforeRepetitions + loweredRepetitions + textAfterRepetitions;
             repAcumulator++;
             isUndoUppercase = true;
             correctCursorNextWords(isUndoUppercase);
             if (range.endOffset >= 1) {
-              range.setStart(textElement, 0);
-              range.setEnd(textElement, 1);
+              range.setStart(textEl, 0);
+              range.setEnd(textEl, 1);
               range.collapse(true);
               selection?.removeAllRanges();
               selection?.addRange(range);
@@ -771,9 +799,7 @@ export function autoCapitalizeInputs(
           forceUpperCase();
         }
 
-        function wrongStartCorrection(
-          wrongStartMatch: RegExpMatchArray | string | null
-        ) {
+        function wrongStartCorrection(wrongStartMatch: targMatchText) {
           // console.log("chegou na checagem de wrong start");
           if (wrongStartMatch) {
             let wrongStartLength = wrongStartMatch
@@ -781,7 +807,7 @@ export function autoCapitalizeInputs(
               .replaceAll(",", "").length;
             let addErasedChar = text.slice(0, wrongStartLength - 1);
             let fixedStart = text.slice(wrongStartLength - 1);
-            textElement.value = fixedStart + addErasedChar;
+            textEl.value = fixedStart + addErasedChar;
           }
         }
 
@@ -812,7 +838,7 @@ export function autoCapitalizeInputs(
               textArray[globalLetterMatchIndex] = capitalizedChar;
               remadeCiteText = textArray.toString().replaceAll(",", "");
             });
-            textElement.value = remadeCiteText;
+            textEl.value = remadeCiteText;
             // console.log("foi chamado pelo capitalizeNext");
             correctCursorNextWords(isUndoUppercase);
             wrongStartCorrection(wrongStartMatch);
@@ -912,7 +938,7 @@ export function autoCapitalizeInputs(
             textArrayD[globalLetterMatchIndexD] = capitalizedCharD;
             remadeCiteText = textArrayD.toString().replaceAll(",", "");
           });
-          textElement.value = remadeCiteText;
+          textEl.value = remadeCiteText;
           let arrayCheckLowerCasesD = Array.from(letterMatchesAfterD);
           for (let iD = 0; iD < arrayCheckLowerCasesD.length; iD++) {
             let filteredArrayD = letterMatchesAfterD.filter((iD) =>
@@ -933,7 +959,7 @@ export function autoCapitalizeInputs(
                 .replaceAll(",", "")
                 .slice(2);
               correctCursorNextWords(isUndoUppercase);
-              textElement.value = textElement.value.replace(
+              textEl.value = textEl.value.replace(
                 regexTargLetter,
                 remadeStringD
               );
@@ -955,7 +981,7 @@ export function autoCapitalizeInputs(
             ?.getRangeAt(0).startOffset;
           if (selectionPosition === 0) {
             wrongStartCorrection(wrongStartMatch);
-            textElement.addEventListener("keyup", (fixmove) => {
+            textEl.addEventListener("keyup", (fixmove) => {
               if (
                 (fixmove instanceof KeyboardEvent &&
                   (fixmove.keyCode === 32 ||
@@ -966,7 +992,7 @@ export function autoCapitalizeInputs(
                 isUndoUppercase
               ) {
                 if (!isFixAfterDCursorExec) {
-                  moveCursorToTheEnd(textElement);
+                  moveCursorToTheEnd(textEl);
                 }
                 fixmove.preventDefault();
                 isFixAfterDCursorExec = true;
@@ -975,11 +1001,11 @@ export function autoCapitalizeInputs(
           }
         }
 
-        function moveCursorToTheEnd(textElement: HTMLElement) {
+        function moveCursorToTheEnd(textEl: HTMLElement) {
           // console.log("chegou no moveCursor");
           if (window.getSelection && !isCursorAutoMoved) {
             let range = document.createRange();
-            range.selectNodeContents(textElement);
+            range.selectNodeContents(textEl);
             range.collapse(false);
             let sel = window.getSelection();
             sel?.removeAllRanges();
@@ -1027,16 +1053,11 @@ export function autoCapitalizeInputs(
                 strDlowercase.substring(0, 1) +
                 DUppercased +
                 strDlowercase.substring(2);
-              let strDAfterMinusInd =
-                textElement.value.length - strDAfter.length;
-              let oppositeSlicedCite =
-                textElement.value.slice(strDAfterMinusInd);
-              let startSlicedCite = textElement.value.slice(
-                0,
-                strDAfterMinusInd
-              );
+              let strDAfterMinusInd = textEl.value.length - strDAfter.length;
+              let oppositeSlicedCite = textEl.value.slice(strDAfterMinusInd);
+              let startSlicedCite = textEl.value.slice(0, strDAfterMinusInd);
               if (wordMatch.length >= 1) {
-                textElement.value = startSlicedCite + oppositeSlicedCite;
+                textEl.value = startSlicedCite + oppositeSlicedCite;
               }
             }
 
@@ -1046,24 +1067,15 @@ export function autoCapitalizeInputs(
           }
         }
 
-        textElement.value = textElement.value.replaceAll(
-          wrongCharsRegexOp1,
-          ""
-        );
-        textElement.value = textElement.value.replaceAll(
-          wrongCharsRegexOp2,
-          ""
-        );
-        textElement.value = textElement.value.replaceAll(
-          wrongCharsRegexOp3,
-          ""
-        );
-        textElement.value = textElement.value.replaceAll(/\s[\s]+/g, " ");
+        textEl.value = textEl.value.replaceAll(wrongCharsRegexOp1, "");
+        textEl.value = textEl.value.replaceAll(wrongCharsRegexOp2, "");
+        textEl.value = textEl.value.replaceAll(wrongCharsRegexOp3, "");
+        textEl.value = textEl.value.replaceAll(/\s[\s]+/g, " ");
 
         if (text.match(/^[a-záàâäãéèêëíìîïóòôöõúùûü]/)) {
           const firstLetterCapitalized = text.slice(0, 1).toUpperCase();
           const restOfText = text.slice(1);
-          textElement.value = firstLetterCapitalized + restOfText;
+          textEl.value = firstLetterCapitalized + restOfText;
         }
       }
     }
@@ -1071,16 +1083,16 @@ export function autoCapitalizeInputs(
 }
 
 export function autoCapitalizeCite(editableCite: HTMLElement): void {
-  let citeText: string | null = editableCite.textContent;
+  let citeText: targStr = editableCite.textContent;
   if (isAutocorrectOn && citeText) {
-    let newWordMatches: string[] | null = citeText.match(
+    let newWordMatches: targStrArr = citeText.match(
       /\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g
     );
-    let letterMatchesIniNotD: string[] | null = citeText.match(/\s[^d]/g);
-    let letterMatchesIniD: string[] | null = citeText.match(/\sd/g);
+    let letterMatchesIniNotD: targStrArr = citeText.match(/\s[^d]/g);
+    let letterMatchesIniD: targStrArr = citeText.match(/\sd/g);
     const notMatchesAfterDRegex: RegExp =
       /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]?\s/g;
-    let letterNotMatchesAfterD: string[] | null = citeText.match(
+    let letterNotMatchesAfterD: targStrArr = citeText.match(
       notMatchesAfterDRegex
     );
     const afterDRegexOp1: RegExp =
@@ -1089,61 +1101,58 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
       /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS\s]/g;
     const afterDRegexOp3: RegExp =
       /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS][a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g;
-    let letterMatchesAfterDOp1: string[] | null =
-      citeText.match(afterDRegexOp1);
-    let letterMatchesAfterDOp2: string[] | null =
-      citeText.match(afterDRegexOp2);
-    let letterMatchesAfterDOp3: string[] | null =
-      citeText.match(afterDRegexOp3);
+    let letterMatchesAfterDOp1: targStrArr = citeText.match(afterDRegexOp1);
+    let letterMatchesAfterDOp2: targStrArr = citeText.match(afterDRegexOp2);
+    let letterMatchesAfterDOp3: targStrArr = citeText.match(afterDRegexOp3);
     const lowercasesRegex: RegExp = /[a-záàâäãéèêëíìîïóòôöõúùûü]/g;
     const lowercasesRegexObj: RegExp = new RegExp(lowercasesRegex);
-    let lowercasesMatches: string[] | null = citeText.match(lowercasesRegex);
+    let lowercasesMatches: targStrArr = citeText.match(lowercasesRegex);
     const uppercasesRegex: RegExp = /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/;
     const uppercasesRegexObj: RegExp = new RegExp(uppercasesRegex);
     const multipleUppercasesRegex: RegExp = /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]{2,}/g;
-    let multipleUppercasesMatches: string[] | null = citeText.match(
+    let multipleUppercasesMatches: targStrArr = citeText.match(
       multipleUppercasesRegex
     );
     const wrongUppercasesRegexOp1: RegExp =
       /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]\b/g;
-    let wrongUppercasesMatchesOp1: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp1: targStrArr = citeText.match(
       wrongUppercasesRegexOp1
     );
     const wrongUppercasesRegexOp2: RegExp =
       /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g;
-    let wrongUppercasesMatchesOp2: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp2: targStrArr = citeText.match(
       wrongUppercasesRegexOp2
     );
     const wrongUppercasesRegexOp3 =
       /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+[a-záàâäãéèêëíìîïóòôöõúùûü]{2,3}\b/g;
-    let wrongUppercasesMatchesOp3: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp3: targStrArr = citeText.match(
       wrongUppercasesRegexOp3
     );
     const wrongUppercasesRegexOp4 =
       /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü][A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g;
-    let wrongUppercasesMatchesOp4: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp4: targStrArr = citeText.match(
       wrongUppercasesRegexOp4
     );
     const wrongUppercasesRegexOp5 =
       /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]{1,2}[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[a-záàâäãéèêëíìîïóòôöõúùûüA-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\b/g;
-    let wrongUppercasesMatchesOp5: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp5: targStrArr = citeText.match(
       wrongUppercasesRegexOp5
     );
     const wrongUppercasesRegexOp6 =
       /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+[a-záàâäãéèêëíìîïóòôöõúùûü][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g;
-    let wrongUppercasesMatchesOp6: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp6: targStrArr = citeText.match(
       wrongUppercasesRegexOp6
     );
     const wrongUppercasesRegexOp7 = /D[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]/g;
-    let wrongUppercasesMatchesOp7: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp7: targStrArr = citeText.match(
       wrongUppercasesRegexOp7
     );
     const wrongUppercasesRegexOp8 = /D[AEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS]/g;
-    let wrongUppercasesMatchesOp8: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp8: targStrArr = citeText.match(
       wrongUppercasesRegexOp8
     );
     const wrongUppercasesRegexOp9 = /D[aeioáàâäãéèêëíìîïóòôöõúùûü][s]\s/g;
-    let wrongUppercasesMatchesOp9: string[] | null = citeText.match(
+    let wrongUppercasesMatchesOp9: targStrArr = citeText.match(
       wrongUppercasesRegexOp9
     );
     const rgbaRegex: RegExp = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
@@ -1151,26 +1160,23 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
     const spaceRegex: RegExp = /\s/g;
     const wrongStartRegex: RegExp =
       /^[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/;
-    let wrongStartMatch: string[] | null = citeText.match(wrongStartRegex);
+    let wrongStartMatch: targStrArr = citeText.match(wrongStartRegex);
     const wrongCharsRegexOp1 =
       /[\s]*[\d\n,;.+-=~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]+[\s]*[\d\n,;.+-=~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]*/g;
-    let wrongCharsMatchesOp1: string[] | null =
-      citeText.match(wrongCharsRegexOp1);
+    let wrongCharsMatchesOp1: targStrArr = citeText.match(wrongCharsRegexOp1);
     const wrongCharsRegexOp2 =
       /$[\d\n,;.+-=~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]+/g;
-    let wrongCharsMatchesOp2: string[] | null =
-      citeText.match(wrongCharsRegexOp2);
+    let wrongCharsMatchesOp2: targStrArr = citeText.match(wrongCharsRegexOp2);
     const wrongCharsRegexOp3 =
       /(?<=\sdD)[\d\n,;.+-=~\\\/|"!@#$%&*¬°ªº§¹²³£¢\(\)\{\}\[\]]+/g;
-    let wrongCharsMatchesOp3: string[] | null =
-      citeText.match(wrongCharsRegexOp3);
+    let wrongCharsMatchesOp3: targStrArr = citeText.match(wrongCharsRegexOp3);
     let selection: Selection | null = window.getSelection();
     let range: Range = document.createRange();
     let remadeCiteText: string | null = citeText;
     let isCursorAutoMoved: boolean = false;
     let isAlertMade: boolean = false;
     let isSpanActive: boolean = false;
-    let spaceMatches: string[] | null = citeText.match(spaceRegex);
+    let spaceMatches: targStrArr = citeText.match(spaceRegex);
     let isUndoUppercase: boolean = false;
     let addAcumulator: number = 0;
 
@@ -1180,7 +1186,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
         wrongCharsMatchesOp2 ||
         wrongCharsMatchesOp3
       ) {
-        let wrongCharsMatches: string[] | null = [];
+        let wrongCharsMatches: targStrArr = [];
 
         if (wrongCharsMatchesOp1) {
           wrongCharsMatches = wrongCharsMatches.concat(wrongCharsMatchesOp1);
@@ -1225,8 +1231,8 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
     undoWrongChars();
 
     function undoMultipleUppercases(): void {
-      let unproperUppercases: string[] | null = [];
-      let unproperDUppercases: string[] | null = []; //EM JS É CONSIDERADO ARRAY DE ARRAY DE STRINGS
+      let unproperUppercases: targStrArr = [];
+      let unproperDUppercases: targStrArr = []; //EM JS É CONSIDERADO ARRAY DE ARRAY DE STRINGS
 
       if (multipleUppercasesMatches) {
         unproperUppercases = unproperUppercases.concat(
@@ -1288,53 +1294,53 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
         );
       }
 
-      unproperUppercases.forEach(
-        (multipleUppercasesMatch: string | null): void => {
-          //EM JS CADA UNIDADE É ARRAY DE STRINGS
-          let loweredRepetitions = "";
-          if (citeText && multipleUppercasesMatch) {
-            let upperCasesRepetitionsIndex: number = citeText.indexOf(
-              multipleUppercasesMatch
-            );
-            let repeatedLetter: string | string[] =
-              multipleUppercasesMatch.slice(0, 1);
-            loweredRepetitions = multipleUppercasesMatch.toLowerCase().slice(1);
-            let textBeforeRepetitions: string = citeText.substring(
-              0,
-              upperCasesRepetitionsIndex
-            );
-            if (spaceMatches) {
-              let numSpaces: number = spaceMatches.length;
-              addAcumulator += numSpaces;
-            }
-            let textAfterRepetitions: string = citeText.slice(
-              upperCasesRepetitionsIndex + 1 + loweredRepetitions.length,
-              citeText.length + 1
-            );
-            let textArray: string[] = Array.from(citeText);
-            textArray.splice(
-              upperCasesRepetitionsIndex + 1,
-              loweredRepetitions.length,
-              loweredRepetitions
-            );
-            editableCite.textContent =
-              textBeforeRepetitions +
-              repeatedLetter +
-              loweredRepetitions +
-              textAfterRepetitions;
-            repAcumulator++;
-            isUndoUppercase = true;
-            correctCursorNextWords(isUndoUppercase);
-            range.selectNodeContents(editableCite);
-            range.collapse(false);
-            if (selection) {
-              selection.removeAllRanges();
-              selection.addRange(range);
-              createSpanAlert(isSpanActive);
-            }
+      unproperUppercases.forEach((multipleUppercasesMatch: targStr): void => {
+        //EM JS CADA UNIDADE É ARRAY DE STRINGS
+        let loweredRepetitions = "";
+        if (citeText && multipleUppercasesMatch) {
+          let upperCasesRepetitionsIndex: number = citeText.indexOf(
+            multipleUppercasesMatch
+          );
+          let repeatedLetter: string | string[] = multipleUppercasesMatch.slice(
+            0,
+            1
+          );
+          loweredRepetitions = multipleUppercasesMatch.toLowerCase().slice(1);
+          let textBeforeRepetitions: string = citeText.substring(
+            0,
+            upperCasesRepetitionsIndex
+          );
+          if (spaceMatches) {
+            let numSpaces: number = spaceMatches.length;
+            addAcumulator += numSpaces;
+          }
+          let textAfterRepetitions: string = citeText.slice(
+            upperCasesRepetitionsIndex + 1 + loweredRepetitions.length,
+            citeText.length + 1
+          );
+          let textArray: string[] = Array.from(citeText);
+          textArray.splice(
+            upperCasesRepetitionsIndex + 1,
+            loweredRepetitions.length,
+            loweredRepetitions
+          );
+          editableCite.textContent =
+            textBeforeRepetitions +
+            repeatedLetter +
+            loweredRepetitions +
+            textAfterRepetitions;
+          repAcumulator++;
+          isUndoUppercase = true;
+          correctCursorNextWords(isUndoUppercase);
+          range.selectNodeContents(editableCite);
+          range.collapse(false);
+          if (selection) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+            createSpanAlert(isSpanActive);
           }
         }
-      );
+      });
 
       unproperDUppercases.forEach((multipleUppercasesMatch: string): void => {
         let loweredRepetitions = "";
@@ -1382,7 +1388,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
     }
 
     if (citeText.length === 1 && !newWordMatches) {
-      let firstLetterMatch: string[] | null = citeText[0]?.match(
+      let firstLetterMatch: targStrArr = citeText[0]?.match(
         autoCapitalizeFirstLetterRegex
       );
       if (firstLetterMatch) {
@@ -1390,7 +1396,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
         let nextLetters: string = citeText.substring(1).toLowerCase();
         editableCite.textContent = capitalizedFirstLetter + nextLetters;
 
-        let firstLetterMatch: string[] | null = citeText[0]?.match(
+        let firstLetterMatch: targStrArr = citeText[0]?.match(
           autoCapitalizeFirstLetterRegex
         );
         if (firstLetterMatch) {
@@ -1438,7 +1444,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
     }
 
     function wrongStartCorrection(
-      wrongStartMatch: RegExpMatchArray | string[] | null
+      wrongStartMatch: RegExpMatchArray | targStrArr
     ): void {
       // console.log("chegou na checagem de wrong start");
       if (wrongStartMatch && citeText) {
@@ -1504,7 +1510,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
 
     function capitalizeNextWordsD() {
       // console.log("foi chamado no capitalize D");
-      let letterMatchesAfterD: string[] | null = [];
+      let letterMatchesAfterD: targStrArr = [];
 
       if (
         !letterNotMatchesAfterD &&
@@ -1572,17 +1578,17 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
       }
     }
 
-    function taskCapitalizeD(letterMatchesAfterD: string[] | null): void {
+    function taskCapitalizeD(letterMatchesAfterD: targStrArr): void {
       // console.log("TASK FOI CHAMADA");
       letterMatchesAfterD?.forEach((letterMatchD: string): void => {
         let globalLetterMatchIndexD: number | undefined = remadeCiteText
           ? remadeCiteText.lastIndexOf(letterMatchD) + 1
           : undefined;
         if (globalLetterMatchIndexD) {
-          let actualCharD: string | undefined = remadeCiteText?.charAt(
+          let actualCharD: targStr = remadeCiteText?.charAt(
             globalLetterMatchIndexD
           );
-          let capitalizedCharD: string | undefined = actualCharD?.toUpperCase();
+          let capitalizedCharD: targStr = actualCharD?.toUpperCase();
           if (remadeCiteText && capitalizedCharD) {
             let citeTextArrayD: string[] = Array.from(remadeCiteText);
             citeTextArrayD[globalLetterMatchIndexD] = capitalizedCharD;
@@ -1591,11 +1597,11 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
         }
       });
       editableCite.textContent = remadeCiteText;
-      let arrayCheckLowerCasesD: string[] | null = Array.from(
+      let arrayCheckLowerCasesD: targStrArr = Array.from(
         letterMatchesAfterD ?? []
       );
       for (let iD: number = 0; iD < arrayCheckLowerCasesD.length; iD++) {
-        let filteredArrayD: string[] | undefined = letterMatchesAfterD?.filter(
+        let filteredArrayD: targStrArr = letterMatchesAfterD?.filter(
           (iD: string) => lowercasesRegexObj.test(iD)
         );
         if (filteredArrayD) {
@@ -1662,12 +1668,11 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
             let computedStyleCite: string = window
               .getComputedStyle(editableCite)
               .getPropertyValue("border-color");
-            let rgbaMatch: string[] | null = computedStyleCite.match(rgbaRegex);
+            let rgbaMatch: targStrArr = computedStyleCite.match(rgbaRegex);
             if (rgbaMatch) {
               let reduceOpacity: NodeJS.Timeout = setInterval((): void => {
-                let poppedArray: string | undefined = rgbaMatch?.pop(); //faz a retirada inicial
-                let strUpdatedAlpha: string | undefined =
-                  poppedArray?.toString();
+                let poppedArray: targStr = rgbaMatch?.pop(); //faz a retirada inicial
+                let strUpdatedAlpha: targStr = poppedArray?.toString();
                 if (rgbaMatch) {
                   // console.log("rgbaMatch validado");
                   let strRgba: string = rgbaMatch
@@ -1740,7 +1745,7 @@ export function autoCapitalizeCite(editableCite: HTMLElement): void {
     }
 
     function forceUpperCase(): void {
-      let wordMatch: string[] | null = [];
+      let wordMatch: targStrArr = [];
       let DMatch: string[][] | null = [];
 
       if (letterMatchesAfterDOp1) {
@@ -1969,8 +1974,13 @@ export function changeTabDCutLayout(
               );
             }
           } else {
-            console.warn(
-              `Erro validando valor de bodyType. Valor: ${bodyType.value}`
+            const error = new Error();
+            const splitError = (error.stack as string)?.split("\n");
+            const slicedError = splitError[1].trim().slice(-7, -1);
+            ErrorHandler.stringError(
+              "validando .value de bodyType",
+              bodyType?.value ?? null,
+              slicedError ?? "NULL"
             );
           }
         } else {
@@ -1997,17 +2007,25 @@ export function changeTabDCutLayout(
         }
         return "pollock7";
       } else {
-        console.warn(
-          `Erro na match de protocolo. Protocolo: ${protocolo.value}`
+        const error = new Error();
+        const splitError = (error.stack as string)?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.stringError(
+          "obtendo pollock.value",
+          protocolo?.value ?? null,
+          slicedError ?? "NULL"
         );
         return "pollock3";
       }
     }
   } else {
-    console.warn(
-      `Erro validando campo de tipo corporal: elemento ${bodyType}, instância ${
-        Object.prototype.toString.call(bodyType).slice(-8, 1) ?? null
-      }`
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      bodyType ?? null,
+      "bodyType",
+      slicedError ?? "NULL"
     );
     return "pollock3";
   }
@@ -2025,11 +2043,25 @@ function checkTabRowsIds(tab: HTMLTableElement) {
         const slicedRowId = rowId.slice(3).toLowerCase();
         arrayTabIds.push(slicedRowId);
       } else {
-        console.warn(`Erro validando id da row. Id: ${rowId}`);
+        const error = new Error();
+        const splitError = (error.stack as string)?.split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.stringError(
+          `obtendo id da row ${tableRows[iR] ?? null}`,
+          rowId ?? null,
+          slicedError ?? "NULL"
+        );
       }
     }
   } else {
-    console.warn(`Erro validando id da Tabela de DCut. Id: ${tab.id}`);
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.stringError(
+      `obtendo id da table ${tab ?? null}`,
+      tab.id ?? null,
+      slicedError ?? "NULL"
+    );
   }
   return arrayTabIds;
 }
@@ -2077,21 +2109,34 @@ function filterIdsByGender(arrayIds: string[], bodyType: string) {
           }
           break;
         default:
-          console.warn(
-            `Erro reocnhecendo value de bodyType. Value: ${bodyType}`
+          const error = new Error();
+          const splitError = (error.stack as string)?.split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.stringError(
+            `obtendo bodyType válido`,
+            bodyType ?? null,
+            slicedError ?? "NULL"
           );
       }
       return genderedIds;
     } else {
-      console.warn(`Erro validando elementos como strings`);
+      const error = new Error();
+      const splitError = (error.stack as string)?.split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.typeError(
+        `validando tipo primitivo de elementos para definição de gênero`,
+        bodyType ?? null,
+        "string",
+        slicedError ?? "NULL"
+      );
     }
   } else {
-    console.warn(`Erro validando array`);
+    console.warn(`Erro validando array em filterIdsByGender()`);
   }
 }
 
 export function isPGCDecaying(
-  person: Man | Woman | Neutro,
+  person: formClassPerson,
   PGC: number,
   targInpPGC: HTMLInputElement
 ): [boolean, number] {
@@ -2104,11 +2149,14 @@ export function isPGCDecaying(
   );
 
   if (!(spanRoundingAlertIcon instanceof HTMLSpanElement)) {
-    console.warn(`Erro validando Span de Alerta para Arredondamento na célula.
-    Instância obtida: ${
-      Object.prototype.toString.call(spanRoundingAlertIcon).slice(8, -1) ??
-      "null"
-    }.`);
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      spanRoundingAlertIcon ?? null,
+      "spanRoundingAlertIcon",
+      slicedError ?? "NULL"
+    );
   } else {
     if (spanRoundingAlertIcon.hidden === false) {
       console.log("não está escondido");
@@ -2164,7 +2212,16 @@ export function isPGCDecaying(
       }
     }
   } else {
-    console.error(`Erro validando decreasedPerson em isPGCDecaying.`);
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.objectError(
+      "decreasedPerson",
+      person ?? null,
+      "person",
+      "6",
+      slicedError
+    );
   }
 
   return [foundDecayPoint, PGC];

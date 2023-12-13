@@ -2,16 +2,36 @@
 
 import * as Model from "./model.js";
 import { UndefinedPerson, Man, Woman, Neutro } from "./classes.js";
+import type {
+  looseNum,
+  primitiveType,
+  targNum,
+  targStrArr,
+  targEl,
+  arrTargEl,
+  HTMLTargEl,
+  entryEl,
+  textEl,
+  formPerson,
+  formClassPerson,
+} from "./types.js";
 import * as ErrorHandler from "./errorHandler.js";
 
 let rowCountAtivFisRot = 3;
 let rowCountAtivFisProp = 3;
 let rowCountComorb = 3;
 const rgbaRegex = /rgba\((\d+), (\d+), (\d+), ([\d.]+)\)/;
+enum EnumTargInpTypes {
+  "weight",
+  "height",
+  "IMC",
+  "MLG",
+  "TMB",
+  "GET",
+}
+const enumTargInpTypes = EnumTargInpTypes;
 
-export function updateSimpleProperty(
-  element: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-) {
+export function updateSimpleProperty(element: entryEl) {
   if (element instanceof HTMLInputElement) {
     if (element.type === "radio" || element.type === "checkbox") {
       return element.checked.toString();
@@ -122,7 +142,7 @@ export function doubleClickHandler(this: HTMLInputElement) {
 
 export function switchAutoFill(
   autoFillBtn: Element,
-  locksTabInd: (Element | null)[]
+  locksTabInd: arrTargEl
 ): boolean {
   let autoFillActivation = true;
   if (autoFillBtn instanceof HTMLButtonElement) {
@@ -136,18 +156,19 @@ export function switchAutoFill(
       switchLockInputs(locksTabInd, autoFillActivation);
     }
   } else {
-    console.error(`Erro validando Botão de Cálculo Automático.
-    Instância obtida: ${
-      Object.prototype.toString.call(autoFillBtn).slice(8, -1) ?? "null"
-    }`);
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      autoFillBtn ?? null,
+      "autoFillBtn",
+      slicedError
+    );
   }
   return autoFillActivation;
 }
 
-function switchLockInputs(
-  locksTabInd: (Element | null)[],
-  autoFillActivation: boolean
-) {
+function switchLockInputs(locksTabInd: arrTargEl, autoFillActivation: boolean) {
   if (
     locksTabInd.length > 0 &&
     locksTabInd.every((lock) => lock instanceof HTMLSpanElement)
@@ -164,10 +185,14 @@ function switchLockInputs(
             <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
           </svg>`;
         } else {
-          console.error(`Erro validando siblingInput.
-          Instância obtida: ${
-            Object.prototype.toString.call(siblingInput).slice(8, -1) ?? "null"
-          }.`);
+          const error = new Error();
+          const splitError = (error.stack as string).split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.inputNotFound(
+            slicedError ?? null,
+            "siblingInput",
+            slicedError ?? "NULL"
+          );
         }
       });
     } else {
@@ -183,10 +208,14 @@ function switchLockInputs(
           <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2M3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/>
         </svg>`;
         } else {
-          console.error(`Erro validando siblingInput.
-          Instância obtida: ${
-            Object.prototype.toString.call(siblingInput).slice(8, -1) ?? "null"
-          }.`);
+          const error = new Error();
+          const splitError = (error.stack as string).split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.inputNotFound(
+            siblingInput ?? null,
+            "siblingInput",
+            slicedError ?? "NULL"
+          );
         }
       });
     }
@@ -199,8 +228,125 @@ function switchLockInputs(
   }
 }
 
+export function getNumCol(evEl: Element): targNum {
+  let numCol: targNum = undefined;
+  if (
+    evEl.id.match(/[0-9]+_[0-9]+$/g) ||
+    (evEl instanceof HTMLInputElement && evEl.name.match(/[0-9]+_[0-9]+$/g)) ||
+    (evEl instanceof HTMLLabelElement && evEl.htmlFor.match(/[0-9]+_[0-9]+$/g))
+  ) {
+    numCol = parseInt(evEl.id.slice(-1), 10);
+    if (Number.isNaN(numCol)) {
+      console.warn(`numCol retornado como NaN. Revertido para undefined.`);
+      numCol = undefined;
+    }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.matchError(
+      ".id do Elemento de Evento",
+      evEl ?? null,
+      evEl?.id ?? "null",
+      slicedError ?? "NULL"
+    );
+  }
+  return numCol;
+}
+
+export function validateEvResultNum(evEl: targEl, property: looseNum): number {
+  if (evEl instanceof HTMLInputElement && evEl.type === "number") {
+    const returnedProperty = updateSimpleProperty(evEl) || 0;
+    if (typeof returnedProperty === "number") {
+      property = returnedProperty;
+    } else if (typeof returnedProperty === "string") {
+      property = parseInt(returnedProperty.replaceAll(/[^0-9.,+-]/g, "")) || 0;
+      if (Number.isNaN(property)) {
+        console.warn(`Propriedade de input para ${
+          evEl?.id ?? "undefined Event Element"
+        }
+        retornada como NaN e revertida para 0.`);
+        property = 0;
+      }
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.typeError(
+        `property relacionada a ${evEl?.id ?? "undefined Event Element"}`,
+        property,
+        "number",
+        slicedError ?? "NULL"
+      );
+      property = 0;
+    }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      evEl,
+      `${evEl?.id ?? "undefined Event Element"}`,
+      slicedError ?? "NULL"
+    );
+    property = 0;
+  }
+  return property;
+}
+
+export function matchPersonPropertiesWH(
+  person: formPerson,
+  targInpWeight: targEl,
+  targInpHeight: targEl
+) {
+  if (targInpWeight instanceof HTMLInputElement) {
+    person.weight = validateEvResultNum(targInpWeight, person.weight);
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      targInpWeight ?? null,
+      "targInpWeight",
+      slicedError ?? "NULL"
+    );
+  }
+  if (targInpHeight instanceof HTMLInputElement) {
+    person.height = validateEvResultNum(targInpHeight, person.height);
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      targInpHeight ?? null,
+      "targInpHeight",
+      slicedError ?? "NULL"
+    );
+  }
+  return [person.weight, person.height];
+}
+
+export function matchPersonPropertiesDC(
+  person: formPerson,
+  targInpSumDCut: targEl
+) {
+  if (targInpSumDCut instanceof HTMLInputElement) {
+    person.sumDCut = validateEvResultNum(targInpSumDCut, person.sumDCut);
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string)?.split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      targInpSumDCut ?? null,
+      "targInpSumDCut",
+      slicedError ?? "NULL"
+    );
+  }
+  return person.sumDCut;
+}
+
 export function updateIndexesContexts(
-  person: Man | Woman | Neutro,
+  person: formClassPerson,
   gordCorpLvl: HTMLSelectElement,
   targInpIMC: HTMLInputElement,
   targInpMLG: HTMLInputElement,
@@ -259,7 +405,7 @@ export function updateIndexesContexts(
 }
 
 export function updateIMCMLGContext(
-  IMCMLGArray: (string | number)[],
+  IMCMLGArray: looseNum[],
   gordCorpLvl: Element,
   targInpIMC: Element,
   targInpMLG: Element,
@@ -285,8 +431,15 @@ export function updateIMCMLGContext(
       MLG = IMCMLGArray[2];
       targInpMLG.value = MLG.toFixed(4) || "0";
     } else {
-      console.error(`IMCMLGArray[2] não validado como number.
-      Tipo primitivo obtido: ${typeof IMCMLGArray[2]}.`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.typeError(
+        "IMCMLGArray[2]",
+        IMCMLGArray[2] ?? null,
+        "number",
+        slicedError ?? "NULL"
+      );
     }
     if (
       !(ignoredIndex === "IMC" || ignoredIndex === "BOTH") &&
@@ -295,37 +448,49 @@ export function updateIMCMLGContext(
       IMC = IMCMLGArray[1];
       targInpIMC.value = IMC.toFixed(4) || "0";
     } else {
-      console.error(`IMCMLGArray[1] não validado como number.
-      Tipo primitivo obtido: ${typeof IMCMLGArray[1]}.`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.typeError(
+        "IMCMLGArray[1]",
+        IMCMLGArray[1] ?? null,
+        "number",
+        slicedError ?? "NULL"
+      );
     }
     if (typeof IMCMLGArray[0] === "string") {
       gordCorpLvl.value = IMCMLGArray[0] || "";
       fluxFormIMC(IMC, formTMBTypeElement, gordCorpLvl);
     } else {
-      console.error(`IMCMLGArray[0] não validado como string.
-      Tipo primitivo obtido: ${typeof IMCMLGArray[0]}.`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.typeError(
+        "IMCMLGArray[0]",
+        IMCMLGArray[0] ?? null,
+        "string",
+        slicedError ?? "NULL"
+      );
     }
     if (IMCMLGArray[0] === "" || IMCMLGArray[1] === 0 || IMCMLGArray[2] === 0) {
       console.warn(`IMCMLGArray não atualizado.
-  Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${IMCMLGArray[1] ?? 0}; ${
+      Valores obtidos: ${IMCMLGArray[0] ?? "null"}; ${IMCMLGArray[1] ?? 0}; ${
         IMCMLGArray[2] ?? 0
       } }`);
     }
   } else {
-    console.log(`Erro validando instância(s) de Elements obtidos.
-    Instancia obtida para gordCorpLvl: ${
-      Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"
-    };
-    Instancia obtida para targInpIMC: ${
-      Object.prototype.toString.call(targInpIMC).slice(8, -1) ?? "null"
-    };
-    Instancia obtida para targInpMLG: ${
-      Object.prototype.toString.call(targInpMLG).slice(8, -1) ?? "null"
-    };
-    Instancia obtida para formTMBTypeElement: ${
-      Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"
-    };.
-    ignoredIndex: ${ignoredIndex}`);
+    const error = new Error();
+    const splitError = (error.stack as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.multipleElementsNotFound(
+      slicedError ?? "NULL",
+      "instâncias de elementos em updateIMCMLGContext",
+      gordCorpLvl ?? null,
+      targInpIMC ?? null,
+      targInpMLG ?? null,
+      formTMBTypeElement ?? null
+    );
+    console.warn(`ignoredIndex: ${ignoredIndex}`);
   }
 }
 
@@ -367,25 +532,21 @@ export function fluxFormIMC(
       Valor obtido: ${IMC ?? "NaN"}`);
     }
   } else {
-    console.error(`Erro obtendo formTMBTypeElement e/ou gordCorpLvl Element.
-    Instância obtida para formTMBTypeElement: ${
-      Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"
-    };
-    .value obtido para formTMBTypeElement: ${
-      (formTMBTypeElement as HTMLSelectElement)?.value ?? "null"
-    };
-    Instância obtida para gordCorpLvl: ${
-      Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"
-    };
-    .value obtido para gordCorpLvl: ${
-      (gordCorpLvl as HTMLSelectElement)?.value ?? "null"
-    }.`);
+    const error = new Error();
+    const splitError = (error.stack as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.multipleElementsNotFound(
+      slicedError ?? "NULL",
+      "obtendo formTMBTypeElement e/ou gordCorpLvl Element",
+      formTMBTypeElement ?? null,
+      gordCorpLvl ?? null
+    );
   }
 }
 
 export function updateTMBContext(
   IMCMLGArray: [string, number, number],
-  person: Man | Woman | Neutro,
+  person: formClassPerson,
   factorAtleta: string,
   formTMBTypeElement: Element,
   targInpTMB: HTMLInputElement
@@ -499,28 +660,26 @@ export function matchTMBElements(
     </svg>`;
     }
   } else {
-    console.error(`Erro validando Elementos obtidos em argumentação para matchTMBElements.
-    Instância obtida para mainSelect: ${
-      Object.prototype.toString.call(mainSelect).slice(8, -1) ?? "null"
-    };
-    Instância obtida para formTMBTypeElement: ${
-      Object.prototype.toString.call(formTMBTypeElement).slice(8, -1) ?? "null"
-    };
-    Instância obtida para spanFactorAtleta: ${
-      Object.prototype.toString.call(spanFactorAtleta).slice(8, -1) ?? "null"
-    };
-    Instância obtida para gordCorpLvl: ${
-      Object.prototype.toString.call(gordCorpLvl).slice(8, -1) ?? "null"
-    };
-    Tag obtida para lockGordCorpLvl: ${
-      Object.prototype.toString.call(lockGordCorpLvl).slice(8, -1) ?? "null"
-    };
-    Tipo primitivo obtido para IMC: ${typeof IMC ?? "undefined"}.`);
+    const error = new Error();
+    const splitError = (error.stack as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.multipleElementsNotFound(
+      slicedError ?? "NULL",
+      "argumentos em matchTMBElements()",
+      mainSelect ?? null,
+      formTMBTypeElement ?? null,
+      spanFactorAtleta ?? null,
+      gordCorpLvl ?? null,
+      lockGordCorpLvl ?? null
+    );
+    console.warn(
+      `Tipo primitivo obtido para IMC: ${typeof IMC ?? "undefined"}.`
+    );
   }
 }
 
 export function updateGETContext(
-  person: Man | Woman | Neutro,
+  person: formClassPerson,
   targInpGET: HTMLInputElement,
   TMB: number,
   factorAtvLvl: number
@@ -534,28 +693,78 @@ export function updateGETContext(
   return GET;
 }
 
-export function updatePGCContext(
-  person: Man | Woman | Neutro,
-  targInpPGC: HTMLInputElement
-) {
-  let PGC = parseFloat(person.calcPGC(person).toFixed(4)) ?? 0;
-  if (Number.isNaN(PGC) || isNaN(PGC)) {
-    console.warn(`PGC retornando como NaN`);
-    PGC = 0;
-  }
-  const PGCDecayArray = Model.isPGCDecaying(person, PGC, targInpPGC);
-  console.log("pgc " + PGCDecayArray[1]);
-  if (PGCDecayArray[0] === true) {
-    PGC = PGCDecayArray[1];
-    targInpPGC.value = PGC.toFixed(2);
+export function updatePGC(
+  person: formClassPerson,
+  numRef: number,
+  context: string,
+  parentElement: Element
+): [number, targEl, targEl] {
+  let targInpPGC: targEl = undefined;
+  let targInpSumDCut: targEl = undefined;
+  let PGC = 0;
+  if (context === "cons" || context === "tab") {
+    if (context === "cons") {
+      targInpPGC = parentElement.querySelector(
+        `#inpPgc${numRef}Cel4_${numRef + 1}`
+      );
+    } else if (context === "tab") {
+      targInpPGC = parentElement.querySelector(
+        `#inpPgc${numRef - 1}Cel4_${numRef}`
+      );
+      targInpSumDCut = parentElement.querySelector(`#tabInpRowDCut9_${numRef}`);
+    }
   } else {
-    targInpPGC.value = PGC.toFixed(4);
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.stringError(
+      "validando contexto.  Valores de string aceitos: cons || tab.",
+      context ?? "undefined",
+      slicedError ?? "NULL"
+    );
+  }
+
+  if (
+    targInpSumDCut instanceof HTMLInputElement &&
+    targInpSumDCut.type === "number"
+  ) {
+    person.sumDCut = parseInt(targInpSumDCut?.value ?? 0);
+    targInpSumDCut.value = person.sumDCut.toString();
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(
+      targInpSumDCut,
+      "targInpSumDCut",
+      slicedError ?? "NULL"
+    );
+  }
+
+  if (targInpPGC instanceof HTMLInputElement && targInpPGC.type === "number") {
+    PGC = parseFloat(person.calcPGC(person).toFixed(4)) ?? 0;
+    if (Number.isNaN(PGC) || isNaN(PGC)) {
+      console.warn(`PGC retornando como NaN`);
+      PGC = 0;
+    }
+    const PGCDecayArray = Model.isPGCDecaying(person, PGC, targInpPGC);
+    if (PGCDecayArray[0] === true) {
+      PGC = PGCDecayArray[1];
+      targInpPGC.value = PGC.toFixed(2);
+    } else {
+      targInpPGC.value = PGC.toFixed(4);
+    }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.inputNotFound(targInpPGC, "targInpPGC", slicedError ?? "NULL");
   }
   if (PGC <= 0) {
     console.warn(`Valor de PGC não atualizado.
-              Valor obtido: ${PGC || 0}`);
+    Valor obtido: ${PGC || 0}`);
   }
-  return PGC;
+  return [PGC ?? 0, targInpSumDCut ?? null, targInpPGC ?? null];
 }
 
 export function updateAtvLvl(
@@ -568,9 +777,15 @@ export function updateAtvLvl(
     atvLvl = returnedAtvLvl;
     secondarySelect.value = atvLvl;
   } else {
-    console.warn(`Erro no tipo retornado para atualização de mainSelect.
-    Tipo obtido: ${returnedAtvLvl ?? "undefined"};
-    Tipo aceito: string.`);
+    const error = new Error();
+    const splitError = (error.stack as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.typeError(
+      "atualização de mainSelect em updateAtLvl()",
+      returnedAtvLvl ?? null,
+      "string",
+      slicedError ?? "NULL"
+    );
   }
   return atvLvl;
 }
@@ -834,9 +1049,14 @@ export function switchRequiredCols(elements: HTMLElement[]) {
       if (totalRows && totalRows.length > 0) {
         nTotalRows = totalRows.length - totalTables.length;
       } else {
-        console.error(`Erro consultando NodeList de elementos <col>.
-        Elemento obtido: ${totalRows ?? "null"};
-        Length obtida: ${totalRows?.length ?? 0}`);
+        const error = new Error();
+        const splitError = (error.stack as string).split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.elementNotPopulated(
+          totalRows ?? null,
+          "NodeList de elementos <tr> em switchRequiredCols()",
+          slicedError ?? "NULL"
+        );
       }
 
       const totalCols = consTablesFs?.querySelectorAll("col");
@@ -844,9 +1064,14 @@ export function switchRequiredCols(elements: HTMLElement[]) {
       if (totalCols && totalCols.length > 0) {
         nTotalCols = totalCols.length - totalTables.length;
       } else {
-        console.error(`Erro consultando NodeList de elementos <col>.
-        Elemento obtido: ${totalCols ?? "null"};
-        Length obtida: ${totalCols?.length ?? 0}`);
+        const error = new Error();
+        const splitError = (error.stack as string).split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.elementNotPopulated(
+          totalCols ?? null,
+          "NodeList de elementos <col> em switchRequiredCols()",
+          slicedError ?? "NULL"
+        );
       }
 
       let nTotalMatrixValidAxes = 0;
@@ -881,10 +1106,14 @@ export function switchRequiredCols(elements: HTMLElement[]) {
           if (inpCel instanceof HTMLInputElement) {
             inpCel.required = false;
           } else {
-            console.warn(`Erro validando instância de Input em Célula.
-            Instância obtida: ${
-              Object.prototype.toString.call(inpCel).slice(8, -1) ?? "null"
-            }.`);
+            const error = new Error();
+            const splitError = (error.stack as string).split("\n");
+            const slicedError = splitError[1].trim().slice(-7, -1);
+            ErrorHandler.inputNotFound(
+              inpCel ?? null,
+              "inpCel",
+              slicedError ?? "NULL"
+            );
           }
         });
       } else {
@@ -930,7 +1159,7 @@ export function switchRequiredCols(elements: HTMLElement[]) {
         matrixValidAxesMedAnt =
           (nRowsMedAnt.length - 1) * (nColsMedAnt.length - 1);
       } else {
-        console.error(`Erro validando Número de Linhas na Tabela de Sinais Vitais.
+        console.error(`Erro validando Número de Linhas na Tabela de Medidas Antropométricas.
         Número de Linhas obtidas: ${nRowsMedAnt?.length ?? 0};
         Número de Colunas obtidas: ${nColsMedAnt?.length ?? 0}.`);
       }
@@ -941,7 +1170,7 @@ export function switchRequiredCols(elements: HTMLElement[]) {
       if (nRowsDC.length > 0 && nColsDC.length > 0) {
         matrixValidAxesDC = (nRowsDC.length - 1) * (nColsDC.length - 1);
       } else {
-        console.error(`Erro validando Número de Linhas na Tabela de Sinais Vitais.
+        console.error(`Erro validando Número de Linhas na Tabela de Dobras Cutâneas.
         Número de Linhas obtidas: ${nRowsDC?.length ?? 0};
         Número de Colunas obtidas: ${nColsDC?.length ?? 0}.`);
       }
@@ -953,7 +1182,7 @@ export function switchRequiredCols(elements: HTMLElement[]) {
         matrixValidAxesIndPerc =
           (nRowsIndPerc.length - 1) * (nColsIndPerc.length - 1);
       } else {
-        console.error(`Erro validando Número de Linhas na Tabela de Sinais Vitais.
+        console.error(`Erro validando Número de Linhas na Tabela de Índices e Percentuais.
         Número de Linhas obtidas: ${nRowsIndPerc?.length ?? 0};
         Número de Colunas obtidas: ${nColsIndPerc?.length ?? 0}.`);
       }
@@ -1115,8 +1344,14 @@ export function switchRequiredCols(elements: HTMLElement[]) {
           (flatRequiredCells[iR] as HTMLInputElement).required = true;
         }
       } else {
-        console.warn(`Erro validando flatRequiredCells.
-      Length obtida: ${flatRequiredCells?.length ?? 0}`);
+        const error = new Error();
+        const splitError = (error.stack as string).split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.elementNotPopulated(
+          flatRequiredCells ?? null,
+          "flatRequiredCells",
+          slicedError ?? "NULL"
+        );
       }
     } else {
       console.error(`Erro atualizando Número de Consulta.
@@ -1131,15 +1366,42 @@ export function switchRequiredCols(elements: HTMLElement[]) {
   }
 }
 
+export function switchNumConsTitles(
+  consTitles: targEl[],
+  trioEl: HTMLInputElement,
+  numTitledCons: number,
+  numTabs: number
+) {
+  let iniTrioValue = trioEl.value;
+  let iniValue = parseInt(iniTrioValue) ?? 0;
+  let trioNums = [];
+  if (Number.isNaN(iniValue)) {
+    console.warn(`iniValue retornado como NaN. Revertido para 0.`);
+    for (let t = 0; t <= numTabs * numTabs - 1; t += numTitledCons / numTabs) {
+      trioNums.push(1, 2, 3);
+    }
+  } else {
+    for (let j = 0; j <= numTabs * numTabs - 1; j += numTitledCons / numTabs) {
+      trioNums.push(iniValue, iniValue + 1, iniValue + 2);
+    }
+  }
+  for (let i = 0; i < consTitles.length; i++) {
+    console.log(JSON.stringify(trioNums));
+    (consTitles[i] as Element).textContent = `${
+      trioNums[i] || `${1 + i}`
+    }ª Consulta`;
+  }
+}
+
 export function createArraysRels(
   btnId: string,
   arrayRows: HTMLTableRowElement[],
   protocolo: string
 ) {
   let arrayConsultasNum: number[] | undefined = [];
-  let rowValues: string[] | undefined = [];
-  let tabValues: string[] | undefined = [];
-  let columnValues: string[] | undefined = [];
+  let rowValues: targStrArr = [];
+  let tabValues: targStrArr = [];
+  let columnValues: targStrArr = [];
   let colAcc = 0;
   const btnRowMatch = btnId?.match(/[0-9]+(?=_)/)?.toString();
   const btnColMatch = btnId?.match(/(?<=_)[0-9]+/)?.toString();
@@ -1193,8 +1455,14 @@ export function createArraysRels(
           protocoloNum = 7;
           break;
         default:
-          console.error(`Erro validando Número de Protocolo Jackson/Pollock.
-          Protocolo obtido: ${protocolo ?? "null"}.`);
+          const error = new Error();
+          const splitError = (error.stack as string).split("\n");
+          const slicedError = splitError[1].trim().slice(-7, -1);
+          ErrorHandler.elementNotFound(
+            protocolo ?? null,
+            "protocolo",
+            slicedError ?? "NULL"
+          );
       }
       if (protocoloNum === 3 || protocoloNum === 7) {
         for (let iR = 0; iR < btnRow - 1; iR++) {
@@ -1242,8 +1510,13 @@ export function createArraysRels(
                     }
                   }
                 } else {
-                  console.warn(
-                    `Erro validando children do tbody. Coleção: ${tBodyChildren}`
+                  const error = new Error();
+                  const splitError = (error.stack as string).split("\n");
+                  const slicedError = splitError[1].trim().slice(-7, -1);
+                  ErrorHandler.elementNotPopulated(
+                    tBodyChildren ?? null,
+                    "tBodyChildren",
+                    slicedError ?? "NULL"
                   );
                 }
                 //deposita valor no último input da coluna (em correto funcionamente, o de somatório)
@@ -1290,11 +1563,10 @@ function getConsultasNums(arrayRow: HTMLTableRowElement) {
   }
 }
 
-//TODO AJUSTAR INCLUSÃO DE VALORES APÓS REUNIÃO
 function getRowValues(
   arrayRows: HTMLTableRowElement[],
   arrayConsultasNum: number[],
-  arrayCelIds: (string | number)[]
+  arrayCelIds: looseNum[]
 ) {
   if (typeof arrayCelIds[0] === "string") {
     const idMatch = arrayCelIds[0]?.match(/[0-9]+(?=_)/);
@@ -1316,7 +1588,14 @@ function getRowValues(
             targCelInp.value = colAcc.toString(); //TODO INCLUÍDO PARA FINS DE TESTE
             arrayRowValues.push(targCelInp.value);
           } else {
-            console.warn("Célula não encontrada");
+            const error = new Error();
+            const splitError = (error.stack as string).split("\n");
+            const slicedError = splitError[1].trim().slice(-7, -1);
+            ErrorHandler.inputNotFound(
+              targCelInp ?? null,
+              "targCelInp",
+              slicedError ?? "NULL"
+            );
           }
           if (arrayRowValues.length === arrayConsultasNum.length) {
             return arrayRowValues;
@@ -1328,60 +1607,156 @@ function getRowValues(
 }
 
 export function defineTargInps(
-  numCons: number | undefined,
-  tabsParent: Element
+  numRef: looseNum,
+  context: string,
+  parentEl: Element
 ) {
-  let targInpWeight: Element | null = null;
-  let targInpHeight: Element | null = null;
-  let targInpSumDCut: Element | null = null;
-  let targInpIMC: Element | null = null;
-  let targInpMLG: Element | null = null;
-  let targInpPGC: Element | null = null;
-  let targInpTMB: Element | null = null;
-  let targInpGET: Element | null = null;
-  let arrayTargInps: (Element | null)[] = [];
-  if (typeof numCons === "number") {
-    targInpWeight = tabsParent.querySelector(
-      `#tabInpRowMedAnt2_${numCons + 1}`
-    );
-    arrayTargInps.push(targInpWeight);
+  let targInpWeight: targEl = undefined;
+  let targInpHeight: targEl = undefined;
+  let targInpIMC: targEl = undefined;
+  let targInpMLG: targEl = undefined;
+  let targInpTMB: targEl = undefined;
+  let targInpGET: targEl = undefined;
+  let arrayTargInps: arrTargEl = [];
+  let validTargInps: arrTargEl = [];
 
-    targInpHeight = tabsParent.querySelector(
-      `#tabInpRowMedAnt3_${numCons + 1}`
-    );
-    arrayTargInps.push(targInpHeight);
-
-    targInpSumDCut = tabsParent.querySelector(`#tabInpRowDCut9_${numCons + 1}`);
-    arrayTargInps.push(targInpSumDCut);
-
-    targInpIMC = tabsParent.querySelector(
-      `#inpImc${numCons}Cel2_${numCons + 1}`
-    );
-    arrayTargInps.push(targInpIMC);
-
-    targInpMLG = tabsParent.querySelector(
-      `#inpMlg${numCons}Cel3_${numCons + 1}`
-    );
-    arrayTargInps.push(targInpMLG);
-
-    targInpPGC = tabsParent.querySelector(
-      `#inpPgc${numCons}Cel4_${numCons + 1}`
-    );
-    arrayTargInps.push(targInpPGC);
-
-    targInpTMB = tabsParent.querySelector(
-      `#inpTmb${numCons}Cel5_${numCons + 1}`
-    );
-    arrayTargInps.push(targInpTMB);
-
-    targInpGET = tabsParent.querySelector(
-      `#inpGet${numCons}Cel6_${numCons + 1}`
-    );
-    arrayTargInps.push(targInpGET);
-  } else {
-    ErrorHandler.typeError("numCons", numCons ?? null, "number");
+  if (typeof numRef === "string") {
+    numRef =
+      numRef
+        .replaceAll(/["']/g, "")
+        .match(/^[0-9]{1,2}$/g)
+        ?.toString() ?? "";
+    if (numRef && numRef !== "") {
+      numRef = parseInt(numRef, 10);
+      if (Number.isNaN(numRef)) {
+        console.warn(`numRef retornado como NaN. Revertido para 1`);
+        numRef = 1;
+      }
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.stringError(
+        "convertendo Número de Consulta de string para número",
+        numRef,
+        slicedError ?? "NULL"
+      );
+    }
   }
-  return arrayTargInps;
+
+  if (typeof numRef === "number") {
+    if (context === "cons" || context === "tab") {
+      if (context === "cons") {
+        targInpWeight = parentEl.querySelector(
+          `#tabInpRowMedAnt2_${numRef + 1}`
+        );
+        arrayTargInps.push(targInpWeight);
+
+        targInpHeight = parentEl.querySelector(
+          `#tabInpRowMedAnt3_${numRef + 1}`
+        );
+        arrayTargInps.push(targInpHeight);
+
+        targInpIMC = parentEl.querySelector(
+          `#inpImc${numRef}Cel2_${numRef + 1}`
+        );
+        arrayTargInps.push(targInpIMC);
+
+        targInpMLG = parentEl.querySelector(
+          `#inpMlg${numRef}Cel3_${numRef + 1}`
+        );
+        arrayTargInps.push(targInpMLG);
+
+        targInpTMB = parentEl.querySelector(
+          `#inpTmb${numRef}Cel5_${numRef + 1}`
+        );
+        arrayTargInps.push(targInpTMB);
+
+        targInpGET = parentEl.querySelector(
+          `#inpGet${numRef}Cel6_${numRef + 1}`
+        );
+        arrayTargInps.push(targInpGET);
+      } else if (context === "tab") {
+        targInpWeight = parentEl.querySelector(`#tabInpRowMedAnt2_${numRef}`);
+        arrayTargInps.push(targInpWeight);
+
+        targInpHeight = parentEl.querySelector(`#tabInpRowMedAnt3_${numRef}`);
+        arrayTargInps.push(targInpHeight);
+
+        targInpIMC = parentEl.querySelector(
+          `#inpImc${numRef - 1}Cel2_${numRef}`
+        );
+        arrayTargInps.push(targInpIMC);
+
+        targInpMLG = parentEl.querySelector(
+          `#inpMlg${numRef - 1}Cel3_${numRef}`
+        );
+        arrayTargInps.push(targInpMLG);
+
+        targInpTMB = parentEl.querySelector(
+          `#inpTmb${numRef - 1}Cel5_${numRef}`
+        );
+        arrayTargInps.push(targInpTMB);
+
+        targInpGET = parentEl.querySelector(
+          `#inpGet${numRef - 1}Cel6_${numRef}`
+        );
+        arrayTargInps.push(targInpGET);
+      }
+    } else {
+      const error = new Error();
+      const splitError = (error.stack as string as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.typeError(
+        "numRef",
+        numRef ?? null,
+        "number ou string somente com números",
+        slicedError ?? "NULL"
+      );
+    }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.stringError(
+      "validando contexto. Valores de string aceitos: cons || tab.",
+      context ?? "undefined",
+      slicedError ?? "NULL"
+    );
+  }
+
+  if (arrayTargInps.length === 6) {
+    for (let iA = 0; iA < arrayTargInps.length; iA++) {
+      if (
+        arrayTargInps[iA] instanceof HTMLInputElement &&
+        (arrayTargInps[iA] as HTMLInputElement).type === "number"
+      ) {
+        console.log(`target ${enumTargInpTypes[iA]}`);
+        validTargInps.push(arrayTargInps[iA]);
+      } else {
+        const error = new Error();
+        const splitError = (error.stack as string as string).split("\n");
+        const slicedError = splitError[1].trim().slice(-7, -1);
+        ErrorHandler.inputNotFound(
+          arrayTargInps[iA],
+          `arrayTargInps ${enumTargInpTypes[iA]}`,
+          slicedError ?? "NULL"
+        );
+        arrayTargInps[iA] = null;
+      }
+    }
+  } else {
+    const error = new Error();
+    const splitError = (error.stack as string as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotPopulated(
+      arrayTargInps ?? null,
+      "arrayTargInps",
+      slicedError ?? "NULL"
+    );
+  }
+
+  return validTargInps;
 }
 
 export function changeToAstDigit(
@@ -1592,19 +1967,28 @@ export function resetarFormulario(
     if (formulario && formulario instanceof HTMLFormElement) {
       formulario.reset();
     } else {
-      console.warn(`Erro validando formulário em reset.
-      Instância obtida: ${
-        Object.prototype.toString.call(formulario).slice(8, -1) ?? "null"
-      }`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        formulario ?? null,
+        "formulario",
+        slicedError ?? "NULL"
+      );
     }
 
     if (editableCite && editableCite instanceof HTMLElement) {
       editableCite.textContent = `--Nome`;
       Model.removeFirstClick(editableCite);
     } else {
-      console.warn(`Erro obtendo Cite Editável em reset.
-      Elemento obtido: ${editableCite ?? "null"};
-      Instância: ${Object.prototype.toString.call(editableCite).slice(8, -1)}`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        editableCite ?? null,
+        "editableCite",
+        slicedError ?? "NULL"
+      );
     }
 
     if (toFileInpBtns.length > 0) {
@@ -1674,8 +2058,14 @@ export function resetarFormulario(
         }
       });
     } else {
-      console.warn(`Erro obtendo .length da NodeList de Botões para Assinatura Digital.
-      Length obtida: ${toFileInpBtns?.length ?? 0}`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotPopulated(
+        toFileInpBtns ?? null,
+        "NodeList toFileInpBtns",
+        slicedError ?? "NULL"
+      );
     }
 
     if (genTrans && genTrans instanceof HTMLSelectElement) {
@@ -1683,10 +2073,14 @@ export function resetarFormulario(
         genTrans.hidden = true;
       }
     } else {
-      console.warn(`Erro obtendo elemento genTrans em reset.
-      Instância obtida: ${
-        Object.prototype.toString.call(genTrans).slice(8, -1) ?? "null"
-      }`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        genTrans ?? null,
+        "genTrans",
+        slicedError ?? "NULL"
+      );
     }
 
     if (genFisAlin && genFisAlin instanceof HTMLSelectElement) {
@@ -1694,16 +2088,23 @@ export function resetarFormulario(
         genFisAlin.hidden = true;
       }
     } else {
-      console.warn(`Erro obtendo elemento genFisAlin em reset.
-      Instância obtida: ${
-        Object.prototype.toString.call(genFisAlin).slice(8, -1) ?? "null"
-      }`);
+      const error = new Error();
+      const splitError = (error.stack as string).split("\n");
+      const slicedError = splitError[1].trim().slice(-7, -1);
+      ErrorHandler.elementNotFound(
+        genFisAlin ?? null,
+        "genFisAlin",
+        slicedError ?? "NULL"
+      );
     }
   } else {
-    console.error(
-      `Erro validando target: instância de ${Object.prototype.toString
-        .call(click.target)
-        .slice(8, -1)}`
+    const error = new Error();
+    const splitError = (error.stack as string).split("\n");
+    const slicedError = splitError[1].trim().slice(-7, -1);
+    ErrorHandler.elementNotFound(
+      (click.target as Element) ?? null,
+      "Botão de Reset",
+      slicedError ?? "NULL"
     );
   }
 }

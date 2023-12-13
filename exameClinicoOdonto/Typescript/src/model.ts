@@ -1,4 +1,17 @@
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import * as Controller from "./controller.js";
+import type {
+  looseNum,
+  targStr,
+  targNum,
+  targStrArr,
+  targEl,
+  arrTargEl,
+  HTMLTargEl,
+  entryEl,
+  textEl,
+} from "./types.js";
+import * as ErrorHandler from "./errorHandler.js";
 
 const subDivsQuadrs = document.querySelectorAll(".quadrSubDiv");
 const autoCapitalizeFirstLetterRegex = /\b\w/;
