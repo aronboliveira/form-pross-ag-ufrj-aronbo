@@ -3,7 +3,6 @@
 <!-- todo transformar dicas em toggle dialog durante aplicação de estilos-->
 <!-- todo incluir alguma sinalização visual para Radios Cpb durante aplicação de estilos-->
 <!-- todo incluir sinalização visual para required durante aplicação de estilos-->
-<!-- todo incluir cálculo de índices em edfis-->
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -20,21 +19,20 @@
   </head>
   <body>
     <header>
-      <h1 class="contPrim hGeneric" id="hForm">Anamnese Geral
-        <button type="button" class="contSec" id="btnJSON">Gerar JSON</button>
-        <button type="button" class="contQuint" id="deactAutocorrectBtn">Desativar Autocorreção</button>
-        <span class="flexSpan" id="spanHFlex">
-          <input type="date" class="contSec" id="dateHeader">
-          <button
-          type="button"
-          class="contSec datBtn atualTratBtn"
-          id="headerDatBtn"
-        >
-          Usar data atual
-        </button>
-        </span>
-      </h1>
-      <h2 class="dica" id="dicaKb">Você pode apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo campo após iniciar o foco com Tab</h2>
+        <div class="flexDiv">
+          <h1 class="contPrim hGeneric" id="hForm">Anamnese Geral</h1>
+          <span class="flexSpan" id="spanHFlex">
+            <input type="date" class="contSec" id="dateHeader">
+            <button
+            type="button"
+            class="contSec datBtn atualTratBtn"
+            id="headerDatBtn"
+          >
+            Usar data atual
+          </button>
+          </span>
+        </div>
+        <button type="button" class="contSec" id="btnJSON" hidden>Gerar JSON</button>
     </header>
     <main>
       <form name="formAnamGName" id="formAnamGId" method="POST" action="#">
@@ -43,7 +41,7 @@
 
           <section class="sectionMain" id="fsAnamGSect">
 
-            <div class="flexDiv" id="div1_div2flex"> <!--ignorar flexDiv na contagem-->
+            <div id="div1_div2flex"> <!--ignorar flexDiv na contagem-->
               <div class="contTerc divMain fsAnamGDiv" id="fsAnamGDiv1">
 
                 <span class="contQuat fsAnamGSpan" id="fsAnamGSpan1">
@@ -337,7 +335,15 @@
           
         <fieldset name="fsAnamGRadName" id="fsAnamGRadId" class="fsMain">
           <legend id="fsAnamGRadLegId" class="legMain">Opções</legend>
-
+          <button type="button" class="biBtn tipBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-exclamation-fill" viewBox="0 0 16 16">
+              <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+            </svg>
+            <dialog>
+              <h2 class="dica" id="dicaKb">Você pode apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo campo 
+                após iniciar o foco com Tab</h2>
+            </dialog>
+          </button>
           <section class="sectionMain sectionConfirm" id="fsAnamGRadSectId">
             <span class="contTerc spanMain spanMainFsAnamGRad" id="febrRSpan">
               <span class="contQuat spanSub spanSubFsAnamGRad" id="febrRSpanSub">Febre Reumática</span>
@@ -978,14 +984,26 @@
           <section class="contSec sectionMain sectionConfirm" id="sectConfirmCheck">
             <blockquote class="contTerc declr" id="declrEnd">"DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA"
               <label for="confirmId" class="contQuat labConfirm"></label>
-              <input type="checkbox" name="confirmName" id="confirmId" class="contQuat" required /> CONCORDO
+              <input type="checkbox" name="confirmName" id="confirmId" class="contQuat" required />
             </blockquote>
             <div class="contTerc divMain" id="divConfirm">
               <span class="contQuat spanConfirm "id="spanConfirm1">
-                <h3 class="contQuint dicas" id="dicaCiteName">Você pode apagar o conteúdo inicial abaixo clicando no texto</h3>
-                <h3 class="contQuint dicas" id="dicaUppercase">As primeiras letras, exceto conjunções, são capitalizadas automaticamente por padrão. 
-                  Outras correções podem precisar de mais texto — Continue digitando!</h3>
+                <br />
                 <cite contenteditable="true" id="citeNameId" class="contQuint">Insira Seu Nome Aqui</cite>
+                <button type="button" class="biBtn tipBtn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-exclamation-fill" viewBox="0 0 16 16">
+                    <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                  </svg>
+                  <dialog>
+                    <h2 class="dica" id="dicaKb">Você pode apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo campo 
+                      após iniciar o foco com Tab</h2>
+                    <h3 class="contQuint dicas" id="dicaCiteName">Você pode apagar o conteúdo inicial abaixo 
+                      clicando no texto</h3>
+                    <h3 class="contQuint dicas" id="dicaUppercase">As primeiras letras, exceto conjunções, são 
+                      capitalizadas automaticamente por padrão. 
+                      Outras correções podem precisar de mais texto — Continue digitando!</h3>
+                  </dialog>
+                </button>
                 <hr id="hrCite"/>
               </span>
   
@@ -1054,6 +1072,8 @@
       </form>
     </main>
     <script type="module" src="controller.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script type="module" src="./Typescript/dist/styleController.js"></script>
   </body>
 </html>
 

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Esta é uma página que contém as interfaces de fila e checks rotineiros 
+    para o atendimento do projeto PROSSaúde — UFRJ"
+    />
+    <title>Atendimento Di ário PROSSaúde — UFRJ</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Atendimento Diário</h1>
+    </header>
+    <main>
+      <article>
+        <div>
+          <span>Dia do Próximo Atendimento:</span>
+          <input type="date" />
+        </div>
+        <div>
+          <span>Dia Confirmado:</span>
+          <input type="checkbox" />
+        </div>
+        <div>
+          <span>Horário do Dia:</span>
+          <input type="time" />
+        </div>
+      </article>
+      <article>
+        <div>
+          <button type="button">Adicionar Paciente</button>
+          <button type="button">Remover Paciente</button>
+        </div>
+        <div>
+          <span>Dia de Modificação:</span>
+          <select>
+            <option value="fstWed">Primeira Quarta</option>
+            <option value="fstFri">Primeira Sexta</option>
+            <option value="sndWed">Segunda Quarta</option>
+            <option value="sndFri">Segunda Sexta</option>
+            <option value="thdWed">Terceira Quarta</option>
+            <option value="thdFri">Terceira Sexta</option>
+            <option value="fthWed">Quarta Quarta</option>
+            <option value="fthFri">Quarta Sexta</option>
+          </select>
+        </div>
+        <table>
+          <tr>
+            <caption>
+              Relação de Pacientes do Mês:
+              <select>
+                <option value="jan">Janeiro</option>
+                <option value="feb">Fevereiro</option>
+                <option value="mar">Março</option>
+                <option value="apr">Abril</option>
+                <option value="may">Maio</option>
+                <option value="jun">Junho</option>
+                <option value="jul">Julho</option>
+                <option value="aug">Agosto</option>
+                <option value="sep">Setembro</option>
+                <option value="oct">Outubro</option>
+                <option value="nov">Novembro</option>
+                <option value="dec">Dezembro</option>
+              </select>
+            </caption>
+          </tr>
+
+          <tr>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Primeira Quarta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr hidden>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Primeira Sexta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Segunda Quarta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Segunda Sexta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Terceira Quarta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Terceira Sexta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Quarta Quarta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <thead>
+                  <th>
+                    <input type="text" placeholder="Quarta Sexta" />
+                    <input type="date" />
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <span>
+                        <input type="text" placeholder="Nome" />
+                        <input type="checkbox" />
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </article>
+    </main>
+    <script type="module" src="./Typescript/dist/controller.js"></script>
+  </body>
+</html>

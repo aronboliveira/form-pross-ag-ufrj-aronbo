@@ -3,8 +3,6 @@
 import * as Controller from "./controller.js";
 import * as ErrorHandler from "./errorHandler.js";
 
-//TODO ADICIONAR CHAMADAS DE ERRORHANDLER
-
 const autoCapitalizeFirstLetterRegex = /\b\w/;
 let repAcumulator = 0;
 let isAutocorrectOn = true;
