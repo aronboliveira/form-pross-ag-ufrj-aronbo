@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Este é um formulário para 
+    o Exame Clínico de Odontologia do projeto PROSSaúde — UFRJ" />
+    <title>Exame Clínico — Odontologia</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  </head>
+  <body>
+    <header>
+      <h1 class="contPrim hGeneric" id="hForm">Exame Clínico — Odontologia
+        <span class="flexSpan" id="spanHFlex">
+          <input type="date" class="contSec" >
+          <button
+          type="button"
+          class="contSec datBtn atualTratBtn"
+          id="headerDatBtn"
+        >
+          Usar data atual
+        </button>
+        </span>
+      </h1>
+      <h2 class="contPrim dicas" id="dicaKb">
+        Você pode apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo
+        campo após iniciar o foco com Tab
+      </h2>
+    </header>
+    <main>
+      <form action="#" method="POST" id="formOdont">
+        
+        <fieldset name="fsAnamGName" id="fsAnamGIdId" class="contPrim fsMain">
+          <legend class="legMain" id="fsAnamGLeg">Identificação</legend>
+  
+          <section class="contSec sectionMain" id="fsAnamGSect">
+  
+            <div class="contTerc divMain fsAnamGDiv" id="fsAnamGDiv1">
+  
+              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan1">
+                <label for="firstNameId" class="contQuint labelIdentif">Primeiro Nome (Simples ou Composto):
+                  <input type="text" name="firstNameName" id="firstNameId" class="contSext inpIdentif" autocomplete="given-name" required />
+                </label>
+                <br />
+              </span>
+    
+              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan2">
+                <label for="additionalNameId"  class="contQuint labelIdentif">Sobrenome(s) do Meio, se presentes:
+                  <input type="text" name="additionalNameName" id="additionalNameId" class="contSext inpIdentif" autocomplete="additional-name" />
+                </label>
+                <br />
+              </span>
+    
+              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan3">
+                <label for="familyNameId" class="contQuint labelIdentif">Último Sobrenome:
+                  <input type="text" name="familyNameName" id="familyNameId" class="contSext inpIdentif" autocomplete="family-name" required />
+                </label>
+                <br />  
+              </span>
+
+              <span class="contQuat fsAnamGSpan" id="fsAnamGSpan4">
+                <label for="socialNameId" class="contQuint labelIdentif">Nome Social:
+                  <input type="text" name="socialNameName" id="socialNameId" class="contSext inpIdentif" autocomplete="given-name"/>
+                </label>
+              </span>
+              <hr />
+            </div>
+            </section>
+        </fieldset>
+  
+        <fieldset name="fsInspBocFacName" id="fsInspBocFacId" class="contPrim fsMain">
+          <legend id="fsInspBocFacLeg" class="contSec legMain inspLeg">Inspeção da Boca e da Face</legend>
+
+          <h3 class="dica" id="dicaKb">Você pode apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo campo após iniciar o foco com Tab</h3>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs1">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub1">Lábios e Mucosa Labial</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv1">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain1">
+                <input type="radio" name="labInpName1" id="labInpYes1" class="contQuint radOp radYes"/>
+                <label for="labInpYes1" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="labInpName1" id="labInpNo1" class="contQuint radOp radNo"/>
+                <label for="labInpNo1" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub1" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa1" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn1">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog1" draggable="true">
+                    <ol class="contSet inspList" id="inspList1">Considere observar:
+                      <li class="contOct inspLI" id="inspLI1_1">Textura
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn1_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI1_2">Coloração
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn1_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI1_3">Presença de Glândulas Salivares Acessórias
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn1_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI1_4">Grânulos de Fordyce
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn1_4">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI1_5">Fossetas
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn1_5">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs2">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub2">Mucosa Jugal</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv2">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain2">
+                <input type="radio" name="jugInpName2" id="jugInpYes2" class="contQuint radOp radYes"/>
+                <label for="jugInpYes2" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName2" id="jugInpNo2" class="contQuint radOp radNo"/>
+                <label for="jugInpNo2" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub2" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa2" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn2">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog2" draggable="true">
+                    <ol class="contSet inspList" id="inspList2">Considere observar:
+                      <li class="contOct inspLI" id="inspLI2_1">Textura
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn2_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI2_2">Coloração
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn2_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI2_3">Papila do ducto da Parótida
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn2_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI2_4">Grânulos de Fordyce
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn2_4">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI2_5">Linha alba
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn2_5">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI2_6">Leucoedema
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn2_6">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI2_7">Pigmentações
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn2_7">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs3">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub3">Fundo de Vestibulo</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv3">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain3">
+                <input type="radio" name="jugInpName3" id="jugInpYes3" class="contQuint radOp radYes"/>
+                <label for="jugInpYes3" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName3" id="jugInpNo3" class="contQuint radOp radNo"/>
+                <label for="jugInpNo3" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub3" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa3" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn3">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog3" draggable="true">
+                    <ol class="contSet inspList" id="inspList3">Considere observar:
+                      <li class="contOct inspLI" id="inspLI3_1">Bridas
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn3_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI3_2">Freio labial
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn3_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI3_3">Coloração
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn3_3">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs4">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub4">Palato Duro</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv4">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain4">
+                <input type="radio" name="jugInpName4" id="jugInpYes4" class="contQuint radOp radYes"/>
+                <label for="jugInpYes4" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName4" id="jugInpNo4" class="contQuint radOp radNo"/>
+                <label for="jugInpNo4" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub4" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa4" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn4">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog4" draggable="true">
+                    <ol class="contSet inspList" id="inspList4">Considere observar:
+                      <li class="contOct inspLI" id="inspLI4_1">Papila incisiva
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn4_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI4_2">Rugosidade Palatina
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn4_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI4_3">Rafe Mediana
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn4_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI4_4">Tórus Palatino
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn4_4">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI4_5">Glândulas Salivares
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn4_5">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI4_6">Fóvea Palatina
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn4_6">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs5">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub5">Palato Mole e Úvula</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv5">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain5">
+                <input type="radio" name="jugInpName5" id="jugInpYes5" class="contQuint radOp radYes"/>
+                <label for="jugInpYes5" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName5" id="jugInpNo5" class="contQuint radOp radNo"/>
+                <label for="jugInpNo5" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub5" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa5" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn5">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog5" draggable="true">
+                    <ol class="contSet inspList" id="inspList5">Considere observar:
+                      <li class="contOct inspLI" id="inspLI5_1">Textura
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn5_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI5_2">Coloração
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn5_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI5_3">Movimentação
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn5_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI5_4">Detalhes da Úvula
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn5_4">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs6">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub6">Orofaringe</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv6">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain6">
+                <input type="radio" name="jugInpName6" id="jugInpYes6" class="contQuint radOp radYes"/>
+                <label for="jugInpYes6" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName6" id="jugInpNo6" class="contQuint radOp radNo"/>
+                <label for="jugInpNo6" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub6" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa6" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn6">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog6" draggable="true">
+                    <ol class="contSet inspList" id="inspList6">Considere observar:
+                      <li class="contOct inspLI" id="inspLI6_1">Coloração
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn6_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI6_2">Presença das Tonsilas
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn6_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI6_3">Nódulos linfoides
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn6_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI6_4">Pilares &#40Palatoglosso&#41
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn6_4">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI6_5">Palatofaríngeo
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn6_5">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs7">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub7">Língua</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv7">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain7">
+                <input type="radio" name="jugInpName7" id="jugInpYes7" class="contQuint radOp radYes"/>
+                <label for="jugInpYes7" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName7" id="jugInpNo7" class="contQuint radOp radNo"/>
+                <label for="jugInpNo7" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub7" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa7" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn7">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog7" draggable="true">
+                    <ol class="contSet inspList" id="inspList7">Considere observar:
+                      <li class="contOct inspLI" id="inspLI7_1">Textura
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_2">Coloração
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_3">Papilas filiformes
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_4">Paplias fungiformes
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_4">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_5">Paplias calciformes &#40circunvaladas&#41
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_5">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_6">Fissuras
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_6">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_7">Glossite migratória benigna
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_7">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_8">Veias linguais
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_8">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_9">Varizes linguais
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_9">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_10">Fímbrias
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_10">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI7_11">Papilas Foliadas
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn7_11">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs8">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub8">Assoalho da Boca</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv8">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain8">
+                <input type="radio" name="jugInpName8" id="jugInpYes8" class="contQuint radOp radYes"/>
+                <label for="jugInpYes8" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName8" id="jugInpNo8" class="contQuint radOp radNo"/>
+                <label for="jugInpNo8" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub8" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa8" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn8">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog8" draggable="true">
+                    <ol class="contSet inspList" id="inspList8">Considere observar:
+                      <li class="contOct inspLI" id="inspLI8_1">Carúncula
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn8_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI8_2">Glândulas Submandibulares
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn8_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI8_3">Glândulas Sublinguais
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn8_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI8_4">Freio Lingual &#40implantação&#41
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn8_4">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI8_5">Fímbrias
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn8_5">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI8_6">Agregados Linfoides
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn8_6">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs9">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub9">Músculos da Mastigação — Palpação</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv9">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain9">
+                <input type="radio" name="jugInpName9" id="jugInpYes9" class="contQuint radOp radYes"/>
+                <label for="jugInpYes9" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName9" id="jugInpNo9" class="contQuint radOp radNo"/>
+                <label for="jugInpNo9" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub9" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa9" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn9">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog9" draggable="true">
+                    <ol class="contSet inspList" id="inspList9">Considere observar:
+                      <li class="contOct inspLI" id="inspLI9_1">Pterigoideo lateral
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn9_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI9_2">Temporal
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn9_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI9_3">Masseter
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn9_3">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+          <fieldset class="contSec fsSub fsInsp" id="inspFs10">
+            <legend class="contTerc legSub inspLeg" id="inspLegSub10">Gengiva Marginal e Inserida &#40Periodonto&#41</legend>
+            <div class="contTerc divMain inspDiv" id="inspDiv10">Há alteração?
+              <span class="contQuat spanMain inspSpanMain" id="inspSpanMain10">
+                <input type="radio" name="jugInpName10" id="jugInpYes10" class="contQuint radOp radYes"/>
+                <label for="jugInpYes10" class="contQuint labOp labInsp">Sim</label>
+                <input type="radio" name="jugInpName10" id="jugInpNo10" class="contQuint radOp radNo"/>
+                <label for="jugInpNo10" class="contQuint labOp labInsp">Não</label>
+                <br />
+                <span class="contQuint spanSub inspSpanSub" id="inspSpanSub10" hidden> Obsevarções e detalhes
+                  <textarea class="contSext inspTa" id="inspTa10" placeholder="Insira aqui as observações"></textarea>
+                  <button type="button" class="contSext inspBtn inspBtnDialog" id="inspDialogBtn10">Mostrar Sugestões</button>
+                  <dialog class="contSext inspDialog" id="inspDialog10" draggable="true">
+                    <ol class="contSet inspList" id="inspList10">Considere observar:
+                      <li class="contOct inspLI" id="inspLI10_1">Níveis de Inserção
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn10_1">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI10_2">Presença de Inflamação
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn10_2">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI10_3">Fístulas
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn10_3">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI10_4">Abscessos
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn10_4">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI10_5">Exostoses
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn10_5">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI10_6">Tórus Mandibular
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn10_6">Adicionar</button>
+                      </li>
+                      <li class="contOct inspLI" id="inspLI10_7">Pigmentações
+                        <button type="button" class="contNine inspLIBtn" id="inspLIBtn10_7">Adicionar</button>
+                      </li>
+                    </ol>
+                  </dialog>
+                </span>
+              </span>
+            </div>
+          </fieldset>
+
+        <hr />
+  
+        <fieldset name="fsAvDentName" id="fsAvDentId" class="contPrim fsMain">
+          <legend class="contSec legMain" id="fsAvDentLeg">Avaliação Dentária</legend>
+          <h2 class="contSec dicas" id="dicaDrag">
+            Você pode arrastar os containers de Quadrantes para reorganizar como preferir</h2>
+          <h2 class="contSec dicas" id="dicaDownUp">
+            Você pode clicar nas setas para deslocar os containers dos Dentes
+          </h2>
+          <h2 class="contSec dicas" id="dicaDrag">
+            Clicar nos valores pré-definidos irá apagá-los</h2>
+            <h2 class="contSec dicas" id="dicaDatalist">
+              Clicar em campos esvaziados irá fornecer uma lista de valores padrão para seleção</h2>
+          <section class="contSec sectionMain" id="sectAvDentId" itemscope itemprop="dentComp">
+  
+            <div class="contTerc divMain quadrAvDent quadrMainDiv" id="divMainSupDir" 
+            itemprop="dentQuadr"
+            draggable="true">
+              SUPERIOR DIREITO
+              <button type="button" class="contQuat resetBut" id="resetSupDir">Resetar</button>
+              <div class="contQuat contInQuadrs divSub quadrAvDent quadrSubDiv" id="divSubSupDir" 
+              itemprop="dentQuadr">
+
+                <label class="contQuint labelAvDent" id="labD18">
+                  <span class="contSext spanMain" id="spanMainD18">
+                    <span class="contSet spanSub DNum" id="spanSubD18">18</span>
+                  </span>
+                  <input type="text" list="avElemDentD18" value="Hígido" id="inpD18" class="contSext inpAvDent" required/>
+                  <datalist id="avElemDentD18" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+
+                <label class="contQuint labelAvDent" id="labD17">
+                  <span class="contSext spanMain" id="spanMainD17">
+                    <span class="contSet spanSub DNum" id="spanSubD17">17</span>
+                  </span>
+                  <input type="text" list="avElemDentD17" value="Hígido" id="inpD17" class="contSext inpAvDent" required/>
+                  <datalist id="avElemDentD17" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+
+                <label class="contQuint labelAvDent" id="labD16">
+                  <span class="contSext spanMain" id="spanMainD16">
+                    <span class="contSet spanSub DNum" id="spanSubD16">16</span>
+                  </span>
+                  <input type="text" list="avElemDentD16" value="Hígido" id="inpD16" class="contSext inpAvDent" required/>
+                  <datalist id="avElemDentD16" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+
+                <label class="contQuint labelAvDent" id="labD15">
+                  <span class="contSext spanMain" id="spanMainD15">
+                    <span class="contSet spanSub DNum" id="spanSubD15">15</span>
+                  </span>
+                  <input type="text" list="avElemDentD15" value="Hígido" id="inpD15" class="contSext inpAvDent" required/>
+                  <datalist id="avElemDentD15" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+
+                <label class="contQuint labelAvDent" id="labD14">
+                  <span class="contSext spanMain" id="spanMainD14">
+                    <span class="contSet spanSub DNum" id="spanSubD14">14</span>
+                  </span>
+                  <input type="text" list="avElemDentD14" value="Hígido" id="inpD14" class="contSext inpAvDent" required/>
+                  <datalist id="avElemDentD14" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+
+                <label class="contQuint labelAvDent" id="labD13">
+                  <span class="contSext spanMain" id="spanMainD13">
+                    <span class="contSpanSub DNum" id="spanSubD13">13</span>
+                  </span>
+                  <input type="text" list="avElemDentD13" value="Hígido" id="inpD13" class="contSext inpAvDent" required/>
+                  <datalist id="avElemDentD13" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+
+                <label class="contQuint labelAvDent" id="labD12">
+                  <span class="contSext spanMain" id="spanMainD12">
+                    <span class="contSet spanSub DNum" id="spanSubD12">12</span>
+                  </span>
+                  <input type="text" list="avElemDentD12" value="Hígido" id="inpD12" class="contSext inpAvDent" required/>
+                  <datalist id="avElemDentD12" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+
+                <label class="contQuint labelAvDent" id="labD11">
+                  <span class="contSext spanMain" id="spanMainD11">
+                    <span class="contSet spanSub DNum" id="spanSubD11">11</span>
+                  </span>
+                  <input type="text" list="avElemD11" value="Hígido" id="inpD11" class="contSext inpAvDent" required/>
+                  <datalist id="avElemD11" class="contSext dlAvDent">
+                    <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                    <option value="Careado" class="contSet elemOp">Careado</option>
+                    <option value="Hígido" class="contSet elemOp">Hígido</option>
+                    <option value="Trincado" class="contSet elemOp">Trincado</option>
+                    <option value="Ausente" class="contSet elemOp">Ausente</option>
+                  </datalist>
+                </label>
+  
+              </div>
+            </div>
+
+            <div class="contTerc divMain quadrAvDent quadrMainDiv" id="divMainInfEsq" 
+            itemprop="dentQuadr" draggable="true">
+              INFERIOR ESQUERDO
+              <button type="button" class="resetBut" id="resetInEsq">Resetar</button>
+              <div class="contQuat contInQuadrs divSub quadrAvDent quadrSubDiv" id="divSubInfEsq" 
+              itemprop="dentQuadr">
+  
+              <label class="contQuint labelAvDent" id="labD31">
+                <span class="contSext spanMain" id="spanMainD31">
+                  <span class="contSet spanSub DNum" id="spanSubD31">31</span>
+                </span>
+                <input type="text" list="avElemD31" value="Hígido" id="inpD31" class="contSext inpAvDent" required/>
+                <datalist id="avElemD31" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD32">
+                <span class="contSext spanMain" id="spanMainD32">
+                  <span class="contSet spanSub DNum" id="spanSubD32">32</span>
+                </span>
+                <input type="text" list="avElemD32" value="Hígido" id="inpD32" class="contSext inpAvDent" required/>
+                <datalist id="avElemD32" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD33">
+                <span class="contSext spanMain" id="spanMainD33">
+                  <span class="contSet spanSub DNum" id="spanSubD33">33</span>
+                </span>
+                <input type="text" list="avElemD33" value="Hígido" id="inpD33" class="contSext inpAvDent" required/>
+                <datalist id="avElemD33" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD34">
+                <span class="contSext spanMain" id="spanMainD34">
+                  <span class="contSet spanSub DNum" id="spanSubD34">34</span>
+                </span>
+                <input type="text" list="avElemD34" value="Hígido" id="inpD34" class="contSext inpAvDent" required/>
+                <datalist id="avElemD34" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD35">
+                <span class="contSext spanMain" id="spanMainD35">
+                  <span class="contSet spanSub DNum" id="spanSubD35">35</span>
+                </span>
+                <input type="text" list="avElemD35" value="Hígido" id="inpD35" class="contSext inpAvDent" required/>
+                <datalist id="avElemD35" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD36">
+                <span class="contSext spanMain" id="spanMainD36">
+                  <span class="contSet spanSub DNum" id="spanSubD36">36</span>
+                </span>
+                <input type="text" list="avElemD36" value="Hígido" id="inpD36" class="contSext inpAvDent" required/>
+                <datalist id="avElemD36" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD37">
+                <span class="contSext spanMain" id="spanMainD37">
+                  <span class="contSet spanSub DNum" id="spanSubD37">37</span>
+                </span>
+                <input type="text" list="avElemD37" value="Hígido" id="inpD37" class="contSext inpAvDent" required/>
+                <datalist id="avElemD37" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD38">
+                <span class="contSext spanMain" id="spanMainD38">
+                  <span class="contSet spanSub DNum" id="spanSubD38">38</span>
+                </span>
+                <input type="text" list="avElemD38" value="Hígido" id="inpD38" class="contSext inpAvDent" required/>
+                <datalist id="avElemD38" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              </div>
+            </div>
+  
+            <div class="contTerc divMain quadrAvDent quadrMainDiv" id="divMainSupEsq" 
+            itemprop="dentQuadr" draggable="true">
+              SUPERIOR ESQUERDO
+              <button type="button" class="resetBut" id="resetSupEsq">Resetar</button>
+              <div class="contQuat contInQuadrs divSub quadrAvDent quadrSubDiv" id="divSubSupEsq" 
+              itemprop="dentQuadr">
+  
+              <label class="contQuint labelAvDent" id="labD21">
+                <span class="contSext spanMain" id="spanMainD21">
+                  <span class="contSet spanSub DNum" id="spanSubD21">21</span>
+                </span>
+                <input type="text" list="avElemD21" value="Hígido" id="inpD21" class="contSext inpAvDent" required/>
+                <datalist id="avElemD21" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD22">
+                <span class="contSext spanMain" id="spanMainD22">
+                  <span class="contSet spanSub DNum" id="spanSubD22">22</span>
+                </span>
+                <input type="text" list="avElemD22" value="Hígido" id="inpD22" class="contSext inpAvDent" required/>
+                <datalist id="avElemD22" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD23">
+                <span class="contSext spanMain" id="spanMainD23">
+                  <span class="contSet spanSub DNum" id="spanSubD23">23</span>
+                </span>
+                <input type="text" list="avElemD23" value="Hígido" id="inpD23" class="contSext inpAvDent" required/>
+                <datalist id="avElemD23" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD24">
+                <span class="contSext spanMain" id="spanMainD24">
+                  <span class="contSet spanSub DNum" id="spanSubD24">24</span>
+                </span>
+                <input type="text" list="avElemD24" value="Hígido" id="inpD24" class="contSext inpAvDent" required/>
+                <datalist id="avElemD24" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD25">
+                <span class="contSext spanMain" id="spanMainD25">
+                  <span class="contSet spanSub DNum" id="spanSubD25">25</span>
+                </span>
+                <input type="text" list="avElemD25" value="Hígido" id="inpD25" class="contSext inpAvDent" required/>
+                <datalist id="avElemD25" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD26">
+                <span class="contSext spanMain" id="spanMainD26">
+                  <span class="contSet spanSub DNum" id="spanSubD26">26</span>
+                </span>
+                <input type="text" list="avElemD26" value="Hígido" id="inpD26" class="contSext inpAvDent" required/>
+                <datalist id="avElemD26" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD27">
+                <span class="contSext spanMain" id="spanMainD27">
+                  <span class="contSet spanSub DNum" id="spanSubD27">27</span>
+                </span>
+                <input type="text" list="avElemD27" value="Hígido" id="inpD27" class="contSext inpAvDent" required/>
+                <datalist id="avElemD27" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD28">
+                <span class="contSext spanMain" id="spanMainD28">
+                  <span class="contSet spanSub DNum" id="spanSubD28">28</span>
+                </span>
+                <input type="text" list="avElemD28" value="Hígido" id="inpD28" class="contSext inpAvDent" required/>
+                <datalist id="avElemD28" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+              </div>
+  
+            </div>
+  
+            <div class="contTerc divMain quadrAvDent quadrMainDiv" id="divMainInfDir" 
+            itemprop="dentQuadr" draggable="true">
+              INFERIOR DIREITO
+              <button type="button" class="resetBut" id="resetInfDir">Resetar</button>
+              <div class="contQuat contInQuadrs contQuadr divSub quadrAvDent quadrSubDiv" id="divSubInfDir" 
+              itemprop="dentQuadr">
+  
+              <label class="contQuint labelAvDent" id="labD41">
+                <span class="contSext spanMain" id="spanMainD41">
+                  <span class="contSet spanSub DNum" id="spanSubD41">41</span>
+                </span>
+                <input type="text" list="avElemD41" value="Hígido" id="inpD41" class="contSext inpAvDent" required/>
+                <datalist id="avElemD41" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD42">
+                <span class="contSext spanMain" id="spanMainD42">
+                  <span class="contSet spanSub DNum" id="spanSubD42">42</span>
+                </span>
+                <input type="text" list="avElemD42" value="Hígido" id="inpD42" class="contSext inpAvDent" required/>
+                <datalist id="avElemD42" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD43">
+                <span class="contSext spanMain" id="spanMainD43">
+                  <span class="contSet spanSub DNum" id="spanSubD43">43</span>
+                </span>
+                <input type="text" list="avElemD43" value="Hígido" id="inpD43" class="contSext inpAvDent" required/>
+                <datalist id="avElemD43" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD44">
+                <span class="contSext spanMain" id="spanMainD44">
+                  <span class="contSet spanSub DNum" id="spanSubD44">44</span>
+                </span>
+                <input type="text" list="avElemD44" value="Hígido" id="inpD44" class="contSext inpAvDent" required/>
+                <datalist id="avElemD44" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD45">
+                <span class="contSext spanMain" id="spanMainD45">
+                  <span class="contSet spanSub DNum" id="spanSubD45">45</span>
+                </span>
+                <input type="text" list="avElemD45" value="Hígido" id="inpD45" class="contSext inpAvDent" required/>
+                <datalist id="avElemD45" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD46">
+                <span class="contSext spanMain" id="spanMainD46">
+                  <span class="contSet spanSub DNum" id="spanSubD46">46</span>
+                </span>
+                <input type="text" list="avElemD46" value="Hígido" id="inpD46" class="contSext inpAvDent" required/>
+                <datalist id="avElemD46" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD47">
+                <span class="contSext spanMain" id="spanMainD47">
+                  <span class="contSet spanSub DNum" id="spanSubD47">47</span>
+                </span>
+                <input type="text" list="avElemD47" value="Hígido" id="inpD47" class="contSext inpAvDent" required/>
+                <datalist id="avElemD47" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              <label class="contQuint labelAvDent" id="labD48">
+                <span class="contSext spanMain" id="spanMainD48">
+                  <span class="contSet spanSub DNum" id="spanSubD48">48</span>
+                </span>
+                <input type="text" list="avElemD48" value="Hígido" id="inpD48" class="contSext inpAvDent" required/>
+                <datalist id="avElemD48" class="contSext dlAvDent">
+                  <option value="Amálgama" class="contSet elemOp">Amálgama</option>
+                  <option value="Careado" class="contSet elemOp">Careado</option>
+                  <option value="Hígido" class="contSet elemOp">Hígido</option>
+                  <option value="Trincado" class="contSet elemOp">Trincado</option>
+                  <option value="Ausente" class="contSet elemOp">Ausente</option>
+                </datalist>
+              </label>
+  
+              </div>
+            </div>
+  
+          </section>
+        </fieldset>
+        <hr />
+  
+        <fieldset nam="fsPlanName" id="fsPlanId" class="contPrim fsMain">
+          <legend>Plano de Tratamento</legend>
+          <textarea name="taPlanName" id="taPlanId" class="taPlan" placeholder="Escreva o Plano de Tratamento aqui" required></textarea>
+        </fieldset>
+  
+        <fieldset name="fsTratName" id="fsTratId" class="contPrim fsMain">
+          <legend class="contSec" id="fsRelTratLeg"> Relação de Tratamentos </legend>
+          <div class="contSec divMain" id="tratContainer">
+            <div class="contTerc divSub divSubTrat" id="divSubTrat1">
+              <span class="contQuat spanMain tratMainSpan tratNumSpan" id="tratNumSpan1"> 
+                1&#41
+              </span>
+              <span class="contQuat spanMain tratMainSpan tratDateSpan" id="tratDateSpan1">
+                  <label for="tratDateInpId1" class="contQuint tratLabel">Data</label>
+                  <input type="date" name="tratDateInpName1" id="tratDateInpId1" class="ContQuint inpTrat tratDate" required />
+                  <button type="button" class="contQuint datBtn" id="trat2DatBtn">Usar data atual</button>
+              </span>
+              <span class="contQuat spanMain tratMainSpan tratTypeSpan" id="tratTypeSpan1">
+                <label for="taTratId1" class="contQuint tratTalab" id="labTratTip1">Tipo de Tratamento</label>
+                <textarea name="taTratName1" id="taTratId1" class="contQuint taTrat" required></textarea>
+              </span>
+              <span class="contQuat spanMain tratMainSpan tratFileSpan" id="tratFileSpan1">
+                <span id="spanAstTratId1" class="contQuint tratLabel labAst">Assinatura</span>
+                <input type="text" name="inpAstTratName1" id="inpAstTratId1"
+                class="contQuint inpTrat inpAst tratAst" />
+                <br />
+                <button type="button" class="contQuint astDigtBtn confirmBtn" 
+                id="trat1AstDigtBtn">Usar Assinatura Digital</button>
+              </span>
+              <span class="contQuat spanMain tratMainSpan tratButSpan" id="tratButSpan1">
+                <button type="button" name="addTratName1" id="addTratId1" class="contQuint addTrat countTrat"
+                value="addTrat">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                  id="addTratSvg1" class="plusButSvg bi bi-plus-square-fill countTratSvg" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                  </svg>
+                </button>
+                <button type="button" name="removeTratName1" id="removeTratId1"
+                class="contQuint removeTrat countTrat" value="removeTrat">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                  id="removeTratSvg1" class="minusButSvg bi bi-dash-square-fill countTratSvg" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>
+                  </svg>
+                </button>
+              </span>   
+            </div>
+          </div>
+  
+        <hr />
+        </fieldset>
+  
+        <fieldset name="fsConfirmName" id="fsConfirmId" class="contPrim fsMain">
+          <section class="contSec sectionMain sectionConfirm" id="sectConfirmCheck">
+            <blockquote class="contTerc declr" id="declrEnd">"DECLARO QUE CONCORDO COM
+              OS TRATAMENTOS PROPOSTOS ACIMA"
+              <label for="confirmId" class="contQuat labConfirm"></label>
+              <input type="checkbox" name="confirmName" id="confirmId" class="contQuat" required />
+            </blockquote>
+            <div class="contTerc divMain" id="divConfirm">
+              <span class="contQuat spanConfirm "id="spanConfirm1">
+                <h3 class="contQuint dicas" id="dicaCiteName">Você pode apagar o conteúdo inicial abaixo clicando no texto</h3>
+                <h3 class="contQuint dicas" id="dicaUppercase">As primeiras letras, exceto conjunções, são capitalizadas automaticamente por padrão. 
+                  Outras correções podem precisar de mais texto — Continue digitando!</h3>
+                <cite contenteditable="true" id="citeNameId" class="contQuint">Insira Seu Nome Aqui</cite>
+                <button type="button" class="contQuint" id="deactAutocorrectBtn">Desativar Autocorreção</button>
+                <hr id="hrCite"/>
+              </span>
+  
+              <div class="contQuat divSub divConfirm" id="divConfirm2">
+                <label for="confirmLocId" class="contQuint labConfirm">
+                  Local:
+                  <input
+                    type="text"
+                    name="confirmLocName"
+                    id="confirmLocId"
+                    class="contQuint inpConfirm"
+                    value="Rio de Janeiro, Rio de Janeiro"
+                    required
+                  />
+                </label>
+    
+                <label for="confirmDatId" class="contQuint labConfirm">
+                  Data:
+                  <input
+                    type="date"
+                    name="confirmDatName"
+                    id="confirmDatId"
+                    class="contQuint inpConfirm"
+                    required
+                  />
+                  <button type="button" class="contQuint datBtn confirmBtn" id="confirmDatBtn">Usar data atual</button>
+                </label>
+                <hr />
+              </div>
+  
+              <div class="contQuat divSub divConfirm" id="divConfirm3">
+                <span id="spanAstPct" class="contQuint labConfirm labAst">
+                  Assinatura do Paciente:
+                  <input
+                    type="text"
+                    name="confirmAstName"
+                    id="inpAstConfirmId"
+                    class="contQuint inpAst"
+                  />
+                  <button type="button" class="contQuint deActBtn" id="deactAutocorrectBtnPac">Desativar Autocorreção</button>
+                  <button type="button" class="contQuint astDigtBtn confirmBtn" 
+                  id="confirmAstDigtBtn">Usar Assinatura Digital</button>
+                </span>
+              </div>
+            </div>
+          </section>
+  
+          <section class="contSec sectionMain sectionConfirm" id="sectConfirmBut">
+            <button
+              type="submit"
+              name="submitFormButName"
+              id="submitFormButId"
+              class="contTerc confirmBut"
+              formaction="_self"
+              formmethod="POST"
+              enterkeyhint="send"
+              accesskey="enter"
+            >
+              Submeter
+            </button>
+            <button type="reset" class="contTerc confirmBut" id="resetFormBtn">Resetar</button>
+          </section>
+          <hr />
+        </fieldset>
+  
+      </form>
+    </main>
+    <script type="module" src="./dist/odController.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+
+  <footer class="contPrim">
+    <address class="contSec">
+      <h3 class="contTerc hGeneric" id="hAddress">Contato</h4>
+      <div class="contTerc contatInf" id="telContatInf">Telefone:</div>
+      <div class="contTerc contatInf" id="emailContatInf">Email:</div>
+      <hr />
+    </address>
+  </footer>
+</html>

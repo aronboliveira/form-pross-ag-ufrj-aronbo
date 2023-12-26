@@ -1,0 +1,106 @@
+header {
+}
+
+#hForm {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flexDiv {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.flexSpan {
+  display: flex;
+}
+
+input[type="date"] {
+}
+
+button[disabled] {
+  cursor: not-allowed;
+}
+
+select {
+  cursor: row-resize;
+}
+
+.numNullId:hover {
+  cursor: url(img/exclamation.svg) 4 12, auto;
+}
+
+.biBtn {
+  background: none;
+  border: transparent;
+}
+
+.tipBtn:hover {
+  cursor: help;
+}
+
+.bi {
+  pointer-events: none;
+}
+
+#spanHFlex {
+  align-items: center;
+}
+
+/* .flexDiv {
+  display: flex;
+} */
+
+textarea {
+  display: block;
+}
+
+textarea[id^="textAdd"] {
+  display: none;
+}
+
+div[id^="divAdd"] {
+  display: none;
+}
+
+#addAntMedId {
+  font-weight: bold;
+}
+
+progress::-webkit-progress-bar {
+  background-color: white;
+}
+
+progress::-webkit-progress-value {
+  background-color: blue;
+}
+
+progress::-moz-progress-bar {
+  background-color: white;
+}
+
+progress::-moz-progress-bar {
+  background-color: blue;
+}
+
+progress::-ms-fill-unavailable {
+  background-color: white;
+}
+
+progress::-ms-fill {
+  background-color: blue;
+}
+
+#confirmAstId {
+  border-width: 0 0 1.5px 0;
+}
+
+#declrEnd {
+  margin: 0;
+}
+
+#spanConfirm1,
+#citeNameId {
+  border-width: 4px;
+}

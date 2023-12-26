@@ -1,0 +1,69 @@
+* {
+  border: solid grey 0.01px;
+  box-sizing: border-box;
+}
+
+/* .float {
+  border-color: red;
+} */
+
+/* [required] {
+  border-color: red;
+} */
+
+.dicas {
+  display: none;
+}
+
+button {
+  display: none;
+}
+
+textarea {
+  display: block;
+}
+
+textarea[id^="textAdd"] {
+  display: none;
+}
+
+div[id^="divAdd"] {
+  display: none;
+}
+
+.divTab {
+  overflow: auto;
+  resize: both;
+}
+
+.tabAtFisRotPop {
+  overflow: auto;
+}
+
+table {
+  /* overflow: auto;
+  resize: both; */
+  width: 100%;
+  /* height: 60%; */
+}
+
+.bi {
+  pointer-events: none;
+}
+
+.countComorb {
+  display: inline-block;
+}
+
+.countAtFis {
+  display: inline-block;
+}
+
+#spanConfirm1,
+#citeNameId {
+  border-width: 4px;
+}
+
+#confirmLocId {
+  min-width: 200px;
+}
