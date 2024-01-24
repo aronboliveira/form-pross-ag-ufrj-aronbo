@@ -389,3 +389,72 @@ input:checked {
 #confirmDatBtn {
   width: 100%;
 }
+
+@media screen and (max-width: 900px) {
+  .fsAnamGDiv,
+  #hDiv,
+  #genDiv,
+  #fsAnamGDiv1,
+  #div1_div2flex,
+  #fsAnamGRadSectId,
+  #fsAnamGRadODSectId,
+  #divOtherD,
+  .antMedBlock,
+  .antMedContainer {
+    display: flex;
+    flex-flow: column nowrap;
+  }
+  #spanHFlex {
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    width: 10vw;
+  }
+  .datBtn {
+    width: 30vw;
+  }
+  #divOtherD {
+    width: 100%;
+  }
+  .antMedBlock {
+    width: 100%;
+    margin: none;
+  }
+  .antMedBlock.spanMain {
+    display: flex;
+  }
+  .antMedBlock.datBtn {
+    width: 100%;
+  }
+  .spanAntMedText {
+    width: 95%;
+  }
+  .spanAntMedText.spanSubAntMedText {
+    width: 100%;
+  }
+  .spanAntMedText.spanSubAntMedText.spanSub {
+    padding: 0;
+  }
+  .spanAntMedDate {
+    width: 90%;
+    margin-top: 3%;
+  }
+  .spanAntMedDate .spanSubAntMedDate {
+    display: flex;
+    padding: 0;
+  }
+  .spanAntMedDate .spanSubAntMedDate .antMedBtnsDiv {
+    width: 12%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .spanAntMedDate .antMedDiv {
+    width: 95%;
+  }
+  .spanAntMedDate input[type="date"],
+  .spanAntMedDate .datBtn {
+    width: 50%;
+  }
+  .spanAntMedDate .datBtn {
+    font-size: 0.8rem;
+  }
+}
