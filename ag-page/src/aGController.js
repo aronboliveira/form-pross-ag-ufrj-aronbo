@@ -6,7 +6,7 @@ import * as GlobalHandler from "../../global-scripts/src/gHandlers.js";
 import * as GlobalControl from "../../global-scripts/src/gController.js";
 import * as ErrorHandler from "../../global-scripts/src/errorHandler.js";
 import { extLine } from "../../global-scripts/src/errorHandler.js";
-import * as XLSX from "./xlsx/xlsx.mjs";
+import * as XLSX from "../../xlsx/xlsx.mjs";
 //inicialização de constantes percorrendo o DOM
 const genElement = document.getElementById("genId");
 const allInputs = Array.from([
