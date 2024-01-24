@@ -196,15 +196,15 @@ export function addAntMedHandler(click, blockCount = 1) {
         newBlock.innerHTML = `
         <span class="divAntMedSpan spanMain spanAntMedText" id="antMedSpanInp${blockCount}">
           <label for="antMedId${blockCount}" class="antMedLabel">${blockCount}&#41
-            <input type="text" name="antMedName${blockCount}" id="antMedId${blockCount}" class="form-control autocorrect autocorrectFirst inpAntMed antMedText"/>
+            <input type="text" name="antMedName${blockCount}" id="antMedId${blockCount}" class="form-control autocorrect autocorrectFirst inpAntMed antMedText" data-title="desc_tratamento${blockCount}"/>
           </label>
         </span>
         <span class="divAntMedSpan spanMain spanAntMedDate" id="antMedSpanMainDate${blockCount}">
           <span class="divAntMedSubSpan spanSub spanSubAntMedDate" id="antMedSpanSubDate${blockCount}">
             <div class="antMedDiv">
               <label for="antMedDateIniId${blockCount}" class="antMedLabel"></label>
-              <input type="date" name="antMedDateIniName${blockCount}" id="antMedDateIniId${blockCount}" class="form-control inpDate antMedDate inpAntMed" required /> até
-              <input type="date" name="antMedDateEndName${blockCount}" id="antMedDateEndId${blockCount}" class="form-control inpDate antMedDate inpAntMed" required />
+              <input type="date" name="antMedDateIniName1" id="antMedDateIniId1" class="form-control inpDate antMedDate inpAntMed" data-title="data_ini_tratamento${blockCount}" required /> até
+              <input type="date" name="antMedDateEndName1" id="antMedDateEndId1" class="form-control inpDate antMedDate inpAntMed" data-title="data_end_tratamento${blockCount}" required />
               <label for="antMedDateEndId${blockCount}" class="antMedLabel"></label>
               <button
               type="button"

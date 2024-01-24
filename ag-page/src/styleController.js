@@ -1,4 +1,4 @@
-import * as ErrorHandler from "../../global-scripts/src/errorHandle.js";
+import * as ErrorHandler from "../../global-scripts/src/errorHandler.js";
 import { extLine } from "../../global-scripts/src/errorHandler.js";
 import * as AGStyleHandler from "./styleHandler.js";
 const tipBtns = Array.from(document.getElementsByClassName("tipBtn"));

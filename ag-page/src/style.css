@@ -18,21 +18,21 @@ select {
   cursor: row-resize;
 }
 
-input[type=date]:required:invalid::-webkit-datetime-edit {
+input[type="date"]:required:invalid::-webkit-datetime-edit {
   color: transparent;
 }
-input[type=date]:focus::-webkit-datetime-edit {
+input[type="date"]:focus::-webkit-datetime-edit {
   color: black !important;
 }
 
 textarea {
   display: block;
 }
-textarea[id^=textAdd] {
+textarea[id^="textAdd"] {
   display: none;
 }
 
-div[id^=divAdd] {
+div[id^="divAdd"] {
   display: none;
 }
 
@@ -204,12 +204,12 @@ input:checked {
 
 #fsAnamGSpan13 {
   grid-row: 4;
-  grid-column: 2/span 1;
+  grid-column: 2 / span 1;
 }
 
 #fsAnamGSpan14 {
   grid-row: 5;
-  grid-column: 2/span 1;
+  grid-column: 2 / span 1;
 }
 
 .locSpan {
@@ -371,7 +371,7 @@ input:checked {
   margin-bottom: 1vh;
 }
 
-.labConfirm:not(label[for=confirmId]) {
+.labConfirm:not(label[for="confirmId"]) {
   display: flex;
   flex-direction: column;
   row-gap: 1vh;

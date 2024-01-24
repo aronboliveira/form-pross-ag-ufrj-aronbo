@@ -6,6 +6,7 @@ import * as GlobalHandler from "../../global-scripts/src/gHandlers.js";
 import * as GlobalControl from "../../global-scripts/src/gController.js";
 import * as ErrorHandler from "../../global-scripts/src/errorHandler.js";
 import { extLine } from "../../global-scripts/src/errorHandler.js";
+import * as XLSX from "../../../node_modules/xlsx/xlsx.mjs";
 //inicialização de constantes percorrendo o DOM
 const genElement = document.getElementById("genId");
 const allInputs = Array.from([
@@ -230,6 +231,55 @@ if (JSONBtn instanceof HTMLButtonElement && allInputs.length > 0) {
     extLine(new Error())
   );
 }
+export function addExportListener() {
+  document.getElementById("btnExport")?.addEventListener("click", async () => {
+    try {
+      const allEntryEls = [
+        ...document.querySelectorAll("input"),
+        ...document.querySelectorAll("textarea"),
+        ...document.querySelectorAll("select"),
+      ];
+      const arrValues = [];
+      const arrTitles = [];
+
+      for (const el of allEntryEls) {
+        if (
+          el instanceof HTMLInputElement &&
+          (el.type === "checkbox" || el.type === "radio")
+        ) {
+          el.checked ? arrValues.push("sim") : arrValues.push("nao");
+        } else arrValues.push(el.value || "nulo");
+        arrTitles.push(el.dataset?.title || "sem_titulo");
+      }
+
+      const editableCite = document.getElementById("citeNameId");
+      arrValues.push(editableCite?.textContent || "nulo");
+      arrTitles.push(editableCite?.dataset?.title || "sem_titulo");
+
+      while (arrValues.length > arrTitles.length) arrTitles.push("sem_titulo");
+      while (arrTitles.length > arrValues.length) arrValues.push("nulo");
+
+      if (arrValues.length === arrTitles.length) {
+        const dataJSON = [];
+        const wb = XLSX.utils.book_new();
+
+        for (let i = 0; i < arrValues.length; i++)
+          dataJSON.push({ c1: arrTitles[i], c2: arrValues[i] });
+
+        XLSX.utils.book_append_sheet(
+          wb,
+          XLSX.utils.json_to_sheet(dataJSON),
+          "Sheet1"
+        );
+        XLSX.writeFile(wb, "data_agForm.xlsx");
+
+        console.log("Spreadsheet generated.");
+      } else throw new Error(`Error validating length of data arrays`);
+    } catch (error) {
+      console.error("Error generating spreadsheet:", error);
+    }
+  });
+}
 //chamadas
 genElement.value = addListenersGenConts(genElement, genValue);
 addListenerTelInputs();
@@ -243,6 +293,7 @@ GlobalHandler.deactTextInput(
   document.querySelectorAll("input[id$=NullId]")
 );
 addListenersQxPrinc();
+addExportListener();
 // // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 // // let shouldRegenerateBtn = false;
 // // const handleMutation = (mutationsList, observer) => {
