@@ -1,0 +1,391 @@
+/* header {
+} */
+body {
+  background-color: rgba(10, 221, 245, 0.1);
+  background-image: url(./PROS_Saude5.jpg);
+  background-size: contain;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+button:hover:not(.tipBtn) {
+  animation: highlightBtn 2s infinite;
+}
+
+select {
+  cursor: row-resize;
+}
+
+input[type="date"]:required:invalid::-webkit-datetime-edit {
+  color: transparent;
+}
+input[type="date"]:focus::-webkit-datetime-edit {
+  color: black !important;
+}
+
+textarea {
+  display: block;
+}
+textarea[id^="textAdd"] {
+  display: none;
+}
+
+div[id^="divAdd"] {
+  display: none;
+}
+
+legend {
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+progress::-webkit-progress-value {
+  background-color: rgba(10, 221, 245, 0.1);
+}
+progress::-moz-progress-bar {
+  background-color: white;
+}
+progress::-moz-progress-bar {
+  background-color: rgba(10, 221, 245, 0.1);
+}
+progress::-ms-fill-unavailable {
+  background-color: white;
+}
+progress::-ms-fill {
+  background-color: rgba(10, 221, 245, 0.1);
+}
+
+blockquote {
+  font-weight: bold;
+  font-style: italic;
+}
+
+input:checked {
+  color: green;
+}
+
+.biBtn {
+  background: none;
+  border: transparent;
+}
+
+.bi {
+  pointer-events: none;
+}
+
+.tipBtn:hover {
+  cursor: help;
+}
+
+#bgDiv {
+  margin: 0.5%;
+  padding: 1%;
+  border-radius: 1vh;
+  background-color: rgba(255, 255, 255, 0.897);
+  border: groove black 0.3vh;
+}
+
+.flexDiv {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.flexDiv:not(.fsAnamGDiv) {
+  justify-content: space-between;
+}
+
+#fsAnamGDiv1 {
+  display: flex;
+  flex: 1;
+  flex-flow: row nowrap;
+  justify-content: start;
+  width: 70vw;
+}
+
+#fsAnamGDiv4 {
+  width: 33%;
+}
+
+.flexSpan {
+  display: flex;
+}
+
+#hDiv {
+  display: flex;
+  flex: 1;
+  flex-flow: row nowrap;
+  align-items: top;
+}
+
+#logoProsImg {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+#hForm {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1%;
+}
+
+#dateHeader {
+  display: inline-block;
+  width: 300%;
+}
+
+#headerDatBtn {
+  display: inline-block;
+}
+
+#spanHFlex {
+  width: 33%;
+}
+
+.divMain {
+  display: grid;
+}
+.divMain:not(#divConfirm) {
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  width: 60%;
+  column-gap: 5%;
+}
+
+#genDiv {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5%;
+  width: 80%;
+}
+
+.tipDlg {
+  float: right;
+  position: absolute;
+  max-width: 50vw;
+  max-height: 40vh;
+  overflow: auto;
+  resize: both;
+  border: black groove;
+  border-radius: 30px;
+  padding: 1%;
+  background-color: white;
+}
+
+.dicas {
+  text-align: start;
+  font-size: 1rem;
+}
+
+.fsAnamGSpan {
+  display: flex;
+  align-items: center;
+  width: 95%;
+  min-height: 50px;
+}
+
+.labelIdentif {
+  display: block;
+  margin: 0.1vh;
+}
+
+.inpIdentif {
+  margin: 0.1vh;
+}
+
+#fsAnamGSpan8 {
+  grid-row: 3/5;
+}
+
+#fsAnamGSpan11 {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+#fsAnamGSpan13 {
+  grid-row: 4;
+  grid-column: 2 / span 1;
+}
+
+#fsAnamGSpan14 {
+  grid-row: 5;
+  grid-column: 2 / span 1;
+}
+
+.locSpan {
+  padding-top: 1vh;
+}
+
+.inpLocNum {
+  margin-left: 5%;
+  max-width: 800px;
+}
+
+@keyframes highlightBtn {
+  0% {
+    background-color: blue;
+  }
+  50% {
+    background-color: green;
+  }
+  100% {
+    background-color: blue;
+  }
+}
+#autoCompCepBtn:enabled {
+  background-color: blue;
+}
+#autoCompCepBtn:enabled:hover {
+  animation: highlightBtn 2s infinite;
+}
+#autoCompCepBtn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+#autoCompCepBtn[disabled]:hover {
+  background-color: orangered;
+}
+
+#fsAnamGRadSectId {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1%;
+  padding-right: 2%;
+  padding-left: 0.5%;
+}
+
+.pbAlmSpan {
+  vertical-align: middle;
+}
+
+.numNullId:hover {
+  cursor: url(./exclamation.svg) 4 12, auto;
+}
+
+.spanMainFsAnamGRad {
+  margin-top: 3vh;
+}
+
+#addAntMedId {
+  font-weight: bold;
+}
+
+.antMedContainer {
+  display: flex;
+  flex-flow: row;
+}
+
+.antMedBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.divAntMedSpan {
+  display: flex;
+  flex-flow: column;
+  height: 20%;
+  width: 50%;
+}
+
+.divAntMedSubSpan {
+  display: flex;
+  padding: 3%;
+  align-items: center;
+}
+
+.divAdd {
+  border: groove grey 2px;
+  border-radius: 2vh;
+  min-width: 20vw;
+}
+.divAdd.divAntFam {
+  padding: 1%;
+}
+.divAdd:not(.divAntFam) {
+  padding: 3%;
+}
+
+.spanSubAntMedText {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.spanAntMedDate {
+  width: 100%;
+}
+
+.antMedDiv {
+  display: flex;
+  width: 80%;
+  align-items: center;
+}
+
+.antMedLabel {
+  display: flex;
+  align-items: center;
+}
+
+.antMedText {
+  display: flex;
+  vertical-align: middle;
+  margin-left: 5%;
+}
+
+.antMedDate {
+  margin-right: 5%;
+  margin-left: 5%;
+}
+
+.atualTratBtn {
+  width: 200%;
+  margin-right: 5%;
+}
+
+.countAntMed {
+  font-weight: bold;
+  font-size: 100%;
+}
+
+.divConfirm {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+#confirmAstId {
+  border-width: 0 0 1.5px 0;
+}
+
+#declrEnd {
+  margin: 0;
+}
+
+#spanConfirm1,
+#citeNameId {
+  border-width: 4px;
+}
+
+#divConfirm2 {
+  display: flex;
+  column-gap: 2.5%;
+  margin-bottom: 1vh;
+}
+
+.labConfirm:not(label[for="confirmId"]) {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1vh;
+}
+
+.labDivConfirm2 {
+  height: 10%;
+}
+
+#divConfirmDat {
+  display: flex;
+  width: 100%;
+}
+
+#confirmDatBtn {
+  width: 100%;
+}
