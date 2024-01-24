@@ -264,7 +264,7 @@ export function addExportListener() {
         const wb = XLSX.utils.book_new();
 
         for (let i = 0; i < arrValues.length; i++)
-          dataJSON.push({ c1: arrTitles[i], c2: arrValues[i] });
+          dataJSON.push({ Título: arrTitles[i], Valor: arrValues[i] });
 
         XLSX.utils.book_append_sheet(
           wb,
