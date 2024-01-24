@@ -6,7 +6,7 @@ import * as GlobalHandler from "../../global-scripts/src/gHandlers.js";
 import * as GlobalControl from "../../global-scripts/src/gController.js";
 import * as ErrorHandler from "../../global-scripts/src/errorHandler.js";
 import { extLine } from "../../global-scripts/src/errorHandler.js";
-import * as XLSX from "../../../node_modules/xlsx/xlsx.mjs";
+import * as XLSX from "./xlsx/xlsx.mjs";
 //inicialização de constantes percorrendo o DOM
 const genElement = document.getElementById("genId");
 const allInputs = Array.from([
@@ -42,7 +42,7 @@ export function addListenersGenConts(genElement, genValue = "masculino") {
     typeof genValue === "string"
   ) {
     const arrGenConts = [genElement, genBirthRel, genTrans, genFisAlin];
-    arrGenConts.forEach(genCont => {
+    arrGenConts.forEach((genCont) => {
       genCont.addEventListener("change", () => {
         genValue =
           GlobalModel.fluxGen(arrGenConts, genElement?.value) || "masculino";
@@ -64,12 +64,12 @@ export function addListenersGenConts(genElement, genValue = "masculino") {
 export function addListenerTelInputs() {
   const telInputs = document.querySelectorAll('input[type="text"][id^="tel"]');
   if (telInputs?.length > 0) {
-    telInputs.forEach(telInput => {
+    telInputs.forEach((telInput) => {
       if (
         telInput instanceof HTMLInputElement ||
         telInput instanceof HTMLTextAreaElement
       )
-        telInput.addEventListener("input", input => {
+        telInput.addEventListener("input", (input) => {
           if (
             input.target instanceof HTMLInputElement ||
             input.target instanceof HTMLTextAreaElement
@@ -103,7 +103,7 @@ export function addListenerTelInputs() {
 export function addListenersEmailInputs() {
   const emailInputs = document.querySelectorAll('input[id^="email"]');
   if (emailInputs?.length > 0) {
-    emailInputs.forEach(emailInput => {
+    emailInputs.forEach((emailInput) => {
       if (emailInput instanceof HTMLInputElement) {
         emailInput.addEventListener("click", () =>
           AGModel.addEmailExtension(emailInput)
@@ -128,9 +128,9 @@ export function addListenersEmailInputs() {
 export function addListenerAntFamChecks() {
   const antFamChecks = document.querySelectorAll("input[id^='antFam']");
   if (antFamChecks?.length > 0) {
-    antFamChecks.forEach(antFamCheck => {
+    antFamChecks.forEach((antFamCheck) => {
       if (antFamCheck instanceof HTMLInputElement) {
-        antFamCheck.addEventListener("change", change =>
+        antFamCheck.addEventListener("change", (change) =>
           GlobalHandler.cpbInpHandler(change, antFamCheck)
         );
         antFamCheck.addEventListener("dblclick", () =>
@@ -155,7 +155,7 @@ export function addListenerAntFamChecks() {
 export function addListenerAntMedContainer(blockCount = 1) {
   const antMedContainer = document.getElementById("antMedContainer");
   antMedContainer
-    ? antMedContainer.addEventListener("click", click => {
+    ? antMedContainer.addEventListener("click", (click) => {
         console.log();
         blockCount = AGHandlers.addAntMedHandler(click, blockCount);
         return blockCount;
@@ -206,7 +206,7 @@ if (JSONBtn instanceof HTMLButtonElement && allInputs.length > 0) {
     if (
       formDescription &&
       formDescription.length === 4 &&
-      !formDescription.some(formDescElement => formDescElement === null)
+      !formDescription.some((formDescElement) => formDescElement === null)
     ) {
       JSONLink = GlobalHandler.createJSONAnchor(
         JSONBtn,
