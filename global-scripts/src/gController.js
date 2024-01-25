@@ -65,7 +65,7 @@ export function getGlobalEls(
         extLine(new Error())
       );
   resetFormBtn instanceof HTMLButtonElement
-    ? resetFormBtn.addEventListener("click", click =>
+    ? resetFormBtn.addEventListener("click", (click) =>
         GlobalHandler.resetarFormulario(click, astDigtBtns, resetFormBtn)
       )
     : ErrorHandler.elementNotFound(
@@ -99,8 +99,8 @@ export function getGlobalEls(
   return [isAutocorrectOn || true, firstClick || false];
 }
 export function addListenerTexts(textConts, isAutocorrectOn = true) {
-  if (textConts.every(el => el instanceof HTMLElement)) {
-    textConts.forEach(textCont => {
+  if (textConts.every((el) => el instanceof HTMLElement)) {
+    textConts.forEach((textCont) => {
       if (textCont?.classList.contains("autocorrect")) {
         textCont instanceof HTMLTextAreaElement ||
         (textCont instanceof HTMLInputElement && textCont.type === "text")
@@ -109,7 +109,6 @@ export function addListenerTexts(textConts, isAutocorrectOn = true) {
                 document.querySelector('button[id^="deactAutocorrectBtn"]') ||
                   document.querySelector('input[id^="deactAutocorrectBtn"]')
               );
-              console.log(isAutocorrectOn);
               GlobalModel.autoCapitalizeInputs(textCont, isAutocorrectOn);
             })
           : ErrorHandler.inputNotFound(
@@ -124,8 +123,8 @@ export function addListenerTexts(textConts, isAutocorrectOn = true) {
   } else console.error(`Erro validando instâncias em textConts`);
 }
 export function addListenerNumInps(numInps) {
-  if (numInps.every(el => el instanceof HTMLElement)) {
-    numInps.forEach(numInp => {
+  if (numInps.every((el) => el instanceof HTMLElement)) {
+    numInps.forEach((numInp) => {
       numInp instanceof HTMLInputElement && numInp.type === "number"
         ? numInp.addEventListener("input", () => {
             GlobalModel.numberLimit(numInp);
@@ -142,12 +141,12 @@ export function addListenerNumInps(numInps) {
 }
 export function addListenerRadios(radioInps, context = "od") {
   if (
-    radioInps.every(el => el instanceof HTMLElement) &&
+    radioInps.every((el) => el instanceof HTMLElement) &&
     (context === "od" || context === "ed" || context === "ag")
   ) {
-    radioInps.forEach(radio => {
+    radioInps.forEach((radio) => {
       if (radio instanceof HTMLInputElement && radio.type === "radio") {
-        radio.addEventListener("keydown", keydown => {
+        radio.addEventListener("keydown", (keydown) => {
           GlobalHandler.opRadioHandler(
             keydown,
             Array.from(
@@ -161,10 +160,10 @@ export function addListenerRadios(radioInps, context = "od") {
           GlobalHandler.doubleClickHandler(radio)
         );
         if (context === "ed" || context === "ag") {
-          radio.addEventListener("change", change =>
+          radio.addEventListener("change", (change) =>
             GlobalHandler.cpbInpHandler(change, radio)
           );
-          radio.addEventListener("keydown", keydown =>
+          radio.addEventListener("keydown", (keydown) =>
             GlobalHandler.cpbInpHandler(keydown, radio)
           );
           if (context === "ag")
@@ -186,10 +185,10 @@ export function addListenerRadios(radioInps, context = "od") {
   } else console.error(`Erro validando instâncias em radioInps`);
 }
 export function addListenerDateBtns(dateBtns) {
-  if (dateBtns.every(el => el instanceof HTMLElement)) {
-    dateBtns.forEach(dateBtn => {
+  if (dateBtns.every((el) => el instanceof HTMLElement)) {
+    dateBtns.forEach((dateBtn) => {
       dateBtn instanceof HTMLButtonElement
-        ? dateBtn.addEventListener("click", activation => {
+        ? dateBtn.addEventListener("click", (activation) => {
             GlobalHandler.useCurrentDate(activation, dateBtn);
           })
         : ErrorHandler.elementNotFound(
@@ -200,28 +199,15 @@ export function addListenerDateBtns(dateBtns) {
     });
   } else console.error(`Erro validando instâncias em dateBtns`);
 }
-export function addListenerCite(
-  editableCite,
-  isAutocorrectOn = true,
-  firstClick = true
-) {
+export function addListenerCite(editableCite, firstClick = true) {
   if (editableCite instanceof HTMLElement) {
-    const citeClickHandler = click => {
+    const citeClickHandler = (click) => {
       if (firstClick && click.target instanceof HTMLElement) {
         GlobalModel.removeFirstClick(click.target);
         firstClick = false;
         editableCite.removeEventListener("click", citeClickHandler);
       }
     };
-    editableCite.addEventListener("keyup", keypress => {
-      keypress.target instanceof HTMLElement
-        ? GlobalModel.autoCapitalizeCite(keypress.target, isAutocorrectOn)
-        : ErrorHandler.elementNotFound(
-            keypress.target,
-            "keypress with editableCite as a target",
-            extLine(new Error())
-          );
-    });
     editableCite.addEventListener("click", citeClickHandler);
   } else
     ErrorHandler.elementNotFound(null, "editableCite", extLine(new Error()));
@@ -231,19 +217,18 @@ export function addListenerAutocorrectBtns(
   deactAutocorrectBtns,
   isAutocorrectOn = true
 ) {
-  if (deactAutocorrectBtns.every(el => el instanceof HTMLElement)) {
-    deactAutocorrectBtns.forEach(deactAutocorrectBtn => {
+  if (deactAutocorrectBtns.every((el) => el instanceof HTMLElement)) {
+    deactAutocorrectBtns.forEach((deactAutocorrectBtn) => {
       deactAutocorrectBtn instanceof HTMLButtonElement ||
       (deactAutocorrectBtn instanceof HTMLInputElement &&
         (deactAutocorrectBtn.type === "checkbox" ||
           deactAutocorrectBtn.type === "radio"))
-        ? deactAutocorrectBtn.addEventListener("click", click => {
+        ? deactAutocorrectBtn.addEventListener("click", (click) => {
             isAutocorrectOn = GlobalModel.switchAutocorrect(
               click,
               deactAutocorrectBtn,
               isAutocorrectOn
             );
-            console.log(isAutocorrectOn);
             return isAutocorrectOn;
           })
         : ErrorHandler.elementNotPopulated(
@@ -258,10 +243,10 @@ export function addListenerAutocorrectBtns(
   return isAutocorrectOn || true;
 }
 export function addListenerAstDigitBtns(astDigtBtns) {
-  if (astDigtBtns.every(el => el instanceof HTMLElement)) {
-    astDigtBtns.forEach(astDigtBtn => {
+  if (astDigtBtns.every((el) => el instanceof HTMLElement)) {
+    astDigtBtns.forEach((astDigtBtn) => {
       astDigtBtn instanceof HTMLButtonElement
-        ? astDigtBtn.addEventListener("click", click => {
+        ? astDigtBtn.addEventListener("click", (click) => {
             GlobalHandler.changeToAstDigit(click, astDigtBtn);
           })
         : ErrorHandler.elementNotFound(
