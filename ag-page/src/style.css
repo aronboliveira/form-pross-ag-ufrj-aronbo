@@ -18,21 +18,21 @@ select {
   cursor: row-resize;
 }
 
-input[type="date"]:required:invalid::-webkit-datetime-edit {
+input[type=date]:required:invalid::-webkit-datetime-edit {
   color: transparent;
 }
-input[type="date"]:focus::-webkit-datetime-edit {
+input[type=date]:focus::-webkit-datetime-edit {
   color: black !important;
 }
 
 textarea {
   display: block;
 }
-textarea[id^="textAdd"] {
+textarea[id^=textAdd] {
   display: none;
 }
 
-div[id^="divAdd"] {
+div[id^=divAdd] {
   display: none;
 }
 
@@ -145,19 +145,7 @@ input:checked {
 .divMain {
   display: grid;
 }
-.divMain:not(#divConfirm):not(#divFreqOdont):not(#fsAnamGDiv3) {
-  grid-template-columns: 1fr 1fr;
-  justify-content: space-between;
-  width: 60%;
-  column-gap: 5%;
-}
-
-#fsAnamGSpan13,
-#fsAnamGSpan14 {
-  width: 60%;
-}
-
-#divFreqOdont {
+.divMain:not(#divConfirm) {
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   width: 60%;
@@ -216,12 +204,12 @@ input:checked {
 
 #fsAnamGSpan13 {
   grid-row: 4;
-  grid-column: 2 / span 1;
+  grid-column: 2/span 1;
 }
 
 #fsAnamGSpan14 {
   grid-row: 5;
-  grid-column: 2 / span 1;
+  grid-column: 2/span 1;
 }
 
 .locSpan {
@@ -383,7 +371,7 @@ input:checked {
   margin-bottom: 1vh;
 }
 
-.labConfirm:not(label[for="confirmId"]) {
+.labConfirm:not(label[for=confirmId]) {
   display: flex;
   flex-direction: column;
   row-gap: 1vh;
@@ -400,165 +388,4 @@ input:checked {
 
 #confirmDatBtn {
   width: 100%;
-}
-
-@media screen and (max-width: 900px) {
-  .fsAnamGDiv,
-  #hDiv,
-  #genDiv,
-  #fsAnamGDiv1,
-  #div1_div2flex,
-  #fsAnamGRadSectId,
-  #fsAnamGRadODSectId,
-  #divOtherD,
-  .antMedBlock,
-  .antMedContainer,
-  .spanAntMedDate {
-    display: flex;
-    flex-flow: column nowrap;
-  }
-  .divMain:not(#divConfirm):not(#divFreqOdont):not(#fsAnamGDiv3) {
-    justify-content: space-between;
-    width: 75%;
-    column-gap: 5%;
-  }
-  #spanHFlex {
-    display: flex;
-    flex-flow: column-reverse nowrap;
-    width: 30vw;
-  }
-  .datBtn:not(#headerDatBtn):not(#confirmDatBtn):not(.atualTratBtn) {
-    width: 30vw;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan16 {
-    order: 1;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan17 {
-    order: 2;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan18 {
-    order: 3;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan19 {
-    order: 4;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan20 {
-    order: 5;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan21 {
-    order: 6;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan22 {
-    order: 7;
-  }
-  #fsAnamGDiv2 #fsAnamGSpan23 {
-    order: 8;
-  }
-  #fsAnamGDiv3 {
-    width: 100%;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan6 {
-    order: 1;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan7 {
-    order: 2;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan8 {
-    order: 3;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan9 {
-    order: 4;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan10 {
-    order: 5;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan11 {
-    order: 6;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan12 {
-    order: 7;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan13 {
-    order: 8;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan14 {
-    order: 9;
-  }
-  #fsAnamGDiv3 #fsAnamGSpan13,
-  #fsAnamGDiv3 #fsAnamGSpan14 {
-    width: 85%;
-    padding: 0;
-    margin-left: 5%;
-  }
-  #divOtherD {
-    width: 100%;
-  }
-  .antMedBlock {
-    width: 90%;
-    margin: none;
-  }
-  .antMedBlock.spanMain {
-    display: flex;
-  }
-  .spanAntMedText {
-    width: 95%;
-  }
-  .spanAntMedText.spanSubAntMedText {
-    width: 100%;
-  }
-  .spanAntMedText.spanSubAntMedText.spanSub {
-    padding: 0;
-  }
-  .spanAntMedDate {
-    width: 90%;
-    margin-top: 3%;
-    justify-content: start;
-  }
-  .spanAntMedDate .spanSubAntMedDate {
-    flex-flow: column nowrap;
-    justify-content: start;
-    padding: 0;
-  }
-  .spanAntMedDate .spanSubAntMedDate .antMedBtnsDiv {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10%;
-    padding-top: 3%;
-    justify-self: right;
-  }
-  .spanAntMedDate .antMedDiv {
-    width: 100%;
-    flex-flow: column nowrap;
-    box-sizing: unset;
-    text-align: center;
-  }
-  .spanAntMedDate input[type="date"],
-  .spanAntMedDate .datBtn {
-    width: 88%;
-    margin-right: 0;
-    margin-bottom: 5%;
-  }
-  .spanAntMedDate .datBtn {
-    width: 80%;
-  }
-  #divFreqOdont {
-    width: 90%;
-  }
-  #divConfirm2 {
-    flex-flow: column nowrap;
-  }
-  .labDivConfirm2 {
-    padding-top: 3%;
-    height: 100%;
-  }
-  #labConfirmDate {
-    height: 50%;
-  }
-  #divConfirmDat {
-    height: 100%;
-    flex-flow: column nowrap;
-  }
-  #confirmDatBtn {
-    width: 100%;
-  }
 }
