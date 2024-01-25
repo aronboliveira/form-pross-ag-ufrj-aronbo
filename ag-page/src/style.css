@@ -18,21 +18,21 @@ select {
   cursor: row-resize;
 }
 
-input[type="date"]:required:invalid::-webkit-datetime-edit {
+input[type=date]:required:invalid::-webkit-datetime-edit {
   color: transparent;
 }
-input[type="date"]:focus::-webkit-datetime-edit {
+input[type=date]:focus::-webkit-datetime-edit {
   color: black !important;
 }
 
 textarea {
   display: block;
 }
-textarea[id^="textAdd"] {
+textarea[id^=textAdd] {
   display: none;
 }
 
-div[id^="divAdd"] {
+div[id^=divAdd] {
   display: none;
 }
 
@@ -145,7 +145,19 @@ input:checked {
 .divMain {
   display: grid;
 }
-.divMain:not(#divConfirm) {
+.divMain:not(#divConfirm):not(#divFreqOdont):not(#fsAnamGDiv3) {
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  width: 60%;
+  column-gap: 5%;
+}
+
+#fsAnamGSpan13,
+#fsAnamGSpan14 {
+  width: 60%;
+}
+
+#divFreqOdont {
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   width: 60%;
@@ -204,12 +216,12 @@ input:checked {
 
 #fsAnamGSpan13 {
   grid-row: 4;
-  grid-column: 2 / span 1;
+  grid-column: 2/span 1;
 }
 
 #fsAnamGSpan14 {
   grid-row: 5;
-  grid-column: 2 / span 1;
+  grid-column: 2/span 1;
 }
 
 .locSpan {
@@ -371,7 +383,7 @@ input:checked {
   margin-bottom: 1vh;
 }
 
-.labConfirm:not(label[for="confirmId"]) {
+.labConfirm:not(label[for=confirmId]) {
   display: flex;
   flex-direction: column;
   row-gap: 1vh;
@@ -400,7 +412,8 @@ input:checked {
   #fsAnamGRadODSectId,
   #divOtherD,
   .antMedBlock,
-  .antMedContainer {
+  .antMedContainer,
+  .spanAntMedDate {
     display: flex;
     flex-flow: column nowrap;
   }
@@ -412,18 +425,71 @@ input:checked {
   .datBtn {
     width: 30vw;
   }
+  #fsAnamGDiv2 #fsAnamGSpan16 {
+    order: 1;
+  }
+  #fsAnamGDiv2 #fsAnamGSpan17 {
+    order: 2;
+  }
+  #fsAnamGDiv2 #fsAnamGSpan18 {
+    order: 3;
+  }
+  #fsAnamGDiv2 #fsAnamGSpan19 {
+    order: 4;
+  }
+  #fsAnamGDiv2 #fsAnamGSpan20 {
+    order: 5;
+  }
+  #fsAnamGDiv2 #fsAnamGSpan21 {
+    order: 6;
+  }
+  #fsAnamGDiv2 #fsAnamGSpan22 {
+    order: 7;
+  }
+  #fsAnamGDiv2 #fsAnamGSpan23 {
+    order: 8;
+  }
+  #fsAnamGDiv3 {
+    width: 100%;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan6 {
+    order: 1;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan7 {
+    order: 2;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan8 {
+    order: 3;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan9 {
+    order: 4;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan10 {
+    order: 5;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan11 {
+    order: 6;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan12 {
+    order: 7;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan13 {
+    width: 80%;
+    order: 8;
+  }
+  #fsAnamGDiv3 #fsAnamGSpan14 {
+    width: 80%;
+    order: 9;
+  }
   #divOtherD {
     width: 100%;
   }
   .antMedBlock {
-    width: 100%;
+    width: 90%;
     margin: none;
   }
   .antMedBlock.spanMain {
     display: flex;
-  }
-  .antMedBlock.datBtn {
-    width: 100%;
   }
   .spanAntMedText {
     width: 95%;
@@ -437,24 +503,32 @@ input:checked {
   .spanAntMedDate {
     width: 90%;
     margin-top: 3%;
+    justify-content: start;
   }
   .spanAntMedDate .spanSubAntMedDate {
-    display: flex;
+    flex-flow: column nowrap;
+    justify-content: start;
     padding: 0;
   }
   .spanAntMedDate .spanSubAntMedDate .antMedBtnsDiv {
     width: 12%;
     display: flex;
     justify-content: space-between;
+    padding-bottom: 3%;
+    padding-top: 3%;
+    justify-self: right;
   }
   .spanAntMedDate .antMedDiv {
     width: 95%;
   }
-  .spanAntMedDate input[type="date"],
+  .spanAntMedDate input[type=date],
   .spanAntMedDate .datBtn {
     width: 50%;
   }
   .spanAntMedDate .datBtn {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
+  }
+  #divFreqOdont {
+    width: 90%;
   }
 }
